@@ -1,3 +1,7 @@
+import csv
+import itertools
+import pandas as pd
+
 ####### Problem 1 #######
 
 # +1, +1, +1 results in  3
@@ -89,9 +93,7 @@ print("Problem 2, answer2(): {0}".format(p2a2_test))
 
 ####### Official Input Data #######
 
-### Csv library.
-import csv
-import itertools
+### Csv library
 
 file_path = "/home/will/advent_of_code/Advent-of-Code/2018/day_01_input.txt"
 
@@ -101,8 +103,7 @@ with open(file_path, newline='') as csv_file:
     for i in list(raw_data):
         data.extend(i)
 
-### Pandas library.
-import pandas as pd
+### Pandas library
 
 df = pd.read_csv("/home/will/advent_of_code/Advent-of-Code/2018/day_01_input.txt", header=None)
 data = list(df.loc[:, 0].values)
