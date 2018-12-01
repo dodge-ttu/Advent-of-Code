@@ -1,4 +1,4 @@
-# Answer one was nothing more than a sumation of a list of integers.
+# Answer one was nothing more than a summation of a list of integers.
 sum([1,-2,3])
 
 # Terrible, hacky solution. Improvements pending.
