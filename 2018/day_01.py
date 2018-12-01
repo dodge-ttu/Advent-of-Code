@@ -58,29 +58,36 @@ def answer1(ls):
     sum = 0
     while True:
         if (sum + ls[count]) in sums:
-            # print(sum + ls[count])
             return(sum + ls[count])
         else:
-            # print(sum, ls[count])
             sum += ls[count]
             count += 1
             sums.append(sum)
-
+        # print(sum, ls[count])
 
 def answer2(ls):
     sum = 0
     sums = []
     for i in itertools.cycle(ls):
         if (sum + i) in sums:
-            # print(sum + i)
             return(sum + i)
         else:
-            # print(sum, sums, i)
             sum += i
             sums.append(sum)
+        # print(sum, sums, i)
 
+def answer3(ls):
+    sum = 0
+    sums = []
+    for i in itertools.cycle(ls):
+        if (sum + i) in sums:
+            return(sum + i)
+        else:
+            sums.append(sum)
+            sum += i
+        # print(sum, sums, i)
 
-answers = [answer1, answer2]
+answers = [answer1, answer2, answer3]
 
 ### Tests:
 
@@ -90,7 +97,7 @@ for itr, answer in enumerate(answers):
 
 # Problem 2, answer1(): ['PASS', 'PASS', 'PASS', 'PASS']
 # Problem 2, answer2(): ['FAIL', 'PASS', 'PASS', 'PASS']
-
+# Problem 2, answer3(): ['PASS', 'PASS', 'PASS', 'PASS']
 
 
 ####### Official Input Data #######
