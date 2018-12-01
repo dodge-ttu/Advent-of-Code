@@ -70,16 +70,15 @@ def answer1(ls):
 def answer2(ls):
     sum = 0
     sums = []
-    count = 0
     for i in itertools.cycle(ls):
         if (sum + i) in sums:
             # print(sum + i)
             return(sum + i)
         else:
-            # print(sum, i)
+            # print(sum, sums, i)
             sum += i
-            count += 1
             sums.append(sum)
+
 
 answers = [answer1, answer2]
 
@@ -112,3 +111,4 @@ df = pd.read_csv("/home/will/advent_of_code/Advent-of-Code/2018/day_01_input.txt
 data = list(df.loc[:, 0].values)
 
 # Data was the same for problem one and two for this day.
+
