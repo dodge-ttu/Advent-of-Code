@@ -20,5 +20,5 @@ def answer(ls):
             count += 1
             sums.append(sum)
 
-
+answer(values)
 
