@@ -21,10 +21,13 @@ test_cases = [a,b,c]
 def answer1(ls):
     return(sum(ls))
 
+answers = [answer1]
+
 ### Tests:
 
-p1a1_test = ["PASS" if answer1(j[0]) == j[1] else "FAIL" for j in test_cases]
-print("Problem 1, answer1(): {0}".format(p1a1_test))
+for answer in answers:
+    test_results = ["PASS" if (answer(test) == sol) else "FAIL" for test, sol in test_cases]
+    print("Problem 1, answer1(): {0}".format(test_results))
 
 # Problem 1, answer1(): ['PASS', 'PASS', 'PASS']
 
@@ -78,13 +81,13 @@ def answer2(ls):
             count += 1
             sums.append(sum)
 
+answers = [answer1, answer2]
+
 ### Tests:
 
-p2a1_test = ["PASS" if answer1(j[0]) == j[1] else "FAIL" for j in test_cases]
-print("Problem 2, answer1(): {0}".format(p2a1_test))
-
-p2a2_test = ["PASS" if answer2(j[0]) == j[1] else "FAIL" for j in test_cases]
-print("Problem 2, answer2(): {0}".format(p2a2_test))
+for answer in answers:
+    test_results = ["PASS" if (answer(test) == sol) else "FAIL" for test, sol in test_cases]
+    print("Problem 2, answer1(): {0}".format(test_results))
 
 # Problem 2, answer1(): ['PASS', 'PASS', 'PASS', 'PASS']
 # Problem 2, answer2(): ['FAIL', 'PASS', 'PASS', 'PASS']
