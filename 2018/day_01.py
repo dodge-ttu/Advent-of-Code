@@ -25,9 +25,9 @@ answers = [answer1]
 
 ### Tests:
 
-for answer in answers:
+for itr, answer in enumerate(answers):
     test_results = ["PASS" if (answer(test) == sol) else "FAIL" for test, sol in test_cases]
-    print("Problem 1, answer1(): {0}".format(test_results))
+    print("Problem 1, answer{0}(): {1}".format(itr+1, test_results))
 
 # Problem 1, answer1(): ['PASS', 'PASS', 'PASS']
 
@@ -85,9 +85,9 @@ answers = [answer1, answer2]
 
 ### Tests:
 
-for answer in answers:
+for itr, answer in enumerate(answers):
     test_results = ["PASS" if (answer(test) == sol) else "FAIL" for test, sol in test_cases]
-    print("Problem 2, answer1(): {0}".format(test_results))
+    print("Problem 2, answer{0}(): {1}".format(itr+1, test_results))
 
 # Problem 2, answer1(): ['PASS', 'PASS', 'PASS', 'PASS']
 # Problem 2, answer2(): ['FAIL', 'PASS', 'PASS', 'PASS']
