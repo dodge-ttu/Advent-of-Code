@@ -1,30 +1,97 @@
-# Answer one was nothing more than a summation of a list of integers.
-sum([1,-2,3])
+####### Problem 1 #######
 
-# Terrible, hacky solution. Improvements pending.
-import pandas as pd
+# +1, +1, +1 results in  3
+# +1, +1, -2 results in  0
+# -1, -2, -3 results in -6
 
-df = pd.read_csv("/home/will/advent_of_code/Advent-of-Code/2018/day_01_input.txt", header=None)
-values = list(df.loc[:, 0].values) * 100000
+### Test cases:
 
-# This solution takes about 3 minutes 39 seconds.
-def answer(ls):
-    sums = []
+a = ([1,1,1], 3)
+b = ([1,1,-2], 0)
+c = ([-1,-2,-3], -6)
+
+test_cases = [a,b,c]
+
+### Answers:
+
+def answer1(ls):
+    return(sum(ls))
+
+### Tests:
+
+p1a1_test = ["PASS" if answer1(j[0]) == j[1] else "FAIL" for j in test_cases]
+print("Problem 1, answer1(): {0}".format(p1a1_test))
+
+# Problem 1, answer1(): ['PASS', 'PASS', 'PASS']
+
+
+
+####### Problem 2 #######
+
+# +1, -1 first reaches 0 twice.
+# +3, +3, +4, -2, -4 first reaches 10 twice.
+# -6, +3, +8, +5, -6 first reaches 5 twice.
+# +7, +7, -2, -7, -4 first reaches 14 twice.
+
+### Test cases:
+
+a = ([1, -1], 0)
+b = ([3, 3, 4, -2, -4], 10)
+c = ([-6, 3, 8, 5, -6], 5)
+d = ([7, 7, -2, -7, -4], 14)
+
+test_cases = [a,b,c,d]
+
+### Answers:
+
+def answer1(ls):
+    ls = ls * 100000
+    sums = [0]
     count = 0
     sum = 0
     while True:
         if (sum + ls[count]) in sums:
-            print(sum + ls[count])
-            break
+            # print(sum + ls[count])
+            return(sum + ls[count])
         else:
-            print(sum, ls[count])
-            sum += (ls[count])
+            # print(sum, ls[count])
+            sum += ls[count]
             count += 1
             sums.append(sum)
 
-answer(values)
 
-# Maybe generator solution without pandas.
+def answer2(ls):
+    sum = 0
+    sums = []
+    count = 0
+    for i in itertools.cycle(ls):
+        if (sum + i) in sums:
+            # print(sum + i)
+            return(sum + i)
+        else:
+            # print(sum, i)
+            sum += i
+            count += 1
+            sums.append(sum)
+
+### Tests:
+
+p2a1_test = ["PASS" if answer1(j[0]) == j[1] else "FAIL" for j in test_cases]
+print("Problem 2, answer1(): {0}".format(p2a1_test))
+
+p2a2_test = ["PASS" if answer2(j[0]) == j[1] else "FAIL" for j in test_cases]
+print("Problem 2, answer2(): {0}".format(p2a2_test))
+
+# Problem 2, answer1(): ['PASS', 'PASS', 'PASS', 'PASS']
+# Problem 2, answer2(): ['FAIL', 'PASS', 'PASS', 'PASS']
+
+
+
+####### Official Input Data #######
+
+# Data was the same for problem one and two for this day.
+
+# Csv library.
 import csv
 import itertools
 
@@ -36,22 +103,8 @@ with open(file_path, newline='') as csv_file:
     for i in list(raw_data):
         data.extend(i)
 
-print(data)
+# Pandas library.
+import pandas as pd
 
-# This solution takes about 1 minute 21 seconds.
-def answer2(ls, sums = [], count = 0, sum = 0):
-    for i in itertools.cycle(ls):
-        if (sum + i) in sums:
-            print(sum + i)
-            break
-        else:
-            print(sum, i)
-            sum += (i)
-            count += 1
-            sums.append(sum)
-
-answer2(data)
-
-
-
-
+df = pd.read_csv("/home/will/advent_of_code/Advent-of-Code/2018/day_01_input.txt", header=None)
+data = list(df.loc[:, 0].values)
