@@ -89,9 +89,7 @@ print("Problem 2, answer2(): {0}".format(p2a2_test))
 
 ####### Official Input Data #######
 
-# Data was the same for problem one and two for this day.
-
-# Csv library.
+### Csv library.
 import csv
 import itertools
 
@@ -103,8 +101,10 @@ with open(file_path, newline='') as csv_file:
     for i in list(raw_data):
         data.extend(i)
 
-# Pandas library.
+### Pandas library.
 import pandas as pd
 
 df = pd.read_csv("/home/will/advent_of_code/Advent-of-Code/2018/day_01_input.txt", header=None)
 data = list(df.loc[:, 0].values)
+
+# Data was the same for problem one and two for this day.
