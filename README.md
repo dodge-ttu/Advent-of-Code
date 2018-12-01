@@ -1,4 +1,4 @@
 # Advent-of-Code
-Advent themed coding challenge
+<a href="https://adventofcode.com/">Advent of Code</a> is a coding challenge created by Eric Wastl
 
-#### <a href="https://adventofcode.com/">https://adventofcode.com/</a>
+
