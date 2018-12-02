@@ -173,7 +173,7 @@ data = list(df.loc[:, 0].values)
 
 ####### Performance  #######
 
-# Perfromance testing on official data.
+# Performance testing on official data.
 
 def time_with_official_data(problem_number, answer_dict, loops=1):
     for (answer_name, answer) in answer_dict.items():
