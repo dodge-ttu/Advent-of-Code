@@ -1,7 +1,7 @@
 import timeit
 import csv
 import itertools
-import pandas as pd
+import re
 
 ####### Problem 1 #######
 
@@ -43,7 +43,7 @@ p1answers = {
     "p1answer1":p1answer1,
 }
 
-### Tests:
+### Problem 1 tests:
 
 for (answer_name, answer) in p1answers.items():
     for test_name, (test,sol) in p1_test_cases.items():
@@ -58,31 +58,74 @@ for (answer_name, answer) in p1answers.items():
 
 ####### Problem 2 #######
 
+# abcde
+# fghij
+# klmno
+# pqrst
+# fguij
+# axcye
+# wvxyz
+#
+# The IDs abcde and axcye are close, but they differ by two characters (the second and fourth)
+# . However, the IDs fghij and fguij differ by exactly one character, the
+# third (h and u). Those must be the correct boxes. What letters are common between
+# the two correct box IDs? (In the example above, this is found by removing the differing
+# character from either ID, producing fgij.
 
 
 ### Test cases:
 
-p2_a =
+p2_a = (["abcde","fghij","klmno","pqrst","fguij","axcye","wvxyz"], "fgij")
 
 p2_test_cases = {
-
+    "p2_a":p2_a
 }
 
 ### Answers:
 
+# Fails on official data.
 def p2answer1(ls):
+    target_length = len(ls[0]) - 1
+    # print(target_length)
+    for pattern in ls:
+        for match in ls:
+            bb = []
+            for letter in pattern:
+                c = [m.start(0) for m in re.finditer(letter, match)]
+                c = [match[i] for i in c]
+                bb.extend(c)
+            # print(bb, len(bb))
+            if len(bb) == target_length:
+                # print(bb)
+                zz = "".join(bb)
+                # print(zz)
+                return(zz)
 
+def p2answer2(ls):
+    id_length = len(ls[0])
+    # print(id_length)
+    counts = []
+    for pattern in ls:
+        for match in ls:
+            sums = [u==v for (u,v) in zip(pattern, match)]
+            # print(sum(sums))
+            counts.append((sums, pattern, sum(sums)))
 
+    bb = [i[1] for i in counts if i[2] == id_length - 1]
 
+    solution = ""
+    for i in bb[0]:
+        if i in [1]:
+            solution = solution + i
 
-
-
+    return(solution)
 
 p2answers = {
-    "p2answer1":p2answer1,,
+    "p2answer1":p2answer1,
+    "p2answer2":p2answer2,
 }
 
-### Tests:
+### Problem 2 tests:
 
 for (answer_name, answer) in p2answers.items():
     for test_name, (test,sol) in p2_test_cases.items():
@@ -91,6 +134,8 @@ for (answer_name, answer) in p2answers.items():
         else:
             print("[Problem 2] Test: FAIL, Function: {0} Input: {1}".format(answer_name, test))
 
+# [Problem 2] Test: PASS, Function: p2answer1 Input: ['abcde', 'fghij', 'klmno', 'pqrst', 'fguij', 'axcye', 'wvxyz']
+# [Problem 2] Test: FAIL, Function: p2answer2 Input: ['abcde', 'fghij', 'klmno', 'pqrst', 'fguij', 'axcye', 'wvxyz']
 
 ####### Official Input Data #######
 
@@ -106,6 +151,10 @@ with open(file_path, newline='') as csv_file:
 
 # Data was the same for problem one and two for this day.
 
+
+
+####### Performance  #######
+
 def time_with_official_data(problem_number, answer_dict, loops=1):
     for (answer_name, answer) in answer_dict.items():
         time = timeit.timeit("{0}(data)".format(answer_name), globals=globals(), number=loops)
@@ -114,3 +163,8 @@ def time_with_official_data(problem_number, answer_dict, loops=1):
 
 time_with_official_data(problem_number=1, answer_dict=p1answers, loops=1)
 time_with_official_data(problem_number=2, answer_dict=p2answers, loops=1)
+
+# [Problem 1] Time: 0.00376 seconds on 1 loops, Function: p1answer1
+# [Problem 2] Time: 0.001 seconds on 1 loops, Function: p2answer1
+# [Problem 2] Time: 0.17918 seconds on 1 loops, Function: p2answer2
+

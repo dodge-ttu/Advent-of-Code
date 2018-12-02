@@ -30,7 +30,7 @@ p1answers = {
     "p1answer1":p1answer1,
 }
 
-### Tests:
+### Problem 1 tests:
 
 for (answer_name, answer) in p1answers.items():
     for test_name, (test,sol) in p1_test_cases.items():
@@ -122,7 +122,7 @@ p2answers = {
     "p2answer4":p2answer4,
 }
 
-### Tests:
+### Problem 2 tests:
 
 for (answer_name, answer) in p2answers.items():
     for test_name, (test,sol) in p2_test_cases.items():
