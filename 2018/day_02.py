@@ -26,12 +26,18 @@ p1_test_cases = {
 
 ### Answers:
 
-def p1answer1(ls):
+def p1answer1(ls, II=0, III=0):
+    for i in ls:
+        i = sorted(i)
+        groups = [list(group) for key, group in itertools.groupby(i)]
+        two_letter = [True for i in groups if len(i) == 2]
+        three_letter = [True for i in groups if len(i) == 3]
+        if two_letter:
+            II += 1
+        if three_letter:
+            III += 1
 
-
-
-
-    return(sum(ls))
+    return(II * III)
 
 p1answers = {
     "p1answer1":p1answer1,
@@ -46,82 +52,34 @@ for (answer_name, answer) in p1answers.items():
         else:
             print("[Problem 1] Test: FAIL, Function: {0} Input: {1}".format(answer_name, test))
 
+# [Problem 1] Test: PASS, Function: p1answer1 Input: ['abcdef', 'bababc', 'abbcde', 'abcccd', 'aabcdd', 'abcdee', 'ababab']
+
+
 
 ####### Problem 2 #######
 
-# +1, -1 first reaches 0 twice.
-# +3, +3, +4, -2, -4 first reaches 10 twice.
-# -6, +3, +8, +5, -6 first reaches 5 twice.
-# +7, +7, -2, -7, -4 first reaches 14 twice.
+
 
 ### Test cases:
 
-p2_a = ([1, -1], 0)
-p2_b = ([3, 3, 4, -2, -4], 10)
-p2_c = ([-6, 3, 8, 5, -6], 5)
-p2_d = ([7, 7, -2, -7, -4], 14)
+p2_a =
 
 p2_test_cases = {
-    "p2_a":p2_a,
-    "p2_b":p2_b,
-    "p2_c":p2_c,
-    "p2_d":p2_d,
+
 }
 
 ### Answers:
 
 def p2answer1(ls):
-    ls = ls * 10000
-    sums = [0]
-    count = 0
-    sum = 0
-    while True:
-        if (sum + ls[count]) in sums:
-            return(sum + ls[count])
-        else:
-            sum += ls[count]
-            count += 1
-            sums.append(sum)
-        # print(sum, ls[count])
 
-def p2answer2(ls):
-    sum = 0
-    sums = []
-    for i in itertools.cycle(ls):
-        if (sum + i) in sums:
-            return(sum + i)
-        else:
-            sum += i
-            sums.append(sum)
-        # print(sum, sums, i)
 
-def p2answer3(ls):
-    sum = 0
-    sums = []
-    for i in itertools.cycle(ls):
-        if (sum + i) in sums:
-            return(sum + i)
-        else:
-            sums.append(sum)
-            sum += i
-        # print(sum, sums, i)
 
-def p2answer4(ls):
-    sum = 0
-    sums = {}
-    for i in itertools.cycle(ls):
-        if str(sum + i) in sums:
-            return(sum + i)
-        else:
-            sums["{0}".format(sum)] = sum
-            sum += i
-        # print(sum, sums, i)
+
+
+
 
 p2answers = {
-    "p2answer1":p2answer1,
-    "p2answer2":p2answer2,
-    "p2answer3":p2answer3,
-    "p2answer4":p2answer4,
+    "p2answer1":p2answer1,,
 }
 
 ### Tests:
@@ -134,31 +92,17 @@ for (answer_name, answer) in p2answers.items():
             print("[Problem 2] Test: FAIL, Function: {0} Input: {1}".format(answer_name, test))
 
 
-
-# Problem 2, answer1(): ['PASS', 'PASS', 'PASS', 'PASS']
-# Problem 2, answer2(): ['FAIL', 'PASS', 'PASS', 'PASS']
-# Problem 2, answer3(): ['PASS', 'PASS', 'PASS', 'PASS']
-# Problem 2, answer4(): ['PASS', 'PASS', 'PASS', 'PASS']
-
-
-
-
 ####### Official Input Data #######
 
 ### Csv library
 
-file_path = "/home/will/advent_of_code/Advent-of-Code/2018/day_01_input.txt"
+file_path = "/home/will/advent_of_code/Advent-of-Code/2018/day_02_input.txt"
 
 with open(file_path, newline='') as csv_file:
-    raw_data = csv.reader(csv_file, delimiter=" ", quoting=csv.QUOTE_NONNUMERIC)
+    raw_data = csv.reader(csv_file, delimiter=" ")
     data = []
     for i in list(raw_data):
         data.extend(i)
-
-### Pandas library
-
-df = pd.read_csv("/home/will/advent_of_code/Advent-of-Code/2018/day_01_input.txt", header=None)
-data = list(df.loc[:, 0].values)
 
 # Data was the same for problem one and two for this day.
 
