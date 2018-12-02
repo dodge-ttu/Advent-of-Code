@@ -87,7 +87,18 @@ def answer3(ls):
             sum += i
         # print(sum, sums, i)
 
-answers = [answer1, answer2, answer3]
+def answer4(ls):
+    sum = 0
+    sums = {}
+    for i in itertools.cycle(ls):
+        if str(sum + i) in sums:
+            return(sum + i)
+        else:
+            sums["{0}".format(sum)] = sum
+            sum += i
+        # print(sum, sums, i)
+
+answers = [answer1, answer2, answer3, answer4]
 
 ### Tests:
 
@@ -98,7 +109,7 @@ for itr, answer in enumerate(answers):
 # Problem 2, answer1(): ['PASS', 'PASS', 'PASS', 'PASS']
 # Problem 2, answer2(): ['FAIL', 'PASS', 'PASS', 'PASS']
 # Problem 2, answer3(): ['PASS', 'PASS', 'PASS', 'PASS']
-
+# Problem 2, answer4(): ['PASS', 'PASS', 'PASS', 'PASS']
 
 ####### Official Input Data #######
 
@@ -118,4 +129,3 @@ df = pd.read_csv("/home/will/advent_of_code/Advent-of-Code/2018/day_01_input.txt
 data = list(df.loc[:, 0].values)
 
 # Data was the same for problem one and two for this day.
-
