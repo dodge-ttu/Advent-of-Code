@@ -1,7 +1,5 @@
 import timeit
 import csv
-import itertools
-import re
 
 ####### Problem 1 #######
 
