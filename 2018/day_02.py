@@ -99,6 +99,7 @@ def p2answer1(ls):
                 # print(bb)
                 zz = "".join(bb)
                 # print(zz)
+
                 return(zz)
 
 def p2answer2(ls):
@@ -127,6 +128,7 @@ def p2answer3(ls):
         a = [q == w for (q,w) in zip(i,j)]
         if sum(a) == id_length - 1:
             solution = "".join([z for z in i if z in j])
+
             return solution
 
 p2answers = {
