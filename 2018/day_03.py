@@ -1,5 +1,3 @@
-## ROUGH VERSION ## #### TEST #####
-
 import timeit
 import csv
 import pandas as pd
@@ -71,15 +69,13 @@ def p1answer1(ls):
         d_range = range(from_top, (from_top+downward), 1)
         for fl in l_range:
             for ft in d_range:
-                print(fl,ft)
+                # print(fl,ft)
                 a[ft, fl] += 1
-    print("whering")
-
     x,y = np.where(a > 1)
-
     bb = x.tolist()
     cc = [i for i in bb]
-    print(cc)
+    #print(cc)
+
     return(len(cc))
 
 p1answers = {
@@ -107,7 +103,7 @@ for (answer_name, answer) in p1answers.items():
 
 p2_a = ([["#1", "@", "1,3:", "4x4"],
          ["#2", "@", "3,1:", "4x4"],
-         ["#3", "@", "5,5:", "2x2"]], 3)
+         ["#3", "@", "5,5:", "2x2"]], "#3")
 
 p2_test_cases = {
     "p2_a":p2_a
@@ -127,7 +123,6 @@ def p2answer1(ls):
         d_range = range(from_top, (from_top+downward), 1)
         for fl in l_range:
             for ft in d_range:
-                print(fl,ft)
                 a[ft, fl] += 1
 
     for i in ls:
@@ -142,7 +137,8 @@ def p2answer1(ls):
         ww = zz == 1
 
         if False not in ww:
-            print(ID)
+            # print(ID)
+
             return(ID)
 
 p2answers = {
@@ -158,7 +154,7 @@ for (answer_name, answer) in p2answers.items():
         else:
             print("[Problem 2] Test: FAIL, Function: {0} Input: {1}".format(answer_name, test))
 
-
+# [Problem 2] Test: PASS, Function: p2answer1 Input: [['#1', '@', '1,3:', '4x4'], ['#2', '@', '3,1:', '4x4'], ['#3', '@', '5,5:', '2x2']]
 
 
 
@@ -191,4 +187,5 @@ def time_with_official_data(problem_number, answer_dict, loops=1):
 time_with_official_data(problem_number=1, answer_dict=p1answers, loops=1)
 time_with_official_data(problem_number=2, answer_dict=p2answers, loops=1)
 
-
+# [Problem 1] Time: 0.48411 seconds on 1 loops, Function: p1answer1
+# [Problem 2] Time: 0.17185 seconds on 1 loops, Function: p2answer1
