@@ -120,9 +120,21 @@ def p2answer2(ls):
 
     return(solution)
 
+def p2answer3(ls):
+    id_length = len(ls[0])
+    # print(id_length)
+    for (i,j) in itertools.combinations(ls, 2):
+        a = [q == w for (q,w) in zip(i,j)]
+        if sum(a) == id_length - 1:
+            solution = "".join([z for z in i if z in j])
+
+            return solution
+
+
 p2answers = {
     "p2answer1":p2answer1,
     "p2answer2":p2answer2,
+    "p2answer3":p2answer3,
 }
 
 ### Problem 2 tests:
@@ -136,6 +148,7 @@ for (answer_name, answer) in p2answers.items():
 
 # [Problem 2] Test: PASS, Function: p2answer1 Input: ['abcde', 'fghij', 'klmno', 'pqrst', 'fguij', 'axcye', 'wvxyz']
 # [Problem 2] Test: FAIL, Function: p2answer2 Input: ['abcde', 'fghij', 'klmno', 'pqrst', 'fguij', 'axcye', 'wvxyz']
+# [Problem 2] Test: PASS, Function: p2answer3 Input: ['abcde', 'fghij', 'klmno', 'pqrst', 'fguij', 'axcye', 'wvxyz']
 
 ####### Official Input Data #######
 
@@ -164,7 +177,10 @@ def time_with_official_data(problem_number, answer_dict, loops=1):
 time_with_official_data(problem_number=1, answer_dict=p1answers, loops=1)
 time_with_official_data(problem_number=2, answer_dict=p2answers, loops=1)
 
-# [Problem 1] Time: 0.00376 seconds on 1 loops, Function: p1answer1
-# [Problem 2] Time: 0.001 seconds on 1 loops, Function: p2answer1
-# [Problem 2] Time: 0.17918 seconds on 1 loops, Function: p2answer2
+# [Problem 1] Time: 0.00438 seconds on 1 loops, Function: p1answer1
+# [Problem 2] Time: 0.0013 seconds on 1 loops, Function: p2answer1
+# [Problem 2] Time: 0.1725 seconds on 1 loops, Function: p2answer2
+# [Problem 2] Time: 0.03807 seconds on 1 loops, Function: p2answer3
+
+
 
