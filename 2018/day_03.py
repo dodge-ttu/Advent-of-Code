@@ -160,7 +160,7 @@ for (answer_name, answer) in p2answers.items():
 
 ####### Official Input Data #######
 
-### Csv library
+### CSV library
 
 file_path = "/home/will/advent_of_code/Advent-of-Code/2018/day_03_input.txt"
 
@@ -172,7 +172,7 @@ with open(file_path, newline='') as csv_file:
 
 # Data was the same for problem one and two for this day.
 
-# Pandas library
+### Pandas library
 
 df = pd.read_csv(file_path, delim_whitespace=True, header=None)
 
