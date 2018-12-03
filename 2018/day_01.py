@@ -1,3 +1,5 @@
+# andrew picks his nose #
+
 import timeit
 import csv
 import itertools
