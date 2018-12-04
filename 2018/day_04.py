@@ -3,6 +3,8 @@ import csv
 import pandas as pd
 import numpy as np
 import re
+import datetime
+import itertools
 
 ####### Problem 1 #######
 
@@ -74,23 +76,23 @@ import re
 
 ### Test cases:
 
-p1_a= ([["[1518-11-01 00:00]", "Guard", "#10", "begins", "shift"],
-        ["[1518-11-01 00:05]", "falls", "asleep"],
-        ["[1518-11-01 00:25]", "wakes", "up"],
-        ["[1518-11-01 00:30]", "falls", "asleep"],
-        ["[1518-11-01 00:55]", "wakes", "up"],
-        ["[1518-11-01 23:58]", "Guard", "#99", "begins", "shift"],
-        ["[1518-11-02 00:40]", "falls", "asleep"],
-        ["[1518-11-02 00:50]", "wakes", "up"],
-        ["[1518-11-03 00:05]", "Guard", "#10", "begins", "shift"],
-        ["[1518-11-03 00:24]", "falls", "asleep"],
-        ["[1518-11-03 00:29]", "wakes", "up"],
-        ["[1518-11-04 00:02]", "Guard", "#99", "begins", "shift"],
-        ["[1518-11-04 00:36]", "falls", "asleep"],
-        ["[1518-11-04 00:46]", "wakes", "up"],
-        ["[1518-11-05 00:03]", "Guard", "#99", "begins", "shift"],
-        ["[1518-11-05 00:45]", "falls", "asleep"],
-        ["[1518-11-05 00:55]", "wakes", "up"]], 240)
+p1_a= ([["[1518-11-01", "00:00]", "Guard", "#10", "begins", "shift"],
+        ["[1518-11-01", "00:05]", "falls", "asleep"],
+        ["[1518-11-01", "00:25]", "wakes", "up"],
+        ["[1518-11-01", "00:30]", "falls", "asleep"],
+        ["[1518-11-01", "00:55]", "wakes", "up"],
+        ["[1518-11-01", "23:58]", "Guard", "#99", "begins", "shift"],
+        ["[1518-11-02", "00:40]", "falls", "asleep"],
+        ["[1518-11-02", "00:50]", "wakes", "up"],
+        ["[1518-11-03", "00:05]", "Guard", "#10", "begins", "shift"],
+        ["[1518-11-03", "00:24]", "falls", "asleep"],
+        ["[1518-11-03", "00:29]", "wakes", "up"],
+        ["[1518-11-04", "00:02]", "Guard", "#99", "begins", "shift"],
+        ["[1518-11-04", "00:36]", "falls", "asleep"],
+        ["[1518-11-04", "00:46]", "wakes", "up"],
+        ["[1518-11-05", "00:03]", "Guard", "#99", "begins", "shift"],
+        ["[1518-11-05", "00:45]", "falls", "asleep"],
+        ["[1518-11-05", "00:55]", "wakes", "up"]], 240)
 
 p1_test_cases = {
     "p1_a":p1_a,
@@ -99,8 +101,46 @@ p1_test_cases = {
 ### Answers:
 
 def p1answer1(ls):
-    for i in ls:
 
+    for (itr,i) in enumerate(ls):
+        aa = "{0}_{1}".format(i[0],i[1])
+        i[0] = datetime.datetime.strptime(aa, "[%Y-%m-%d_%H:%S]")
+        ls[itr] = [i[0], i[2:]]
+
+    ls = sorted(ls, key=lambda x: x[0])
+
+    def pairwise(iterable):
+        "s -> (s0,s1), (s1,s2), (s2, s3), ..."
+        a, b = itertools.tee(iterable)
+        next(b, None)
+        return zip(a, b)
+
+    one_to_the_next_shifts = pairwise(ls)
+
+    shift_chunks = []
+    for (one,next_one) in one_to_the_next_shifts:
+        print("next :{0}".format(next_one[1][1][0]))
+        if next_one[1][1][0] != "#":
+            temp.append(one)
+        shift_chunks.append(temp)
+
+    # shift_log = {}
+    # for i in ls:
+    #     shift_log[i[0]] = i[1][1:]
+    #
+    # gaurd_IDs = []
+    # for i in ls:
+    #     if i[1][1][0] == "#":
+    #         print(i[1][1])
+    #         gaurd_IDs.append(i[1][1])
+    #
+    # shift_starts = []
+    # for i in ls:
+    #     if i[1][1][0] == "#":
+    #         print(i)
+    #         shift_starts.append(i)
+
+    return(ls, gaurd_IDs, shift_starts, shift_log, shift_chunks)
 
 p1answers = {
     "p1answer1":p1answer1,
