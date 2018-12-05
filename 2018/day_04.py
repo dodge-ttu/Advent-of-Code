@@ -1,10 +1,8 @@
 import timeit
 import csv
-import pandas as pd
-import numpy as np
-import re
 import datetime
-import itertools
+from datetime import timedelta
+from collections import Counter
 
 ####### Problem 1 #######
 
@@ -104,43 +102,67 @@ def p1answer1(ls):
 
     for (itr,i) in enumerate(ls):
         aa = "{0}_{1}".format(i[0],i[1])
+        # print(aa)
         i[0] = datetime.datetime.strptime(aa, "[%Y-%m-%d_%H:%S]")
         ls[itr] = [i[0], i[2:]]
 
     ls = sorted(ls, key=lambda x: x[0])
+    ID_set = set([i[1][1] for i in ls if len(i[1]) == 4])
+    group_ls = []
+    for i in ls:
+        if len(i[1]) == 4:
+            temp = []
+            ID_value = i[1][1]
+            temp.append(i)
+            group_ls.append((ID_value, temp))
+        if len(i[1]) == 2:
+            temp.append(i)
 
-    def pairwise(iterable):
-        "s -> (s0,s1), (s1,s2), (s2, s3), ..."
-        a, b = itertools.tee(iterable)
-        next(b, None)
-        return zip(a, b)
+    # https://stackoverflow.com/a/1060330/7384740
+    def daterange(start_date, end_date):
+        for n in range(int((end_date - start_date).seconds)):
+            yield start_date + timedelta(seconds=n)
 
-    one_to_the_next_shifts = pairwise(ls)
+    sleep_ranges = []
 
-    shift_chunks = []
-    for (one,next_one) in one_to_the_next_shifts:
-        print("next :{0}".format(next_one[1][1][0]))
-        if next_one[1][1][0] != "#":
-            temp.append(one)
-        shift_chunks.append(temp)
+    for (ID,i) in group_ls:
+        start_sleeping = datetime.datetime(1500, 1, 1, 0, 0, 0)
+        stop_sleeping = datetime.datetime(1500, 1, 1, 0, 0, 0)
+        for j in i:
+            if j[1][0] == "falls":
+                start_sleeping = j[0]
+            if j[1][0] == "wakes":
+                stop_sleeping = j[0]
+            if (start_sleeping < stop_sleeping):
+                # print(ID, start_sleeping, stop_sleeping)
+                seconds_sleeping = daterange(start_sleeping, stop_sleeping)
+                sleep_ranges.append((ID, [i.second for i in seconds_sleeping]))
 
-    # shift_log = {}
-    # for i in ls:
-    #     shift_log[i[0]] = i[1][1:]
-    #
-    # gaurd_IDs = []
-    # for i in ls:
-    #     if i[1][1][0] == "#":
-    #         print(i[1][1])
-    #         gaurd_IDs.append(i[1][1])
-    #
-    # shift_starts = []
-    # for i in ls:
-    #     if i[1][1][0] == "#":
-    #         print(i)
-    #         shift_starts.append(i)
+    all_minutes_each = []
 
-    return(ls, gaurd_IDs, shift_starts, shift_log, shift_chunks)
+    for ID in ID_set:
+        chunk = [i for i in sleep_ranges if i[0] == ID]
+        one_long = []
+        for i in chunk:
+            one_long.extend(i[1])
+        all_minutes_each.append((ID, one_long))
+
+    counts = []
+    for ID, mins_sleeping in all_minutes_each:
+        # print(ID)
+        count_info = Counter(mins_sleeping).most_common(1)
+        if count_info:
+            most_common, _ = count_info[0]
+        else:
+            most_common = 0
+        overall_mins = len(mins_sleeping)
+        counts.append((ID, most_common, overall_mins))
+
+    biggest_sleeper = max(counts, key=lambda x: x[2])
+
+    answer = int(biggest_sleeper[0][1:]) * biggest_sleeper[1]
+
+    return(answer)
 
 p1answers = {
     "p1answer1":p1answer1,
@@ -155,19 +177,34 @@ for (answer_name, answer) in p1answers.items():
         else:
             print("[Problem 1] Test: FAIL, Function: {0} Input: {1}".format(answer_name, test))
 
-# [Problem 1] Test: PASS, Function: p1answer1 Input: [['#1', '@', '1,3:', '4x4'], ['#2', '@', '3,1:', '4x4'], ['#3', '@', '5,5:', '2x2']]
+# [Problem 1] Test: PASS, Function: p1answer1 Input: [[datetime.datetime(1518, 11, 1, 0, 0), ['Guard', '#10', 'begins', 'shift']], [datetime.datetime(1518, 11, 1, 0, 0, 5), ['falls', 'asleep']], [datetime.datetime(1518, 11, 1, 0, 0, 25), ['wakes', 'up']], [datetime.datetime(1518, 11, 1, 0, 0, 30), ['falls', 'asleep']], [datetime.datetime(1518, 11, 1, 0, 0, 55), ['wakes', 'up']], [datetime.datetime(1518, 11, 1, 23, 0, 58), ['Guard', '#99', 'begins', 'shift']], [datetime.datetime(1518, 11, 2, 0, 0, 40), ['falls', 'asleep']], [datetime.datetime(1518, 11, 2, 0, 0, 50), ['wakes', 'up']], [datetime.datetime(1518, 11, 3, 0, 0, 5), ['Guard', '#10', 'begins', 'shift']], [datetime.datetime(1518, 11, 3, 0, 0, 24), ['falls', 'asleep']], [datetime.datetime(1518, 11, 3, 0, 0, 29), ['wakes', 'up']], [datetime.datetime(1518, 11, 4, 0, 0, 2), ['Guard', '#99', 'begins', 'shift']], [datetime.datetime(1518, 11, 4, 0, 0, 36), ['falls', 'asleep']], [datetime.datetime(1518, 11, 4, 0, 0, 46), ['wakes', 'up']], [datetime.datetime(1518, 11, 5, 0, 0, 3), ['Guard', '#99', 'begins', 'shift']], [datetime.datetime(1518, 11, 5, 0, 0, 45), ['falls', 'asleep']], [datetime.datetime(1518, 11, 5, 0, 0, 55), ['wakes', 'up']]]
 
 
 
 ####### Problem 2 #######
 
-# Exact same setup as above but return the id of the item without any overlap.
+# Exact same setup as above. When considering all guards, which guard is most frequently
+# asleep on the same minute?
 
 ### Test cases:
 
-p2_a = ([["#1", "@", "1,3:", "4x4"],
-         ["#2", "@", "3,1:", "4x4"],
-         ["#3", "@", "5,5:", "2x2"]], "#3")
+p2_a= ([["[1518-11-01", "00:00]", "Guard", "#10", "begins", "shift"],
+        ["[1518-11-01", "00:05]", "falls", "asleep"],
+        ["[1518-11-01", "00:25]", "wakes", "up"],
+        ["[1518-11-01", "00:30]", "falls", "asleep"],
+        ["[1518-11-01", "00:55]", "wakes", "up"],
+        ["[1518-11-01", "23:58]", "Guard", "#99", "begins", "shift"],
+        ["[1518-11-02", "00:40]", "falls", "asleep"],
+        ["[1518-11-02", "00:50]", "wakes", "up"],
+        ["[1518-11-03", "00:05]", "Guard", "#10", "begins", "shift"],
+        ["[1518-11-03", "00:24]", "falls", "asleep"],
+        ["[1518-11-03", "00:29]", "wakes", "up"],
+        ["[1518-11-04", "00:02]", "Guard", "#99", "begins", "shift"],
+        ["[1518-11-04", "00:36]", "falls", "asleep"],
+        ["[1518-11-04", "00:46]", "wakes", "up"],
+        ["[1518-11-05", "00:03]", "Guard", "#99", "begins", "shift"],
+        ["[1518-11-05", "00:45]", "falls", "asleep"],
+        ["[1518-11-05", "00:55]", "wakes", "up"]], 4455)
 
 p2_test_cases = {
     "p2_a":p2_a
@@ -176,34 +213,70 @@ p2_test_cases = {
 ### Answers:
 
 def p2answer1(ls):
-    a = np.zeros((10000,10000))
+    for (itr,i) in enumerate(ls):
+        aa = "{0}_{1}".format(i[0],i[1])
+        # print(aa)
+        i[0] = datetime.datetime.strptime(aa, "[%Y-%m-%d_%H:%S]")
+        ls[itr] = [i[0], i[2:]]
+
+    ls = sorted(ls, key=lambda x: x[0])
+    ID_set = set([i[1][1] for i in ls if len(i[1]) == 4])
+    group_ls = []
     for i in ls:
-        (ID, _, offset, size) = i
-        from_left = int(re.findall(r"\d+", offset)[0])
-        from_top = int(re.findall(r"\d+", offset)[1])
-        rightward = int(re.findall(r"\d+", size)[0])
-        downward = int(re.findall(r"\d+", size)[1])
-        l_range = range(from_left, (from_left+rightward), 1)
-        d_range = range(from_top, (from_top+downward), 1)
-        for fl in l_range:
-            for ft in d_range:
-                a[ft, fl] += 1
+        if len(i[1]) == 4:
+            temp = []
+            ID_value = i[1][1]
+            temp.append(i)
+            group_ls.append((ID_value, temp))
+        if len(i[1]) == 2:
+            temp.append(i)
 
-    for i in ls:
-        (ID, _, offset, size) = i
-        from_left = int(re.findall(r"\d+", offset)[0])
-        from_top = int(re.findall(r"\d+", offset)[1])
-        rightward = int(re.findall(r"\d+", size)[0])
-        downward = int(re.findall(r"\d+", size)[1])
+    # https://stackoverflow.com/a/1060330/7384740
+    def daterange(start_date, end_date):
+        for n in range(int((end_date - start_date).seconds)):
+            yield start_date + timedelta(seconds=n)
 
-        zz = a[from_top:from_top+downward,from_left:from_left+rightward]
+    sleep_ranges = []
 
-        ww = zz == 1
+    for (ID,i) in group_ls:
+        start_sleeping = datetime.datetime(1500, 1, 1, 0, 0, 0)
+        stop_sleeping = datetime.datetime(1500, 1, 1, 0, 0, 0)
+        for j in i:
+            if j[1][0] == "falls":
+                start_sleeping = j[0]
+            if j[1][0] == "wakes":
+                stop_sleeping = j[0]
+            if (start_sleeping < stop_sleeping):
+                # print(ID, start_sleeping, stop_sleeping)
+                seconds_sleeping = daterange(start_sleeping, stop_sleeping)
+                sleep_ranges.append((ID, [i.second for i in seconds_sleeping]))
 
-        if False not in ww:
-            # print(ID)
+    all_minutes_each = []
 
-            return(ID)
+    for ID in ID_set:
+        chunk = [i for i in sleep_ranges if i[0] == ID]
+        one_long = []
+        for i in chunk:
+            one_long.extend(i[1])
+        all_minutes_each.append((ID, one_long))
+
+    counts = []
+    for ID, mins_sleeping in all_minutes_each:
+        # print(ID)
+        count_info = Counter(mins_sleeping).most_common(1)
+        if count_info:
+            most_common, _ = count_info[0]
+        else:
+            most_common = 0
+        overall_mins = len(mins_sleeping)
+        counts.append((ID, most_common, overall_mins))
+
+    max_minute_slept = max(counts, key=lambda x: x[1])
+    print(max_minute_slept)
+    answer = int(max_minute_slept[0][1:]) * max_minute_slept[1]
+
+    return(answer)
+
 
 p2answers = {
     "p2answer1":p2answer1,
@@ -218,7 +291,8 @@ for (answer_name, answer) in p2answers.items():
         else:
             print("[Problem 2] Test: FAIL, Function: {0} Input: {1}".format(answer_name, test))
 
-# [Problem 2] Test: PASS, Function: p2answer1 Input: [['#1', '@', '1,3:', '4x4'], ['#2', '@', '3,1:', '4x4'], ['#3', '@', '5,5:', '2x2']]
+# [Problem 2] Test: PASS, Function: p2answer1 Input: [[datetime.datetime(1518, 11, 1, 0, 0), ['Guard', '#10', 'begins', 'shift']], [datetime.datetime(1518, 11, 1, 0, 0, 5), ['falls', 'asleep']], [datetime.datetime(1518, 11, 1, 0, 0, 25), ['wakes', 'up']], [datetime.datetime(1518, 11, 1, 0, 0, 30), ['falls', 'asleep']], [datetime.datetime(1518, 11, 1, 0, 0, 55), ['wakes', 'up']], [datetime.datetime(1518, 11, 1, 23, 0, 58), ['Guard', '#99', 'begins', 'shift']], [datetime.datetime(1518, 11, 2, 0, 0, 40), ['falls', 'asleep']], [datetime.datetime(1518, 11, 2, 0, 0, 50), ['wakes', 'up']], [datetime.datetime(1518, 11, 3, 0, 0, 5), ['Guard', '#10', 'begins', 'shift']], [datetime.datetime(1518, 11, 3, 0, 0, 24), ['falls', 'asleep']], [datetime.datetime(1518, 11, 3, 0, 0, 29), ['wakes', 'up']], [datetime.datetime(1518, 11, 4, 0, 0, 2), ['Guard', '#99', 'begins', 'shift']], [datetime.datetime(1518, 11, 4, 0, 0, 36), ['falls', 'asleep']], [datetime.datetime(1518, 11, 4, 0, 0, 46), ['wakes', 'up']], [datetime.datetime(1518, 11, 5, 0, 0, 3), ['Guard', '#99', 'begins', 'shift']], [datetime.datetime(1518, 11, 5, 0, 0, 45), ['falls', 'asleep']], [datetime.datetime(1518, 11, 5, 0, 0, 55), ['wakes', 'up']]]
+# Passes tests but breaks on official data.
 
 
 
@@ -236,9 +310,7 @@ with open(file_path, newline='') as csv_file:
 
 # Data was the same for problem one and two for this day.
 
-### Pandas library
 
-df = pd.read_csv(file_path, sep="]", header=None)
 
 ####### Performance  #######
 
