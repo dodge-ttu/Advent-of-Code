@@ -247,7 +247,7 @@ def p2answer1(ls):
             if j[1][0] == "wakes":
                 stop_sleeping = j[0]
             if (start_sleeping < stop_sleeping):
-                # print(ID, start_sleeping, stop_sleeping)
+                print(ID, start_sleeping, stop_sleeping)
                 seconds_sleeping = daterange(start_sleeping, stop_sleeping)
                 sleep_ranges.append((ID, [i.second for i in seconds_sleeping]))
 
@@ -265,13 +265,13 @@ def p2answer1(ls):
         # print(ID)
         count_info = Counter(mins_sleeping).most_common(1)
         if count_info:
-            most_common, _ = count_info[0]
+            most_common, number_of = count_info[0]
         else:
-            most_common = 0
-        overall_mins = len(mins_sleeping)
-        counts.append((ID, most_common, overall_mins))
+            most_common, number_of = 0, 0
+        # overall_mins = len(mins_sleeping)
+        counts.append((ID, most_common, number_of))
 
-    max_minute_slept = max(counts, key=lambda x: x[1])
+    max_minute_slept = max(counts, key=lambda x: x[2])
     print(max_minute_slept)
     answer = int(max_minute_slept[0][1:]) * max_minute_slept[1]
 
@@ -323,5 +323,5 @@ def time_with_official_data(problem_number, answer_dict, loops=1):
 time_with_official_data(problem_number=1, answer_dict=p1answers, loops=1)
 time_with_official_data(problem_number=2, answer_dict=p2answers, loops=1)
 
-# [Problem 1] Time: 0.48411 seconds on 1 loops, Function: p1answer1
-# [Problem 2] Time: 0.17185 seconds on 1 loops, Function: p2answer1
+# [Problem 1] Time: 0.01445 seconds on 1 loops, Function: p1answer1
+# [Problem 2] Time: 0.01451 seconds on 1 loops, Function: p2answer1
