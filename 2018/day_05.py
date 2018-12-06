@@ -103,7 +103,7 @@ for (answer_name, answer) in p1answers.items():
         else:
             print("[Problem 1] Test: FAIL, Function: {0} Input: {1}".format(answer_name, test))
 
-# [Problem 1] Test: PASS, Function: p1answer1 Input: [[datetime.datetime(1518, 11, 1, 0, 0), ['Guard', '#10', 'begi...]
+# [Problem 1] Test: PASS, Function: p1answer1 Input: dabAcCaCBAcCcaDA
 
 
 
@@ -203,14 +203,21 @@ with open(file_path, "r") as my_file:
 
 ####### Performance  #######
 
-def time_with_official_data(problem_number, answer_dict, loops=1):
+def time_with_official_data(problem_number, answer_dict, loops=1, testing=False):
     for (answer_name, answer) in answer_dict.items():
-        time = timeit.timeit("{0}(data, testing=False)".format(answer_name), globals=globals(), number=loops)
+        if not testing:
+            time = timeit.timeit("{0}(data)".format(answer_name), globals=globals(), number=loops)
+        else:
+            time = timeit.timeit("{0}(data, testing=False)".format(answer_name), globals=globals(), number=loops)
+
         time = round(time, 5)
         print("[Problem {0}] Time: {1} seconds on {2} loops, Function: {3}".format(problem_number,time,loops,answer_name))
 
-time_with_official_data(problem_number=1, answer_dict=p1answers, loops=1)
+time_with_official_data(problem_number=1, answer_dict=p1answers, loops=1, testing=False)
 time_with_official_data(problem_number=2, answer_dict=p2answers, loops=1)
+
+# [Problem 1] Time: 2.18692 seconds on 1 loops, Function: p1answer1
+# [Problem 2] Time: 8.15665 seconds on 1 loops, Function: p2answer1
 
 # NOTE: Dictionary lookup
 
