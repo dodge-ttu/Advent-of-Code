@@ -1,4 +1,4 @@
-# NOTES: Use sets and dicts for lookups. Also `re.sub(pattern, "", string)` is great for whittling down strings, as
+# NOTE: Use sets and dicts for lookups. Also `re.sub(pattern, "", string)` is great for whittling down strings, as
 # opposed to any form of list filtering and rearrangement.
 #
 # Find max value for item in dictionary:

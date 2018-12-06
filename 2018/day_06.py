@@ -1,13 +1,12 @@
-# NOTES: This one seems to be a bit more challenging. Having never encountered a problem such as this I think
+# NOTE: This one seems to be a bit more challenging. Having never encountered a problem such as this I think
 # outlining a process beforehand may help rather than trudging through with nothing more than a half-baked
 # mental model :)
 #
-# Step one:     Find pair furthest from origin to define "viewing" space.
-# Step two:     Drop any case one away from boundary as guaranteed to be infinite.
-# Step three:   Find distance from a given pair and all points in "viewing" space. (Yikes that's alot)
-# Step four:    For each point in the "viewing" space find centroid with minimal associated distance.
-# Step five:    Pop value from all dicts except that with the minimally associated distance.
-# Step six:     Finite distances can be defined as those with a pair in all other dicts, right?!?.....
+# Step one:     Find upper left and lower right to define "viewing" space.
+# Step two:     Mark any case on boundary lines (or one away from boundary) as guaranteed to be infinite.
+# Step three:   Find distance from a given centroid and all points in "viewing" space. (Yikes that's alot)
+# Step four:    For each point in the "viewing" space find unmarked centroid with minimal associated distance.
+# Step five:    Centroid associated with most points wins..... or
 # Step seven:   Cry like a baby and try to erase advent of code from memory :)
 
 import timeit
@@ -80,15 +79,44 @@ ls = p1_a[0]
 
 def p1answer1(ls):
 
-    # Find max centriod to set boundary
+    # Find upper left and lower right max centroid to set boundary
     distances_from_origin = []
     for (x,y) in ls:
         dist = abs(0-x) + abs(0-y)
-        distances_from_origin.append(dist)
+        distances_from_origin.append((dist, (x,y)))
 
-    # Determine if centriod is "one" away from edge and drop.
+    (min_from_origin, (min_x,min_y)) = min([i for i in distances_from_origin], key=lambda x: x[0])
+    (max_from_origin, (max_x,max_y)) = max([i for i in distances_from_origin], key=lambda x: x[0])
 
-    print(distances_from_origin)
+    marked_centroids = {}
+    # Determine if centroid is on boundary or one away and mark.
+    for (x,y) in ls:
+        marked = False
+        if (x == min_x) or (x == max_x):
+            marked = True
+        if (y == min_y) or (y == min_x):
+            marked = True
+        if (x == (min_x +1 )) or (x == (max_x - 1)):
+            marked = True
+        if (y == (min_y + 1)) or (y == (min_y - 1)):
+            marked = True
+        marked_centroids[str((x,y))] = ((x,y), marked)
+
+    print(marked_centroids)
+
+    # Generate all ordered pairs within boundary
+    all_points_within = []
+    for x in range(min_x,max_x):
+        for y in range(min_y,max_y):
+            all_points_within.append((x,y))
+
+    print(all_points_within)
+
+    # Distance to all, this is getting messy
+
+
+
+
 
 def p1answer2():
 
@@ -169,16 +197,3 @@ def time_with_official_data(problem_number, answer_dict, loops=1):
 
 time_with_official_data(problem_number=1, answer_dict=p1answers, loops=1, testing=False)
 time_with_official_data(problem_number=2, answer_dict=p2answers, loops=1)
-
-
-# NOTES: This one seems to be a bit more challenging. Having never encountered a problem such as this I think
-# outlining a process beforehand may help rather than trudging through with nothing more than a half-baked
-# mental model :)
-#
-# Step one:     Find pair furthest from origin to define "viewing" space.
-# Step two:     Drop any case one away from boundary as guaranteed to be infinite.
-# Step three:   Find distance from a given pair and all points in "viewing" space. (Yikes that's alot)
-# Step four:    For each point in the "viewing" space find centroid with minimal associated distance.
-# Step five:    Pop value from all dicts except that with the minimally associated distance.
-# Step six:     Finite distances can be defined as those with a pair in all other dicts, right?!?.....
-# Step seven:   Cry like a baby and try to erase advent of code from memory :)
