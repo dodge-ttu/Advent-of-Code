@@ -1,9 +1,6 @@
 import timeit
+import operator
 import re
-import csv
-import datetime
-from datetime import timedelta
-from collections import Counter
 
 ####### Problem 1 #######
 
@@ -43,30 +40,58 @@ def p1answer1(a_string):
         a = None
         b = None
         a = [i+j for itr,(i,j) in enumerate(zip(ls,ls[1:])) if (i.isupper() & j.islower()) & (i.lower()==j.lower())]
-        print(a)
+        # print(a)
         if a:
             a = a[0]
             a_string = a_string.replace(a, "")
-            print(a_string)
+            # print(a_string)
             stop_mark = None
             ls = list(a_string)
         b = [i+j for itr,(i,j) in enumerate(zip(ls,ls[1:])) if (i.islower() & j.isupper()) & (i.lower()==j.lower())]
-        print(b)
+        # print(b)
         if b:
             b = b[0]
             a_string = a_string.replace(b, "")
-            print(a_string)
+            # print(a_string)
             stop_mark = None
             ls = list(a_string)
         if not a and not b:
             stop_mark = "STOP"
 
-    print(a_string)
-    print(len(a_string))
     return(len(a_string))
+
+# def p1answer2(a_string):
+#     stop_mark = None
+#     ls = set(a_string)
+#     while stop_mark == None:
+#         a = None
+#         b = None
+#         a = [i+j for itr,(i,j) in enumerate(zip(ls,ls[1:])) if (i.isupper() & j.islower()) & (i.lower()==j.lower())]
+#         # print(a)
+#         if a:
+#             a = a[0]
+#             a_string = a_string.replace(a, "")
+#             # print(a_string)
+#             stop_mark = None
+#             ls = list(a_string)
+#         b = [i+j for itr,(i,j) in enumerate(zip(ls,ls[1:])) if (i.islower() & j.isupper()) & (i.lower()==j.lower())]
+#         # print(b)
+#         if b:
+#             b = b[0]
+#             a_string = a_string.replace(b, "")
+#             # print(a_string)
+#             stop_mark = None
+#             ls = list(a_string)
+#         if not a and not b:
+#             stop_mark = "STOP"
+#
+#     return(len(a_string))
+
+
 
 p1answers = {
     "p1answer1":p1answer1,
+    # "p1answer2":p1answer2,
 }
 
 ### Problem 1 tests:
@@ -78,18 +103,27 @@ for (answer_name, answer) in p1answers.items():
         else:
             print("[Problem 1] Test: FAIL, Function: {0} Input: {1}".format(answer_name, test))
 
-# [Problem 1] Test: PASS, Function: p1answer1 Input: [[datetime.datetime(1518, 11, 1, 0, 0), ['Guard', '#10', 'begins', 'shift']], [datetime.datetime(1518, 11, 1, 0, 0, 5), ['falls', 'asleep']], [datetime.datetime(1518, 11, 1, 0, 0, 25), ['wakes', 'up']], [datetime.datetime(1518, 11, 1, 0, 0, 30), ['falls', 'asleep']], [datetime.datetime(1518, 11, 1, 0, 0, 55), ['wakes', 'up']], [datetime.datetime(1518, 11, 1, 23, 0, 58), ['Guard', '#99', 'begins', 'shift']], [datetime.datetime(1518, 11, 2, 0, 0, 40), ['falls', 'asleep']], [datetime.datetime(1518, 11, 2, 0, 0, 50), ['wakes', 'up']], [datetime.datetime(1518, 11, 3, 0, 0, 5), ['Guard', '#10', 'begins', 'shift']], [datetime.datetime(1518, 11, 3, 0, 0, 24), ['falls', 'asleep']], [datetime.datetime(1518, 11, 3, 0, 0, 29), ['wakes', 'up']], [datetime.datetime(1518, 11, 4, 0, 0, 2), ['Guard', '#99', 'begins', 'shift']], [datetime.datetime(1518, 11, 4, 0, 0, 36), ['falls', 'asleep']], [datetime.datetime(1518, 11, 4, 0, 0, 46), ['wakes', 'up']], [datetime.datetime(1518, 11, 5, 0, 0, 3), ['Guard', '#99', 'begins', 'shift']], [datetime.datetime(1518, 11, 5, 0, 0, 45), ['falls', 'asleep']], [datetime.datetime(1518, 11, 5, 0, 0, 55), ['wakes', 'up']]]
+# [Problem 1] Test: PASS, Function: p1answer1 Input: [[datetime.datetime(1518, 11, 1, 0, 0), ['Guard', '#10', 'begi...]
 
 
 
 ####### Problem 2 #######
 
-# Exact same setup as above. When considering all guards, which minute is the guard who is most frequently
-# asleep on the same minute?
+# One of the unit types is causing problems; it's preventing the polymer from collapsing as much as it should.
+# Your goal is to figure out which unit type is causing the most problems, remove all instances of it
+# (regardless of polarity), fully react the remaining polymer, and measure its length.
+
+# For example, again using the polymer dabAcCaCBAcCcaDA from above:
+
+# Removing all A/a units produces dbcCCBcCcD. Fully reacting this polymer produces dbCBcD, which has length 6.
+# Removing all B/b units produces daAcCaCAcCcaDA. Fully reacting this polymer produces daCAcaDA, which has length 8.
+# Removing all C/c units produces dabAaBAaDA. Fully reacting this polymer produces daDA, which has length 4.
+# Removing all D/d units produces abAcCaCBAcCcaA. Fully reacting this polymer produces abCBAc, which has length 6.
+# In this example, removing all C/c units was best, producing the answer 4.
 
 ### Test cases:
 
-p2_a=
+p2_a= ("dabAcCaCBAcCcaDA", 4)
 
 p2_test_cases = {
     "p2_a":p2_a
@@ -97,7 +131,45 @@ p2_test_cases = {
 
 ### Answers:
 
-def p2answer1(ls):
+def p2answer1(original_string, testing=True):
+    if testing:
+        alphabet = ["a","b","c","d"]
+    else:
+        alphabet = [chr(96+i) for i in range(1,26)]
+    clean_polymer_lengths = {}
+    for letter in alphabet:
+        a_string = original_string
+        ls = list(a_string)
+        stop_mark = None
+        ls = [i for i in ls if i.lower() != letter]
+        a_string = "".join(ls)
+        a = None
+        b = None
+        while stop_mark == None:
+            a = [i+j for itr,(i,j) in enumerate(zip(ls,ls[1:])) if (i.isupper() & j.islower()) & (i.lower()==j.lower())]
+            # print(a)
+            if a:
+                a = a[0]
+                a_string = a_string.replace(a, "")
+                # print(a_string)
+                stop_mark = None
+                ls = list(a_string)
+            b = [i+j for itr,(i,j) in enumerate(zip(ls,ls[1:])) if (i.islower() & j.isupper()) & (i.lower()==j.lower())]
+            # print(b)
+            if b:
+                b = b[0]
+                a_string = a_string.replace(b, "")
+                # print(a_string)
+                stop_mark = None
+                ls = list(a_string)
+            if not a and not b:
+                stop_mark = "STOP"
+
+        clean_polymer_lengths[letter] = len(a_string)
+
+    shortest_polymer = min(clean_polymer_lengths.items(), key=operator.itemgetter(1))[1]
+
+    return(shortest_polymer)
 
 p2answers = {
     "p2answer1":p2answer1,
@@ -112,6 +184,7 @@ for (answer_name, answer) in p2answers.items():
         else:
             print("[Problem 2] Test: FAIL, Function: {0} Input: {1}".format(answer_name, test))
 
+# [Problem 2] Test: PASS, Function: p2answer1 Input: dabAcCaCBAcCcaDA
 
 
 
@@ -132,10 +205,13 @@ with open(file_path, "r") as my_file:
 
 def time_with_official_data(problem_number, answer_dict, loops=1):
     for (answer_name, answer) in answer_dict.items():
-        time = timeit.timeit("{0}(data)".format(answer_name), globals=globals(), number=loops)
+        time = timeit.timeit("{0}(data, testing=False)".format(answer_name), globals=globals(), number=loops)
         time = round(time, 5)
         print("[Problem {0}] Time: {1} seconds on {2} loops, Function: {3}".format(problem_number,time,loops,answer_name))
 
 time_with_official_data(problem_number=1, answer_dict=p1answers, loops=1)
 time_with_official_data(problem_number=2, answer_dict=p2answers, loops=1)
 
+# NOTE: Dictionary lookup
+
+# max(dict.items(), key=operator.itemgetter(1))[0]

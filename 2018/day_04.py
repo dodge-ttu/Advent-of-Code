@@ -118,7 +118,7 @@ def p1answer1(ls):
         if len(i[1]) == 2:
             temp.append(i)
 
-    # https://stackoverflow.com/a/1060330/7384740
+    # ttps://stackoverflow.com/a/1060330/7384740
     def daterange(start_date, end_date):
         for n in range(int((end_date - start_date).seconds)):
             yield start_date + timedelta(seconds=n)
@@ -183,8 +183,7 @@ for (answer_name, answer) in p1answers.items():
 
 ####### Problem 2 #######
 
-# Exact same setup as above. When considering all guards, which guard is most frequently
-# asleep on the same minute?
+# Exact same setup as above. For the guard who slept most, which minute did the most frequently sleep?
 
 ### Test cases:
 
