@@ -38,9 +38,11 @@ def p1answer1(the_string):
     a_string = the_string
     stop_mark = None
     ls = list(a_string)
+
     while stop_mark == None:
         a = [i+j for itr,(i,j) in enumerate(zip(ls,ls[1:])) if (i.isupper() & j.islower()) & (i.lower()==j.lower())]
         # print(a)
+
         if a:
             a = a[0]
             a_string = a_string.replace(a, "")
@@ -49,12 +51,14 @@ def p1answer1(the_string):
             ls = list(a_string)
         b = [i+j for itr,(i,j) in enumerate(zip(ls,ls[1:])) if (i.islower() & j.isupper()) & (i.lower()==j.lower())]
         # print(b)
+
         if b:
             b = b[0]
             a_string = a_string.replace(b, "")
             # print(a_string)
             stop_mark = None
             ls = list(a_string)
+
         if not a and not b:
             stop_mark = "STOP"
 
@@ -66,6 +70,7 @@ def p1answer2(the_string):
     stop_mark = None
     aA = re.compile(r'aA|bB|cC|dD|eE|fF|gG|hH|Ii|jJ|kK|lL|mM|nN|oO|pP|qQ|rR|sS|tT|uU|vV|wW|xX|yY|zZ')
     Aa = re.compile(r'Aa|Bb|Cc|Dd|Ee|Ff|Gg|Hh|Ii|Jj|Kk|Ll|Mm|Nn|oO|pP|Qq|Rr|Ss|Tt|Uu|Vv|Ww|Xx|Yy|Zz')
+
     while stop_mark == None:
         string_length_before = len(a_string)
         a_string = re.sub(aA, "", a_string)
@@ -126,15 +131,18 @@ def p2answer1(the_string, testing=True):
     else:
         alphabet = [chr(96+i) for i in range(1,26)]
     clean_polymer_lengths = {}
+
     for letter in alphabet:
         a_string = the_string
         ls = list(a_string)
         stop_mark = None
         ls = [i for i in ls if i.lower() != letter]
         a_string = "".join(ls)
+
         while stop_mark == None:
             a = [i+j for itr,(i,j) in enumerate(zip(ls,ls[1:])) if (i.isupper() & j.islower()) & (i.lower()==j.lower())]
             # print(a)
+
             if a:
                 a = a[0]
                 a_string = a_string.replace(a, "")
@@ -143,15 +151,19 @@ def p2answer1(the_string, testing=True):
                 ls = list(a_string)
             b = [i+j for itr,(i,j) in enumerate(zip(ls,ls[1:])) if (i.islower() & j.isupper()) & (i.lower()==j.lower())]
             # print(b)
+
             if b:
                 b = b[0]
                 a_string = a_string.replace(b, "")
                 # print(a_string)
                 stop_mark = None
                 ls = list(a_string)
+
             if not a and not b:
                 stop_mark = "STOP"
+
         clean_polymer_lengths[letter] = len(a_string)
+
     shortest_polymer = min(clean_polymer_lengths.items(), key=operator.itemgetter(1))[1]
 
     return(shortest_polymer)
@@ -163,6 +175,7 @@ def p2answer2(the_string, testing=True):
     else:
         alphabet = [chr(96+i) for i in range(1,26)]
     clean_polymer_lengths = {}
+
     for letter in alphabet:
         a_string = the_string
         stop_mark = None
@@ -171,20 +184,22 @@ def p2answer2(the_string, testing=True):
         a_string = "".join(ls)
         aA = re.compile(r'aA|bB|cC|dD|eE|fF|gG|hH|Ii|jJ|kK|lL|mM|nN|oO|pP|qQ|rR|sS|tT|uU|vV|wW|xX|yY|zZ')
         Aa = re.compile(r'Aa|Bb|Cc|Dd|Ee|Ff|Gg|Hh|Ii|Jj|Kk|Ll|Mm|Nn|oO|pP|Qq|Rr|Ss|Tt|Uu|Vv|Ww|Xx|Yy|Zz')
+
         while stop_mark == None:
             string_length_before = len(a_string)
             a_string = re.sub(aA, "", a_string)
             a_string = re.sub(Aa, "", a_string)
             string_length_after = len(a_string)
             # print(a_string)
+
             if string_length_before == string_length_after:
                 stop_mark = "STOP"
+
         clean_polymer_lengths[letter] = len(a_string)
+
     shortest_polymer = min(clean_polymer_lengths.items(), key=operator.itemgetter(1))[1]
 
     return(shortest_polymer)
-
-
 
 p2answers = {
     "p2answer1":p2answer1,
