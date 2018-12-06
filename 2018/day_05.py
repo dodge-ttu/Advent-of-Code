@@ -33,6 +33,7 @@ p1_test_cases = {
 
 ### Answers:
 
+# Slow
 def p1answer1(the_string):
     a_string = the_string
     stop_mark = None
@@ -59,6 +60,7 @@ def p1answer1(the_string):
 
     return(len(a_string))
 
+# Fast
 def p1answer2(the_string):
     a_string = the_string
     stop_mark = None
@@ -117,6 +119,7 @@ p2_test_cases = {
 
 ### Answers:
 
+# Slow
 def p2answer1(the_string, testing=True):
     if testing:
         alphabet = ["a","b","c","d"]
@@ -148,13 +151,12 @@ def p2answer1(the_string, testing=True):
                 ls = list(a_string)
             if not a and not b:
                 stop_mark = "STOP"
-
         clean_polymer_lengths[letter] = len(a_string)
-
     shortest_polymer = min(clean_polymer_lengths.items(), key=operator.itemgetter(1))[1]
 
     return(shortest_polymer)
 
+# Fast
 def p2answer2(the_string, testing=True):
     if testing:
         alphabet = ["a","b","c","d"]
@@ -177,9 +179,7 @@ def p2answer2(the_string, testing=True):
             # print(a_string)
             if string_length_before == string_length_after:
                 stop_mark = "STOP"
-
         clean_polymer_lengths[letter] = len(a_string)
-
     shortest_polymer = min(clean_polymer_lengths.items(), key=operator.itemgetter(1))[1]
 
     return(shortest_polymer)
