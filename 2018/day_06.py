@@ -1,18 +1,5 @@
-# NOTE: This one seems to be a bit more challenging. Having never encountered a problem such as this I think
-# outlining a process beforehand may help rather than trudging through with nothing more than a half-baked
-# mental model :)
-#
-# Step one:     Find upper left and lower right to define "viewing" space.
-# Step two:     Mark any case on boundary lines (or one away from boundary) as guaranteed to be infinite.
-# Step three:   Find distance from a given centroid and all points in "viewing" space. (Yikes that's alot)
-# Step four:    For each point in the "viewing" space find unmarked centroid with minimal associated distance.
-# Step five:    Centroid associated with most points wins..... or
-# Step seven:   Cry like a baby and try to erase advent of code from memory :)
-
 import timeit
-import math
-import operator
-import re
+import csv
 
 ####### Problem 1 #######
 
@@ -75,21 +62,19 @@ p1_test_cases = {
 
 ### Answers:
 
-ls = p1_a[0]
-
 def p1answer1(ls):
 
-    # Find upper left and lower right max centroid to set boundary
+    # Find max right centroid to set boundary
     distances_from_origin = []
     for (x,y) in ls:
         dist = abs(0-x) + abs(0-y)
         distances_from_origin.append((dist, (x,y)))
 
-    (min_from_origin, (min_x,min_y)) = min([i for i in distances_from_origin], key=lambda x: x[0])
+    (min_x,min_y) = (0,0)
     (max_from_origin, (max_x,max_y)) = max([i for i in distances_from_origin], key=lambda x: x[0])
 
-    marked_centroids = {}
-    # Determine if centroid is on boundary or one away and mark.
+    # Determine if centroid is on boundary or one away and add to "infinite" list.
+    marked_centroids = []
     for (x,y) in ls:
         marked = False
         if (x == min_x) or (x == max_x):
@@ -100,25 +85,55 @@ def p1answer1(ls):
             marked = True
         if (y == (min_y + 1)) or (y == (min_y - 1)):
             marked = True
-        marked_centroids[str((x,y))] = ((x,y), marked)
+        if marked:
+            marked_centroids.append(str((x,y)))
 
-    print(marked_centroids)
-
-    # Generate all ordered pairs within boundary
+    # Generate all ordered pairs within boundary.
     all_points_within = []
-    for x in range(min_x,max_x):
-        for y in range(min_y,max_y):
+    for x in range(min_x,max_x+1):
+        for y in range(min_y,max_y+1):
             all_points_within.append((x,y))
 
-    print(all_points_within)
+    # Distance from all centroids for each point.
+    dist_all_for_all = {}
+    for (x,y) in all_points_within:
+        dist_this_for_all = {}
+        for (x_centroid,y_centroid) in ls:
+            dist = abs(x_centroid - x) + abs(y_centroid - y)
+            dist_this_for_all[str((x_centroid,y_centroid))] = dist
+        dist_all_for_all[str((x,y))] = dist_this_for_all
 
-    # Distance to all, this is getting messy
+    # Associate minimum distance with centroids.
+    # Also drop points that share centroid values.
+    closest_centroid_to_each = {}
+    for (x,y) in all_points_within:
+        d = dist_all_for_all[str((x,y))]
+        centroid_closest_to_this = min(d.items(), key=lambda x: x[1])
+        all_that_map_to_that_centroid = [k for k in d if d[k] == centroid_closest_to_this[1]]
+        if len(all_that_map_to_that_centroid) == 1:
+            print("hi")
+            closest_centroid_to_each[str((x,y))] = centroid_closest_to_this[0]
 
+    # Find centroid with max associated closest items, figures crossed...
+    counts = {}
+    for (x_centroid,y_centroid) in ls:
+        count = sum(value == str((x_centroid,y_centroid)) for value in closest_centroid_to_each.values())
+        counts[str((x_centroid,y_centroid))]  = count
 
+    print(counts)
+    # Ooops, forgot to drop those that are marked as infinite
+    for key in marked_centroids:
+        if key in counts:
+            counts.pop(key)
 
+    print(counts)
 
+    centroid_with_max_closest = max(counts.items(), key=lambda x: x[1])
 
-def p1answer2():
+    return(centroid_with_max_closest[1])
+
+def p1answer2(*args, **kwargs):
+    pass
 
 p1answers = {
     "p1answer1":p1answer1,
@@ -180,11 +195,14 @@ for (answer_name, answer) in p2answers.items():
 
 file_path = "/home/will/advent_of_code/Advent-of-Code/2018/day_06_input.txt"
 
-with open(file_path, "r") as my_file:
-    data = my_file.read()
+with open(file_path) as my_file:
+    raw_data = csv.reader(my_file, quoting=csv.QUOTE_NONNUMERIC)
+    data = []
+    for row in raw_data:
+        data.append((int(row[0]),int(row[1])))
 
 # Data was the same for problem one and two for this day.
-
+ls = p1_a[0]
 
 
 ####### Performance  #######
@@ -197,3 +215,29 @@ def time_with_official_data(problem_number, answer_dict, loops=1):
 
 time_with_official_data(problem_number=1, answer_dict=p1answers, loops=1, testing=False)
 time_with_official_data(problem_number=2, answer_dict=p2answers, loops=1)
+
+# NOTE: This one seems to be a bit more challenging. Having never encountered a problem such as this I think
+# outlining a process beforehand may help rather than trudging through with nothing more than a half-baked
+# mental model :) ... nevermind, it's all half baked.
+#
+# Step one:     Find upper left and lower right to define "viewing" space.
+# Step two:     Mark any case on boundary lines (or one away from boundary) as guaranteed to be infinite.
+# Step three:   Find distance from a given centroid and all points in "viewing" space. (Yikes that's alot)
+# Step four:    For each point in the "viewing" space find unmarked centroid with minimal associated distance.
+# Step five:    Centroid associated with most points wins..... or
+# Step seven:   Cry like a baby and try to erase advent of code from memory (:
+#
+# Do not use "dict" as variable name because it shadows built-in type!
+#
+# https://stackoverflow.com/a/3282871/7384740
+# Cleaner way to run min/max on dictionary:
+# max(d.items(), key=lambda x: x[1]) will look at the value.
+# max(d.items(), key-lambda x: x[0]) will look at the key.
+#
+# https://stackoverflow.com/a/48371928/7384740
+# Count occurrences of a value in dictionary:
+# sum(value == 0 for value in d.values())
+#
+
+
+
