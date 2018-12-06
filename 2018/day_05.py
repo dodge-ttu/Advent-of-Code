@@ -33,12 +33,11 @@ p1_test_cases = {
 
 ### Answers:
 
-def p1answer1(a_string):
+def p1answer1(the_string):
+    a_string = the_string
     stop_mark = None
     ls = list(a_string)
     while stop_mark == None:
-        a = None
-        b = None
         a = [i+j for itr,(i,j) in enumerate(zip(ls,ls[1:])) if (i.isupper() & j.islower()) & (i.lower()==j.lower())]
         # print(a)
         if a:
@@ -60,38 +59,25 @@ def p1answer1(a_string):
 
     return(len(a_string))
 
-# def p1answer2(a_string):
-#     stop_mark = None
-#     ls = set(a_string)
-#     while stop_mark == None:
-#         a = None
-#         b = None
-#         a = [i+j for itr,(i,j) in enumerate(zip(ls,ls[1:])) if (i.isupper() & j.islower()) & (i.lower()==j.lower())]
-#         # print(a)
-#         if a:
-#             a = a[0]
-#             a_string = a_string.replace(a, "")
-#             # print(a_string)
-#             stop_mark = None
-#             ls = list(a_string)
-#         b = [i+j for itr,(i,j) in enumerate(zip(ls,ls[1:])) if (i.islower() & j.isupper()) & (i.lower()==j.lower())]
-#         # print(b)
-#         if b:
-#             b = b[0]
-#             a_string = a_string.replace(b, "")
-#             # print(a_string)
-#             stop_mark = None
-#             ls = list(a_string)
-#         if not a and not b:
-#             stop_mark = "STOP"
-#
-#     return(len(a_string))
+def p1answer2(the_string):
+    a_string = the_string
+    stop_mark = None
+    aA = re.compile(r'aA|bB|cC|dD|eE|fF|gG|hH|Ii|jJ|kK|lL|mM|nN|oO|pP|qQ|rR|sS|tT|uU|vV|wW|xX|yY|zZ')
+    Aa = re.compile(r'Aa|Bb|Cc|Dd|Ee|Ff|Gg|Hh|Ii|Jj|Kk|Ll|Mm|Nn|oO|pP|Qq|Rr|Ss|Tt|Uu|Vv|Ww|Xx|Yy|Zz')
+    while stop_mark == None:
+        string_length_before = len(a_string)
+        a_string = re.sub(aA, "", a_string)
+        a_string = re.sub(Aa, "", a_string)
+        string_length_after = len(a_string)
+        # print(a_string)
+        if string_length_before == string_length_after:
+            stop_mark = "STOP"
 
-
+    return(len(a_string))
 
 p1answers = {
     "p1answer1":p1answer1,
-    # "p1answer2":p1answer2,
+    "p1answer2":p1answer2,
 }
 
 ### Problem 1 tests:
@@ -131,20 +117,18 @@ p2_test_cases = {
 
 ### Answers:
 
-def p2answer1(original_string, testing=True):
+def p2answer1(the_string, testing=True):
     if testing:
         alphabet = ["a","b","c","d"]
     else:
         alphabet = [chr(96+i) for i in range(1,26)]
     clean_polymer_lengths = {}
     for letter in alphabet:
-        a_string = original_string
+        a_string = the_string
         ls = list(a_string)
         stop_mark = None
         ls = [i for i in ls if i.lower() != letter]
         a_string = "".join(ls)
-        a = None
-        b = None
         while stop_mark == None:
             a = [i+j for itr,(i,j) in enumerate(zip(ls,ls[1:])) if (i.isupper() & j.islower()) & (i.lower()==j.lower())]
             # print(a)
@@ -171,8 +155,40 @@ def p2answer1(original_string, testing=True):
 
     return(shortest_polymer)
 
+def p2answer2(the_string, testing=True):
+    if testing:
+        alphabet = ["a","b","c","d"]
+    else:
+        alphabet = [chr(96+i) for i in range(1,26)]
+    clean_polymer_lengths = {}
+    for letter in alphabet:
+        a_string = the_string
+        stop_mark = None
+        ls = list(a_string)
+        ls = [i for i in ls if i.lower() != letter]
+        a_string = "".join(ls)
+        aA = re.compile(r'aA|bB|cC|dD|eE|fF|gG|hH|Ii|jJ|kK|lL|mM|nN|oO|pP|qQ|rR|sS|tT|uU|vV|wW|xX|yY|zZ')
+        Aa = re.compile(r'Aa|Bb|Cc|Dd|Ee|Ff|Gg|Hh|Ii|Jj|Kk|Ll|Mm|Nn|oO|pP|Qq|Rr|Ss|Tt|Uu|Vv|Ww|Xx|Yy|Zz')
+        while stop_mark == None:
+            string_length_before = len(a_string)
+            a_string = re.sub(aA, "", a_string)
+            a_string = re.sub(Aa, "", a_string)
+            string_length_after = len(a_string)
+            # print(a_string)
+            if string_length_before == string_length_after:
+                stop_mark = "STOP"
+
+        clean_polymer_lengths[letter] = len(a_string)
+
+    shortest_polymer = min(clean_polymer_lengths.items(), key=operator.itemgetter(1))[1]
+
+    return(shortest_polymer)
+
+
+
 p2answers = {
     "p2answer1":p2answer1,
+    "p2answer2":p2answer2,
 }
 
 ### Problem 2 tests:
@@ -216,9 +232,12 @@ def time_with_official_data(problem_number, answer_dict, loops=1, testing=False)
 time_with_official_data(problem_number=1, answer_dict=p1answers, loops=1, testing=False)
 time_with_official_data(problem_number=2, answer_dict=p2answers, loops=1)
 
-# [Problem 1] Time: 2.18692 seconds on 1 loops, Function: p1answer1
-# [Problem 2] Time: 8.15665 seconds on 1 loops, Function: p2answer1
+# [Problem 1] Time: 2.16539 seconds on 1 loops, Function: p1answer1
+# [Problem 1] Time: 0.01871 seconds on 1 loops, Function: p1answer2
+# [Problem 2] Time: 8.50573 seconds on 1 loops, Function: p2answer1
+# [Problem 2] Time: 0.09292 seconds on 1 loops, Function: p2answer2
 
 # NOTE: Dictionary lookup
-
 # max(dict.items(), key=operator.itemgetter(1))[0]
+# max(dict.iterkeys(), key=(lambda key: dict[key]))
+# https://stackoverflow.com/a/268285/7384740
