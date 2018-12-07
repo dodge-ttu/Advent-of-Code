@@ -64,73 +64,97 @@ p1_test_cases = {
 
 def p1answer1(ls):
 
-    # Find max right centroid to set boundary
-    distances_from_origin = []
-    for (x,y) in ls:
-        dist = abs(0-x) + abs(0-y)
-        distances_from_origin.append((dist, (x,y)))
+    # Store the quantity of points closest to each centroid so that I can increase the "viewing" window with a two
+    # part loop to determine if the count increases. The centroids where the count increases can be marked as infinite.
+    counts = {str(k):0 for k in ls}
+    loop_counter = 0
 
-    (min_x,min_y) = (0,0)
-    (max_from_origin, (max_x,max_y)) = max([i for i in distances_from_origin], key=lambda x: x[0])
+    for i in range(2):
+        loop_counter += 1
 
-    # Determine if centroid is on boundary or one away and add to "infinite" list.
-    marked_centroids = []
-    for (x,y) in ls:
-        marked = False
-        if (x == min_x) or (x == max_x):
-            marked = True
-        if (y == min_y) or (y == min_x):
-            marked = True
-        if (x == (min_x +1 )) or (x == (max_x - 1)):
-            marked = True
-        if (y == (min_y + 1)) or (y == (min_y - 1)):
-            marked = True
-        if marked:
-            marked_centroids.append(str((x,y)))
+        # Find max right centroid to set boundary
+        distances_from_origin = []
+        for (x,y) in ls:
+            dist = abs(0-abs(x)) + abs(0-abs(y))
+            distances_from_origin.append((dist, (x,y)))
 
-    # Generate all ordered pairs within boundary.
-    all_points_within = []
-    for x in range(min_x,max_x+1):
-        for y in range(min_y,max_y+1):
-            all_points_within.append((x,y))
+        if loop_counter == 1:
+            (min_x,min_y) = (0,0)
+            (max_from_origin, (max_x,max_y)) = max([i for i in distances_from_origin], key=lambda x: x[0])
 
-    # Distance from all centroids for each point.
-    dist_all_for_all = {}
-    for (x,y) in all_points_within:
-        dist_this_for_all = {}
-        for (x_centroid,y_centroid) in ls:
-            dist = abs(x_centroid - x) + abs(y_centroid - y)
-            dist_this_for_all[str((x_centroid,y_centroid))] = dist
-        dist_all_for_all[str((x,y))] = dist_this_for_all
+        if loop_counter == 2:
+            (min_x, min_y) = (-100, -100)
+            (max_from_origin, (max_x, max_y)) = max([i for i in distances_from_origin], key=lambda x: x[0])
+            (max_x, max_y) = (max_x+100, max_y+100)
 
-    # Associate minimum distance with centroids.
-    # Also drop points that share centroid values.
-    closest_centroid_to_each = {}
-    for (x,y) in all_points_within:
-        d = dist_all_for_all[str((x,y))]
-        centroid_closest_to_this = min(d.items(), key=lambda x: x[1])
-        all_that_map_to_that_centroid = [k for k in d if d[k] == centroid_closest_to_this[1]]
-        if len(all_that_map_to_that_centroid) == 1:
-            print("hi")
-            closest_centroid_to_each[str((x,y))] = centroid_closest_to_this[0]
+        print(min_x,min_y,max_x,max_y)
 
-    # Find centroid with max associated closest items, figures crossed...
-    counts = {}
-    for (x_centroid,y_centroid) in ls:
-        count = sum(value == str((x_centroid,y_centroid)) for value in closest_centroid_to_each.values())
-        counts[str((x_centroid,y_centroid))]  = count
+        # Generate all ordered pairs within boundary.
+        all_points_within = []
+        for x in range(min_x,max_x+1):
+            for y in range(min_y,max_y+1):
+                all_points_within.append((x,y))
 
-    print(counts)
-    # Ooops, forgot to drop those that are marked as infinite
-    for key in marked_centroids:
-        if key in counts:
-            counts.pop(key)
+        print("length points within: {0}".format(len(all_points_within)))
 
-    print(counts)
+        # Distance from all centroids for each point.
+        dist_all_for_all = {}
+        for (x,y) in all_points_within:
+            dist_this_for_all = {}
+            for (x_centroid,y_centroid) in ls:
+                dist = abs(x_centroid - x) + abs(y_centroid - y)
+                dist_this_for_all[str((x_centroid,y_centroid))] = dist
+            dist_all_for_all[str((x,y))] = dist_this_for_all
 
-    centroid_with_max_closest = max(counts.items(), key=lambda x: x[1])
+        # Associate minimum distance with centroids.
+        # Also drop points that share centroid values.
+        closest_centroid_to_each = {}
+        for (x,y) in all_points_within:
+            d = dist_all_for_all[str((x,y))]
+            centroid_closest_to_this = min(d.items(), key=lambda x: x[1])
+            all_that_map_to_that_centroid = [k for k in d if d[k] == centroid_closest_to_this[1]]
+            if len(all_that_map_to_that_centroid) == 1:
+                closest_centroid_to_each[str((x,y))] = centroid_closest_to_this[0]
 
-    return(centroid_with_max_closest[1])
+        # First pass...
+        if loop_counter == 1:
+            # Find centroid with max associated closest items, figures crossed...
+            counts = []
+            for (x_centroid,y_centroid) in ls:
+                count = sum(value == str((x_centroid,y_centroid)) for value in closest_centroid_to_each.values())
+                counts.append((str((x_centroid,y_centroid)), count))
+
+            print("length counts first time: {0}".format(len(counts)))
+
+            centroid_with_max_closest = max(counts, key=lambda x: x[1])
+
+            print(centroid_with_max_closest)
+
+        # Second pass...
+        if loop_counter == 2:
+            # Check to see which centroids have an increase in associated points to filter out the infinite centroids.
+            # Find centroid with max associated closest items, figures crossed...
+            counts_second_time = []
+            for (x_centroid, y_centroid) in ls:
+                count = sum(value == str((x_centroid, y_centroid)) for value in closest_centroid_to_each.values())
+                counts_second_time.append((str((x_centroid, y_centroid)), count)
+
+            marked_centroids = []
+
+            for (c1,c2) in zip(counts, counts_second_time):
+                if c1 < c2:
+                    marked_centroids.append(c1)
+
+            for key in marked_centroids:
+                    counts.remove(key)
+
+            print("length counts second time: {0}".format(len(counts_second_time)))
+
+            centroid_with_max_closest = max(counts, key=lambda x: x[1])
+
+            print(centroid_with_max_closest)
+
+            return centroid_with_max_closest[1], counts_second_time
 
 def p1answer2(*args, **kwargs):
     pass
@@ -202,7 +226,7 @@ with open(file_path) as my_file:
         data.append((int(row[0]),int(row[1])))
 
 # Data was the same for problem one and two for this day.
-ls = p1_a[0]
+
 
 
 ####### Performance  #######
@@ -227,6 +251,8 @@ time_with_official_data(problem_number=2, answer_dict=p2answers, loops=1)
 # Step five:    Centroid associated with most points wins..... or
 # Step seven:   Cry like a baby and try to erase advent of code from memory (:
 #
+# DO NOT USE PARENTHESIS ON RETURN STATEMENTS !!! Can't believe I have been doing that.
+#
 # Do not use "dict" as variable name because it shadows built-in type!
 #
 # https://stackoverflow.com/a/3282871/7384740
@@ -238,6 +264,14 @@ time_with_official_data(problem_number=2, answer_dict=p2answers, loops=1)
 # Count occurrences of a value in dictionary:
 # sum(value == 0 for value in d.values())
 #
-
+# Step two: This original method of filtering will miss many cases. The only thing I can think to do at this point is
+# to increase the viewing space with a short loop and only look at counts that increase to separate finite from
+# infinite.
+#
+#
+#
+#
+#
+#
 
 
