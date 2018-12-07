@@ -94,7 +94,6 @@ for (answer_name, answer) in p1answers.items():
 # [Problem 1] Test: PASS, Function: p1answer1 Input: [['#1', '@', '1,3:', '4x4'], ['#2', '@', '3,1:', '4x4'], ['#3', '@', '5,5:', '2x2']]
 
 
-
 ####### Problem 2 #######
 
 # Exact same setup as above but return the id of the item without any overlap.
@@ -155,7 +154,6 @@ for (answer_name, answer) in p2answers.items():
             print("[Problem 2] Test: FAIL, Function: {0} Input: {1}".format(answer_name, test))
 
 # [Problem 2] Test: PASS, Function: p2answer1 Input: [['#1', '@', '1,3:', '4x4'], ['#2', '@', '3,1:', '4x4'], ['#3', '@', '5,5:', '2x2']]
-
 
 
 ####### Official Input Data #######

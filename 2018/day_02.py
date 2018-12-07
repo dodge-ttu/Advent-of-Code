@@ -55,7 +55,6 @@ for (answer_name, answer) in p1answers.items():
 # [Problem 1] Test: PASS, Function: p1answer1 Input: ['abcdef', 'bababc', 'abbcde', 'abcccd', 'aabcdd', 'abcdee', 'ababab']
 
 
-
 ####### Problem 2 #######
 
 # abcde
@@ -151,7 +150,6 @@ for (answer_name, answer) in p2answers.items():
 # [Problem 2] Test: PASS, Function: p2answer3 Input: ['abcde', 'fghij', 'klmno', 'pqrst', 'fguij', 'axcye', 'wvxyz']
 
 
-
 ####### Official Input Data #######
 
 ### CSV library
@@ -165,7 +163,6 @@ with open(file_path, newline='') as csv_file:
         data.extend(i)
 
 # Data was the same for problem one and two for this day.
-
 
 
 ####### Performance  #######

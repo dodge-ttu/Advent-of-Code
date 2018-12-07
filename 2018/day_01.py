@@ -44,7 +44,6 @@ for (answer_name, answer) in p1answers.items():
 # [Problem 1] Test: PASS, Function: p1answer1 Input: [-1, -2, -3]
 
 
-
 ####### Problem 2 #######
 
 # +1, -1 first reaches 0 twice.
@@ -149,7 +148,6 @@ for (answer_name, answer) in p2answers.items():
 # [Problem 2] Test: PASS, Function: p2answer4 Input: [7, 7, -2, -7, -4]
 
 
-
 ####### Official Input Data #######
 
 ### CSV library
@@ -168,7 +166,6 @@ df = pd.read_csv("/home/will/advent_of_code/Advent-of-Code/2018/day_01_input.txt
 data = list(df.loc[:, 0].values)
 
 # Data was the same for problem one and two for this day.
-
 
 
 ####### Performance  #######

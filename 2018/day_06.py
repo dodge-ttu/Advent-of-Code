@@ -83,9 +83,9 @@ def p1answer1(ls):
             (max_from_origin, (max_x,max_y)) = max([i for i in distances_from_origin], key=lambda x: x[0])
 
         if loop_counter == 2:
-            (min_x, min_y) = (-100, -100)
+            (min_x, min_y) = (-10, -10)
             (max_from_origin, (max_x, max_y)) = max([i for i in distances_from_origin], key=lambda x: x[0])
-            (max_x, max_y) = (max_x+100, max_y+100)
+            (max_x, max_y) = (max_x+10, max_y+10)
 
         print(min_x,min_y,max_x,max_y)
 
@@ -137,7 +137,7 @@ def p1answer1(ls):
             counts_second_time = []
             for (x_centroid, y_centroid) in ls:
                 count = sum(value == str((x_centroid, y_centroid)) for value in closest_centroid_to_each.values())
-                counts_second_time.append((str((x_centroid, y_centroid)), count)
+                counts_second_time.append((str((x_centroid, y_centroid)), count))
 
             marked_centroids = []
 
@@ -154,7 +154,7 @@ def p1answer1(ls):
 
             print(centroid_with_max_closest)
 
-            return centroid_with_max_closest[1], counts_second_time
+            return centroid_with_max_closest[1]
 
 def p1answer2(*args, **kwargs):
     pass
@@ -173,7 +173,8 @@ for (answer_name, answer) in p1answers.items():
         else:
             print("[Problem 1] Test: FAIL, Function: {0} Input: {1}".format(answer_name, test))
 
-
+# [Problem 1] Test: PASS, Function: p1answer1 Input: [(1, 1), (1, 6), (8, 3), (3, 4), (5, 5), (8, 9)]
+# [Problem 1] Test: FAIL, Function: p1answer2 Input: [(1, 1), (1, 6), (8, 3), (3, 4), (5, 5), (8, 9)]
 
 
 ####### Problem 2 #######
@@ -181,7 +182,7 @@ for (answer_name, answer) in p1answers.items():
 
 ### Test cases:
 
-p2_a =
+p2_a = ([],None)
 
 p2_test_cases = {
     "p2_a":p2_a
@@ -189,12 +190,11 @@ p2_test_cases = {
 
 ### Answers:
 
-def p2answer1():
+def p2answer1(*args, **kwargs):
+    pass
 
-
-
-
-def p2answer2():
+def p2answer2(*args, **kwargs):
+    pass
 
 p2answers = {
     "p2answer1":p2answer1,
@@ -210,7 +210,8 @@ for (answer_name, answer) in p2answers.items():
         else:
             print("[Problem 2] Test: FAIL, Function: {0} Input: {1}".format(answer_name, test))
 
-
+# [Problem 2] Test: PASS, Function: p2answer1 Input: []
+# [Problem 2] Test: PASS, Function: p2answer2 Input: []
 
 
 ####### Official Input Data #######
@@ -228,17 +229,22 @@ with open(file_path) as my_file:
 # Data was the same for problem one and two for this day.
 
 
-
 ####### Performance  #######
 
 def time_with_official_data(problem_number, answer_dict, loops=1):
     for (answer_name, answer) in answer_dict.items():
-        time = timeit.timeit("{0}(data, testing=False)".format(answer_name), globals=globals(), number=loops)
+        time = timeit.timeit("{0}(data)".format(answer_name), globals=globals(), number=loops)
         time = round(time, 5)
         print("[Problem {0}] Time: {1} seconds on {2} loops, Function: {3}".format(problem_number,time,loops,answer_name))
 
-time_with_official_data(problem_number=1, answer_dict=p1answers, loops=1, testing=False)
+time_with_official_data(problem_number=1, answer_dict=p1answers, loops=1)
 time_with_official_data(problem_number=2, answer_dict=p2answers, loops=1)
+
+# [Problem 1] Time: 18.32244 seconds on 1 loops, Function: p1answer1
+# [Problem 1] Time: 0.0 seconds on 1 loops, Function: p1answer2
+# [Problem 2] Time: 0.0 seconds on 1 loops, Function: p2answer1
+# [Problem 2] Time: 0.0 seconds on 1 loops, Function: p2answer2
+
 
 # NOTE: This one seems to be a bit more challenging. Having never encountered a problem such as this I think
 # outlining a process beforehand may help rather than trudging through with nothing more than a half-baked
@@ -267,11 +273,3 @@ time_with_official_data(problem_number=2, answer_dict=p2answers, loops=1)
 # Step two: This original method of filtering will miss many cases. The only thing I can think to do at this point is
 # to increase the viewing space with a short loop and only look at counts that increase to separate finite from
 # infinite.
-#
-#
-#
-#
-#
-#
-
-

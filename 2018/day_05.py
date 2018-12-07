@@ -99,7 +99,6 @@ for (answer_name, answer) in p1answers.items():
 # [Problem 1] Test: PASS, Function: p1answer1 Input: dabAcCaCBAcCcaDA
 
 
-
 ####### Problem 2 #######
 
 # One of the unit types is causing problems; it's preventing the polymer from collapsing as much as it should.
@@ -218,7 +217,6 @@ for (answer_name, answer) in p2answers.items():
 # [Problem 2] Test: PASS, Function: p2answer1 Input: dabAcCaCBAcCcaDA
 
 
-
 ####### Official Input Data #######
 
 ### CSV library
@@ -229,7 +227,6 @@ with open(file_path, "r") as my_file:
     data = my_file.read()
 
 # Data was the same for problem one and two for this day.
-
 
 
 ####### Performance  #######

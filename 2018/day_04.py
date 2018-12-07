@@ -180,7 +180,6 @@ for (answer_name, answer) in p1answers.items():
 # [Problem 1] Test: PASS, Function: p1answer1 Input: [[datetime.datetime(1518, 11, 1, 0, 0), ['Guard', '#10', 'begins', 'shift']], [datetime.datetime(1518, 11, 1, 0, 0, 5), ['falls', 'asleep']], [datetime.datetime(1518, 11, 1, 0, 0, 25), ['wakes', 'up']], [datetime.datetime(1518, 11, 1, 0, 0, 30), ['falls', 'asleep']], [datetime.datetime(1518, 11, 1, 0, 0, 55), ['wakes', 'up']], [datetime.datetime(1518, 11, 1, 23, 0, 58), ['Guard', '#99', 'begins', 'shift']], [datetime.datetime(1518, 11, 2, 0, 0, 40), ['falls', 'asleep']], [datetime.datetime(1518, 11, 2, 0, 0, 50), ['wakes', 'up']], [datetime.datetime(1518, 11, 3, 0, 0, 5), ['Guard', '#10', 'begins', 'shift']], [datetime.datetime(1518, 11, 3, 0, 0, 24), ['falls', 'asleep']], [datetime.datetime(1518, 11, 3, 0, 0, 29), ['wakes', 'up']], [datetime.datetime(1518, 11, 4, 0, 0, 2), ['Guard', '#99', 'begins', 'shift']], [datetime.datetime(1518, 11, 4, 0, 0, 36), ['falls', 'asleep']], [datetime.datetime(1518, 11, 4, 0, 0, 46), ['wakes', 'up']], [datetime.datetime(1518, 11, 5, 0, 0, 3), ['Guard', '#99', 'begins', 'shift']], [datetime.datetime(1518, 11, 5, 0, 0, 45), ['falls', 'asleep']], [datetime.datetime(1518, 11, 5, 0, 0, 55), ['wakes', 'up']]]
 
 
-
 ####### Problem 2 #######
 
 # Exact same setup as above. For the guard who slept most, which minute did the most frequently sleep?
@@ -292,7 +291,6 @@ for (answer_name, answer) in p2answers.items():
 # [Problem 2] Test: PASS, Function: p2answer1 Input: [[datetime.datetime(1518, 11, 1, 0, 0), ['Guard', '#10', 'begins', 'shift']], [datetime.datetime(1518, 11, 1, 0, 0, 5), ['falls', 'asleep']], [datetime.datetime(1518, 11, 1, 0, 0, 25), ['wakes', 'up']], [datetime.datetime(1518, 11, 1, 0, 0, 30), ['falls', 'asleep']], [datetime.datetime(1518, 11, 1, 0, 0, 55), ['wakes', 'up']], [datetime.datetime(1518, 11, 1, 23, 0, 58), ['Guard', '#99', 'begins', 'shift']], [datetime.datetime(1518, 11, 2, 0, 0, 40), ['falls', 'asleep']], [datetime.datetime(1518, 11, 2, 0, 0, 50), ['wakes', 'up']], [datetime.datetime(1518, 11, 3, 0, 0, 5), ['Guard', '#10', 'begins', 'shift']], [datetime.datetime(1518, 11, 3, 0, 0, 24), ['falls', 'asleep']], [datetime.datetime(1518, 11, 3, 0, 0, 29), ['wakes', 'up']], [datetime.datetime(1518, 11, 4, 0, 0, 2), ['Guard', '#99', 'begins', 'shift']], [datetime.datetime(1518, 11, 4, 0, 0, 36), ['falls', 'asleep']], [datetime.datetime(1518, 11, 4, 0, 0, 46), ['wakes', 'up']], [datetime.datetime(1518, 11, 5, 0, 0, 3), ['Guard', '#99', 'begins', 'shift']], [datetime.datetime(1518, 11, 5, 0, 0, 45), ['falls', 'asleep']], [datetime.datetime(1518, 11, 5, 0, 0, 55), ['wakes', 'up']]]
 
 
-
 ####### Official Input Data #######
 
 ### CSV library
@@ -306,7 +304,6 @@ with open(file_path, newline='') as csv_file:
         data.append(row)
 
 # Data was the same for problem one and two for this day.
-
 
 
 ####### Performance  #######
