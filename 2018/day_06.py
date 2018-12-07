@@ -71,15 +71,15 @@ def p1answer1(ls, *args, **kwargs):
     for i in range(2):
         loop_counter += 1
 
-        # # Find bottom right corner of space. Abs() twice for points on negative side of origin.
-        # distances_from_origin = []
-        # for (x,y) in ls:
-        #     dist = abs(0-abs(x)) + abs(0-abs(y))
-        #     distances_from_origin.append((dist, (x,y)))
+        # Find bottom right corner of space. Abs() twice for points on negative side of origin.
+        distances_from_origin = []
+        for (x,y) in ls:
+            dist = abs(0-abs(x)) + abs(0-abs(y))
+            distances_from_origin.append((dist, (x,y)))
 
         # Manually set min and max
 
-        (min_x, min_y, max_x, max_y) = (0, 0, 1000, 1000)
+        # (min_x, min_y, max_x, max_y) = (0, 0, 1000, 1000)
 
         # Original "viewing" window.
         if loop_counter == 1:
@@ -89,7 +89,7 @@ def p1answer1(ls, *args, **kwargs):
         # Slightly larger "viewing" window.
         if loop_counter == 2:
             (min_x, min_y) = (-10, -10)
-            (max_from_origin, (max_x, max_y)) = max([i for i in distances_from_origin], key=lambda x: x[0])
+            # (max_from_origin, (max_x, max_y)) = max([i for i in distances_from_origin], key=lambda x: x[0])
             (max_x, max_y) = (max_x+10, max_y+10)
 
         # Generate all ordered pairs within boundary.
@@ -249,7 +249,7 @@ def p2answer1(ls, cutoff = 32, *args, **kwargs):
             dist = abs(x_centroid - x) + abs(y_centroid - y)
             dist_this_for_all.append(dist)
         dist_all_for_all[str((x,y))] = sum(dist_this_for_all)
-        print(sum(dist_this_for_all))
+        # print(sum(dist_this_for_all))
 
     # Number of distance-to-centroid sums under cutoff.
     number_within_range = len([k for k,v in dist_all_for_all.items() if v < cutoff])
@@ -311,8 +311,9 @@ time_with_official_data(problem_number=2, answer_dict=p2answers, loops=1)
 
 # [Problem 1] Time: 18.32244 seconds on 1 loops, Function: p1answer1
 # [Problem 1] Time: 0.0 seconds on 1 loops, Function: p1answer2
-# [Problem 2] Time: 0.0 seconds on 1 loops, Function: p2answer1
+# [Problem 2] Time: 12.58929 seconds on 1 loops, Function: p2answer1
 # [Problem 2] Time: 0.0 seconds on 1 loops, Function: p2answer2
+
 
 
 # Notes #######
