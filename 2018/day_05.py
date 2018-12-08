@@ -249,9 +249,3 @@ time_with_official_data(problem_number=2, answer_dict=p2answers, loops=1)
 # [Problem 2] Time: 8.50573 seconds on 1 loops, Function: p2answer1
 # [Problem 2] Time: 0.09292 seconds on 1 loops, Function: p2answer2
 
-# NOTE: Use sets and dicts for lookups. Also `re.sub(pattern, "", string)` is great for whittling down strings, as
-# opposed to any form of list filtering and rearrangement.
-#
-# Find max value for item in dictionary:
-# max(dict.items(), key=operator.itemgetter(1))[0]
-# https://stackoverflow.com/a/268285/7384740
