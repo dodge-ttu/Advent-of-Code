@@ -110,41 +110,71 @@ def p1answer2(ls, *args, **kwargs):
         return instr_order, all_pieces
 
     instr_order_forward, all_pieces = build_instr_dict(ls)
-    instr_order_reversed, all_pieces = build_instr_dict(ls, forward=False)
+    instr_order_reversed, _ = build_instr_dict(ls, forward=False)
 
     prereqs_conditions = {}
 
     for value in instr_order_forward:
         prereqs_conditions[value] = [instr_order_reversed[value], instr_order_forward[value]]
 
-
-    idx = 0
     for (k,v) in prereqs_conditions.items():
         print(k,v)
-        idx += 1
 
-    final_order = []
-
-    for search_key in prereqs_conditions.keys():
-        temp = [k for (k,v) in prereqs_conditions.items() if search_key in v[1]]
-        print(temp, search_key)
-
-
-
-
-
-    final_order = []
+    all_instructions = []
 
     for (k,v) in prereqs_conditions.items():
+        temp = []
         if not v[0]:
-            final_order += [k] + [v][1]
-        if not v[1]:
-            final_order += [k]
-        else:
-            final_order
+            for j in v[1]:
+                temp.append((k,j))
+        elif not v[1]:
+            for i in v[0]:
+                temp.append((i, k))
+        elif v[0] and v[1]:
+            print(v[0], "else")
+            (a,b) = v
+            print(a)
+            for i in a:
+                temp.append((i, k))
+            for j in b:
+                temp.append((k, j))
+        all_instructions.extend(temp)
 
+    instruction_set = set(all_instructions)
 
+    final_order = ""
+    counter = 0
+    length_all_pieces = len(all_pieces)
 
+    while len(all_pieces) !=0:
+
+        counter += 1
+
+        num_before = []
+
+        for piece in all_pieces:
+            temp = []
+            num_prereqs = len([i for i in instruction_set if i[1] == piece])
+            if num_prereqs == 0:
+                temp.extend(piece)
+                num_before.extend(temp)
+
+        num_before = sorted(num_before)
+
+        print(num_before)
+
+        order_temp = "".join(num_before)
+
+        instruction_set = [i for i in instruction_set if i[0] not in num_before]
+
+        for i in num_before:
+            all_pieces.remove(i)
+
+        final_order= final_order + order_temp
+
+    print(final_order)
+
+    return final_order
 
 p1answers = {
     "p1answer1":p1answer1,
@@ -153,7 +183,7 @@ p1answers = {
 
 ### Problem 1 tests:
 
-for (answinstr_order[v]er_name, answer) in p1answers.items():
+for (answer_name, answer) in p1answers.items():
     for test_name, (test,sol) in p1_test_cases.items():
         if (answer(test) == sol):
             print("[Problem 1] Test: PASS, Function: {0} Input: {1}".format(answer_name, test))
