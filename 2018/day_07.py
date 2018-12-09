@@ -55,7 +55,7 @@ p1_test_cases = {
 
 ### Answers:
 
-# Passes test case fails on official data.
+# Passes test case fails on official data. Crap answer
 def p1answer1(ls, *args, **kwargs):
     order = ""
     counter = 0
@@ -77,23 +77,73 @@ def p1answer1(ls, *args, **kwargs):
             order = re.sub(r'(\w)\1', "", order)
     return(order)
 
+# Ahhh... maybe...
 def p1answer2(ls, *args, **kwargs):
-    parsed_instructions = []
-    for instruction in ls:
-        words = re.split(" ", instruction)
-        (one,two) = words[1], words[7]
-        parsed_instructions.append((one,two))
 
-    #
-    unique_keys = list(set([k for (k,v) in parsed_instructions]))
-    instr_order = {k:[] for k in unique_keys}
+    def build_instr_dict(ls, forward=True):
 
-    for (one,two) in parsed_instructions:
-        instr_order[one].append(two)
+        if not forward:
+            ls.reverse()
 
-    final_order = "".join
-    for (k,v) in instr_order.items():
-        final_order = re.sub(k, "{0}{1}".format(final_order)
+        parsed_instructions = []
+        for instruction in ls:
+            words = re.split(" ", instruction)
+            (one,two) = words[1], words[7]
+
+            if not forward:
+                parsed_instructions.append((two, one))
+
+            else:
+                parsed_instructions.append((one,two))
+
+
+        all_pieces = list(dict.fromkeys("".join([i+j for(i,j) in parsed_instructions])))
+
+        instr_order = {k:[] for k in all_pieces}
+
+        for (one,two) in parsed_instructions:
+            instr_order[one].append(two)
+
+        for (k,v) in instr_order.items():
+            instr_order[k] = sorted(list(set(v)))
+
+        return instr_order, all_pieces
+
+    instr_order_forward, all_pieces = build_instr_dict(ls)
+    instr_order_reversed, all_pieces = build_instr_dict(ls, forward=False)
+
+    prereqs_conditions = {}
+
+    for value in instr_order_forward:
+        prereqs_conditions[value] = [instr_order_reversed[value], instr_order_forward[value]]
+
+
+    idx = 0
+    for (k,v) in prereqs_conditions.items():
+        print(k,v)
+        idx += 1
+
+    final_order = []
+
+    for search_key in prereqs_conditions.keys():
+        temp = [k for (k,v) in prereqs_conditions.items() if search_key in v[1]]
+        print(temp, search_key)
+
+
+
+
+
+    final_order = []
+
+    for (k,v) in prereqs_conditions.items():
+        if not v[0]:
+            final_order += [k] + [v][1]
+        if not v[1]:
+            final_order += [k]
+        else:
+            final_order
+
+
 
 
 p1answers = {
@@ -103,14 +153,14 @@ p1answers = {
 
 ### Problem 1 tests:
 
-for (answer_name, answer) in p1answers.items():
+for (answinstr_order[v]er_name, answer) in p1answers.items():
     for test_name, (test,sol) in p1_test_cases.items():
         if (answer(test) == sol):
             print("[Problem 1] Test: PASS, Function: {0} Input: {1}".format(answer_name, test))
         else:
             print("[Problem 1] Test: FAIL, Function: {0} Input: {1}".format(answer_name, test))
 
-# [Problem 1] Test: PA"S"S, Function: p1answer1 Input: [(1, 1), (1, 6), (8, 3), (3, 4), (5, 5), (8, 9)]
+# [Problem 1] Test: PASS, Function: p1answer1 Input: [(1, 1), (1, 6), (8, 3), (3, 4), (5, 5), (8, 9)]
 # [Problem 1] Test: FAIL, Function: p1answer2 Input: [(1, 1), (1, 6), (8, 3), (3, 4), (5, 5), (8, 9)]
 
 
