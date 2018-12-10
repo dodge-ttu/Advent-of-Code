@@ -80,6 +80,7 @@ def p1answer1(ls, *args, **kwargs):
 # Ahhh... maybe...
 def p1answer2(ls, *args, **kwargs):
 
+    # Function to build instruction dict with prerequisites and conditions.
     def build_instr_dict(ls, forward=True):
 
         if not forward:
@@ -111,23 +112,20 @@ def p1answer2(ls, *args, **kwargs):
     instr_order_forward, all_pieces = build_instr_dict(ls)
     instr_order_reversed, _ = build_instr_dict(ls, forward=False)
 
+    # Build instruction dictionary.
     prereqs_conditions = {}
 
     for value in instr_order_forward:
         prereqs_conditions[value] = [instr_order_reversed[value], instr_order_forward[value]]
 
-    for (k,v) in sorted(prereqs_conditions.items(), key=lambda x: len(x[1][0])):
-        print(k,v)
-
+    # Decide where to start, official input data starts with a tie...
     starting_points = sorted([k for (k,v) in prereqs_conditions.items() if len(v[0]) == 0])
-
-    for i in prereqs_conditions.items():
-        print(i)
 
     first_pop = starting_points[0]
 
     answer_string = ""
 
+    # Loop to remove ready items and then find next first available item.
     while len(prereqs_conditions) > 1:
         answer_string = answer_string + first_pop
         enabled_guys = prereqs_conditions[first_pop][1]
@@ -151,7 +149,6 @@ def p1answer2(ls, *args, **kwargs):
     # Deal with last item left in queue
     answer_string = answer_string + "".join(prereqs_conditions.keys())
 
-    print(answer_string)
     return answer_string
 
 p1answers = {
