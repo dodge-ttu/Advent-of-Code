@@ -121,17 +121,6 @@ def p1answer2(ls, *args, **kwargs):
 
     starting_points = sorted([k for (k,v) in prereqs_conditions.items() if len(v[0]) == 0])
 
-    # final_order = []
-    #
-    # for search_key in prereqs_conditions.keys():
-    #     temp = sorted([k for (k,v) in prereqs_conditions.items() if search_key in v[0]])
-    #     final_order.append((search_key, temp))
-    #
-    # for i in final_order:
-    #     print(i)
-    #
-    # final_order = sorted(final_order, key=lambda x: (x[1], x[0]))
-
     for i in prereqs_conditions.items():
         print(i)
 
@@ -139,9 +128,7 @@ def p1answer2(ls, *args, **kwargs):
 
     answer_string = ""
 
-
     while len(prereqs_conditions) > 1:
-        # print(answer_string)
         answer_string = answer_string + first_pop
         enabled_guys = prereqs_conditions[first_pop][1]
 
@@ -150,7 +137,6 @@ def p1answer2(ls, *args, **kwargs):
         for (k,v) in prereqs_conditions.items():
             if k in enabled_guys:
                 prereqs_conditions[k][0].remove(first_pop)
-            # print(prereqs_conditions)
 
         enabled = []
 
@@ -159,8 +145,6 @@ def p1answer2(ls, *args, **kwargs):
                 enabled.append(k)
 
         enabled = sorted(enabled)
-
-        # print(enabled)
 
         first_pop = enabled[0]
 
