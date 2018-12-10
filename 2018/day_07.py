@@ -117,64 +117,59 @@ def p1answer2(ls, *args, **kwargs):
     for value in instr_order_forward:
         prereqs_conditions[value] = [instr_order_reversed[value], instr_order_forward[value]]
 
-    for (k,v) in prereqs_conditions.items():
+    for (k,v) in sorted(prereqs_conditions.items(), key=lambda x: len(x[1][0])):
         print(k,v)
 
-    all_instructions = []
+    starting_points = sorted([k for (k,v) in prereqs_conditions.items() if len(v[0]) == 0])
 
-    for (k,v) in prereqs_conditions.items():
-        temp = []
-        if not v[0]:
-            for j in v[1]:
-                temp.append((k,j))
-        elif not v[1]:
-            for i in v[0]:
-                temp.append((i, k))
-        elif v[0] and v[1]:
-            print(v[0], "else")
-            (a,b) = v
-            print(a)
-            for i in a:
-                temp.append((i, k))
-            for j in b:
-                temp.append((k, j))
-        all_instructions.extend(temp)
+    # final_order = []
+    #
+    # for search_key in prereqs_conditions.keys():
+    #     temp = sorted([k for (k,v) in prereqs_conditions.items() if search_key in v[0]])
+    #     final_order.append((search_key, temp))
+    #
+    # for i in final_order:
+    #     print(i)
+    #
+    # final_order = sorted(final_order, key=lambda x: (x[1], x[0]))
 
-    instruction_set = set(all_instructions)
+    for i in prereqs_conditions.items():
+        print(i)
 
-    final_order = ""
-    counter = 0
-    length_all_pieces = len(all_pieces)
+    first_pop = starting_points[0]
 
-    while len(all_pieces) !=0:
+    answer_string = ""
 
-        counter += 1
 
-        num_before = []
+    while len(prereqs_conditions) > 1:
+        # print(answer_string)
+        answer_string = answer_string + first_pop
+        enabled_guys = prereqs_conditions[first_pop][1]
 
-        for piece in all_pieces:
-            temp = []
-            num_prereqs = len([i for i in instruction_set if i[1] == piece])
-            if num_prereqs == 0:
-                temp.extend(piece)
-                num_before.extend(temp)
+        prereqs_conditions.pop(first_pop)
 
-        num_before = sorted(num_before)
+        for (k,v) in prereqs_conditions.items():
+            if k in enabled_guys:
+                prereqs_conditions[k][0].remove(first_pop)
+            # print(prereqs_conditions)
 
-        print(num_before)
+        enabled = []
 
-        order_temp = "".join(num_before)
+        for (k,v) in prereqs_conditions.items():
+            if not v[0]:
+                enabled.append(k)
 
-        instruction_set = [i for i in instruction_set if i[0] not in num_before]
+        enabled = sorted(enabled)
 
-        for i in num_before:
-            all_pieces.remove(i)
+        # print(enabled)
 
-        final_order= final_order + order_temp
+        first_pop = enabled[0]
 
-    print(final_order)
+    # Deal with last item left in queue
+    answer_string = answer_string + "".join(prereqs_conditions.keys())
 
-    return final_order
+    print(answer_string)
+    return answer_string
 
 p1answers = {
     "p1answer1":p1answer1,
@@ -190,8 +185,8 @@ for (answer_name, answer) in p1answers.items():
         else:
             print("[Problem 1] Test: FAIL, Function: {0} Input: {1}".format(answer_name, test))
 
-# [Problem 1] Test: PASS, Function: p1answer1 Input: [(1, 1), (1, 6), (8, 3), (3, 4), (5, 5), (8, 9)]
-# [Problem 1] Test: FAIL, Function: p1answer2 Input: [(1, 1), (1, 6), (8, 3), (3, 4), (5, 5), (8, 9)]
+# [Problem 1] Test: PASS, Function: p1answer1 Input: ['Step C must be finished before step A can begin.', 'Step C must be finished before step F can begin.', 'Step A must be finished before step B can begin.', 'Step A must be finished before step D can begin.', 'Step B must be finished before step E can begin.', 'Step D must be finished before step E can begin.', 'Step F must be finished before step E can begin.']
+# [Problem 1] Test: PASS, Function: p1answer2 Input: ['Step F must be finished before step E can begin.', 'Step D must be finished before step E can begin.', 'Step B must be finished before step E can begin.', 'Step A must be finished before step D can begin.', 'Step A must be finished before step B can begin.', 'Step C must be finished before step F can begin.', 'Step C must be finished before step A can begin.']
 
 
 ####### Problem 2 #######
@@ -199,7 +194,7 @@ for (answer_name, answer) in p1answers.items():
 
 ### Test cases:
 
-p2_a = ([(1,1),(1,6),(8,3),(3,4),(5,5),(8,9)], 16)
+p2_a = ([],0)
 
 p2_test_cases = {
     "p2_a":p2_a
@@ -227,8 +222,8 @@ for (answer_name, answer) in p2answers.items():
         else:
             print("[Problem 2] Test: FAIL, Function: {0} Input: {1}".format(answer_name, test))
 
-# [Problem 2] Test: PA"S"S, Function: p2answer1 Input: []
-# [Problem 2] Test: PA"S"S, Function: p2answer2 Input: []
+# [Problem 2] Test: PASS, Function: p2answer1 Input: []
+# [Problem 2] Test: PASS, Function: p2answer2 Input: []
 
 
 ####### Official Input Data #######
@@ -258,6 +253,8 @@ def time_with_official_data(problem_number, answer_dict, loops=1, testing=False,
 time_with_official_data(problem_number=1, answer_dict=p1answers, loops=1)
 time_with_official_data(problem_number=2, answer_dict=p2answers, loops=1)
 
+# [Problem 1] Time: 0.00185 seconds on 1 loops, Function: p1answer1
+# [Problem 1] Time: 0.00117 seconds on 1 loops, Function: p1answer2
 
 
 
