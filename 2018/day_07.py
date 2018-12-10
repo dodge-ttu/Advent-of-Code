@@ -231,7 +231,7 @@ p2_test_cases = {
 
 ### Answers:
 
-def p2answer1(ls, *args, **kwargs):
+def p2answer1(ls, how_many_workers=2, time_offset=0, *args, **kwargs):
 
     # Function to build instruction dict with prerequisites and conditions.
     def build_instr_dict(ls, forward=True):
@@ -275,10 +275,111 @@ def p2answer1(ls, *args, **kwargs):
         print(i)
 
     alphabet = [chr(97+i).upper() for i in range(26)]
-    time_per_letter = {k:v for (k,v) in zip(alphabet,range(1,27))}
+    time_per_letter = {k:(v+time_offset) for (k,v) in zip(alphabet,range(1,27))}
 
+    # Decide where to start.
+    starting_points = sorted([k for (k,v) in prereqs_conditions.items() if len(v[0]) == 0])
 
+    # Generate worker queues.
+    all_queues = []
+    for i in range(how_many_workers):
+        all_queues.append((None, None))
 
+    print(all_queues)
+
+    # Current job.
+    current_jobs = starting_points
+
+    # Current time.
+    current_time = 0
+
+    # Total time.
+    total_time = 0
+
+    # Create empty leftover queue.
+    leftovers = set()
+
+    # All jobs completed master list.
+    completed_master = []
+
+    # Fill worker queues with first available jobs.
+    for (worker_id, job_key) in enumerate(current_jobs):
+        this_jobs_time = time_per_letter[job_key]
+        all_queues[worker_id] = ((this_jobs_time + current_time), job_key)
+
+    print(all_queues)
+
+    # While there is a job key in the queue.
+    while len([j for (i,j) in all_queues if j != None]) > 0:
+
+        # Increment timekeeper
+        current_time += 1
+        print(current_time)
+
+        # Check for jobs that should be done at this point and time and add to completed queue.
+        completed_jobs = []
+
+        for (idx,(task_time, job_key)) in enumerate(all_queues):
+            if task_time == current_time:
+                print(task_time)
+                completed_jobs.append(job_key)
+                completed_master.append(job_key)
+
+        print(completed_jobs)
+        print("heere")
+
+        # Remove completed tasks from the all tasks list.
+        for job_key in completed_jobs:
+            if job_key in all_pieces:
+                all_pieces.remove(job_key)
+
+        # Remove completed jobs from any worker queue where they are present.
+        for completed_job_key in completed_jobs:
+            for (idx, (task_time, job_key)) in enumerate(all_queues):
+                if completed_job_key == job_key:
+                    all_queues[idx] = (None, None)
+
+        print(all_queues)
+
+        # Check to see which jobs have now become enabled with this iteration's completed tasks.
+        enabled_tasks = []
+
+        for job_key in completed_jobs:
+            enabled_tasks.extend(prereqs_conditions[job_key][1])
+
+        print(enabled_tasks)
+
+        # Add lefotvers to newly enabled tasks.
+        enabled_tasks.extend(leftovers)
+
+        # Generated expected completion times for all now available tasks.
+        enabled_time_log = []
+
+        for job_key in enabled_tasks:
+            if job_key not in leftovers:
+                expected_completion_time = time_per_letter[job_key] + current_time
+                enabled_time_log.append((expected_completion_time, job_key))
+
+        print(enabled_time_log)
+
+        # Fill empty queues with newly available jobs.
+        for (worker_id, (expected_completion_time,enabled_job_key)) in enumerate(enabled_time_log):
+            for (task_time, job_key) in all_queues:
+                if (not task_time) and (not job_key):
+                    all_queues[worker_id] = (expected_completion_time,enabled_job_key)
+            if enabled_job_key in {i[1] for i in all_queues}:
+                enabled_tasks.remove(enabled_job_key)
+
+        print(all_queues)
+        print(enabled_tasks)
+
+        # Deterimine which jobs did not make a queue and store for next round.
+        for task in enabled_tasks:
+            leftovers.add(task)
+
+        print(leftovers)
+
+    return current_time + 1
 
 def p2answer2(*args, **kwargs):
     pass
