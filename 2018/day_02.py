@@ -3,8 +3,8 @@ import csv
 import itertools
 import re
 
-####### Problem 1 #######
-
+#region Problem 1
+#
 # abcdef contains no letters that appear exactly two or three times.
 # bababc contains two a and three b, so it counts for both.
 # abbcde contains two b, but no letter appears exactly three times.
@@ -15,6 +15,8 @@ import re
 # Of these box IDs, four of them contain a letter which appears exactly
 # twice, and three of them contain a letter which appears exactly three
 # times. Multiplying these together produces a checksum of 4 * 3 = 12.
+#
+#endregion
 
 ### Test cases:
 
@@ -54,9 +56,8 @@ for (answer_name, answer) in p1answers.items():
 
 # [Problem 1] Test: PASS, Function: p1answer1 Input: ['abcdef', 'bababc', 'abbcde', 'abcccd', 'aabcdd', 'abcdee', 'ababab']
 
-
-####### Problem 2 #######
-
+#region Problem 2
+#
 # abcde
 # fghij
 # klmno
@@ -70,7 +71,8 @@ for (answer_name, answer) in p1answers.items():
 # third (h and u). Those must be the correct boxes. What letters are common between
 # the two correct box IDs? (In the example above, this is found by removing the differing
 # character from either ID, producing fgij.
-
+#
+#endregion
 
 ### Test cases:
 

@@ -3,11 +3,13 @@ import csv
 import itertools
 import pandas as pd
 
-####### Problem 1 #######
-
+#region Problem 1
+#
 # +1, +1, +1 results in  3
 # +1, +1, -2 results in  0
 # -1, -2, -3 results in -6
+#
+#endregion
 
 ### Test cases:
 
@@ -43,13 +45,14 @@ for (answer_name, answer) in p1answers.items():
 # [Problem 1] Test: PASS, Function: p1answer1 Input: [1, 1, -2]
 # [Problem 1] Test: PASS, Function: p1answer1 Input: [-1, -2, -3]
 
-
-####### Problem 2 #######
-
+#region Problem 2
+#
 # +1, -1 first reaches 0 twice.
 # +3, +3, +4, -2, -4 first reaches 10 twice.
 # -6, +3, +8, +5, -6 first reaches 5 twice.
 # +7, +7, -2, -7, -4 first reaches 14 twice.
+#
+#endregion
 
 ### Test cases:
 
@@ -186,6 +189,3 @@ time_with_official_data(problem_number=2, answer_dict=p2answers, loops=1)
 # [Problem 2] Time: 217.74534 seconds on 1 loops, Function: p2answer2
 # [Problem 2] Time: 201.87448 seconds on 1 loops, Function: p2answer3
 # [Problem 2] Time: 0.18462 seconds on 1 loops, Function: p2answer4
-
-# NOTE: Sets are significantly faster for "lookup" operations!
-# https://stackoverflow.com/a/17945009

@@ -1,7 +1,7 @@
 import timeit
 import re
 
-####### Problem 1 #######
+#region Problem 1
 #
 # The instructions specify a series of steps and requirements about which steps must be finished before others
 # can begin (your puzzle input). Each step is designated by a single letter. For example, suppose you have the
@@ -36,6 +36,8 @@ import re
 # Finally, E is completed.
 # 
 # "So, in this example, the correct order is CABDFE.
+#
+#endregion
 
 ### Test cases:
 
@@ -125,7 +127,7 @@ def p1answer2(ls, *args, **kwargs):
 
     answer_string = ""
 
-    # Loop to remove ready items and then find next first available item.
+    # Loop to remove ready items and then find next available item.
     while len(prereqs_conditions) > 1:
         answer_string = answer_string + first_pop
         enabled_guys = prereqs_conditions[first_pop][1]
@@ -168,9 +170,8 @@ for (answer_name, answer) in p1answers.items():
 # [Problem 1] Test: PASS, Function: p1answer1 Input: ['Step C must be finished before step A can begin.', 'Step C must be finished before step F can begin.', 'Step A must be finished before step B can begin.', 'Step A must be finished before step D can begin.', 'Step B must be finished before step E can begin.', 'Step D must be finished before step E can begin.', 'Step F must be finished before step E can begin.']
 # [Problem 1] Test: PASS, Function: p1answer2 Input: ['Step F must be finished before step E can begin.', 'Step D must be finished before step E can begin.', 'Step B must be finished before step E can begin.', 'Step A must be finished before step D can begin.', 'Step A must be finished before step B can begin.', 'Step C must be finished before step F can begin.', 'Step C must be finished before step A can begin.']
 
-
-####### Problem 2 #######
-
+#region Problem 2
+#
 # As you're about to begin construction, four of the Elves offer to help. "The sun will set soon; it'll go faster
 # if we work together." Now, you need to account for multiple people working on steps simultaneously. If multiple
 # steps are available, workers should still begin them in alphabetical order.
@@ -208,7 +209,8 @@ for (answer_name, answer) in p1answers.items():
 # can begin multiple steps simultaneously.
 #
 # In this example, it would take 15 seconds for two workers to complete these steps.
-
+#
+#endregion
 
 ### Test cases:
 
@@ -229,8 +231,54 @@ p2_test_cases = {
 
 ### Answers:
 
-def p2answer1(ls, cutoff = 32, *args, **kwargs):
-    pass
+def p2answer1(ls, *args, **kwargs):
+
+    # Function to build instruction dict with prerequisites and conditions.
+    def build_instr_dict(ls, forward=True):
+
+        if not forward:
+            ls.reverse()
+
+        parsed_instructions = []
+        for instruction in ls:
+            words = re.split(" ", instruction)
+            (one,two) = words[1], words[7]
+
+            if not forward:
+                parsed_instructions.append((two, one))
+
+            else:
+                parsed_instructions.append((one,two))
+
+        all_pieces = list(dict.fromkeys("".join([i+j for(i,j) in parsed_instructions])))
+
+        instr_order = {k:[] for k in all_pieces}
+
+        for (one,two) in parsed_instructions:
+            instr_order[one].append(two)
+
+        for (k,v) in instr_order.items():
+            instr_order[k] = sorted(list(set(v)))
+
+        return instr_order, all_pieces
+
+    instr_order_forward, all_pieces = build_instr_dict(ls)
+    instr_order_reversed, _ = build_instr_dict(ls, forward=False)
+
+    # Build instruction dictionary.
+    prereqs_conditions = {}
+
+    for value in instr_order_forward:
+        prereqs_conditions[value] = [instr_order_reversed[value], instr_order_forward[value]]
+
+    for i in prereqs_conditions.items():
+        print(i)
+
+    alphabet = [chr(97+i).upper() for i in range(26)]
+    time_per_letter = {k:v for (k,v) in zip(alphabet,range(1,27))}
+
+
+
 
 def p2answer2(*args, **kwargs):
     pass
