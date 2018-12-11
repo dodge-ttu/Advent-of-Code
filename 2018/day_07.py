@@ -286,8 +286,6 @@ def p2answer1(ls, how_many_workers=2, time_offset=0, *args, **kwargs):
     for i in range(how_many_workers):
         all_queues.append((None, None))
 
-    print(all_queues)
-
     # Current job.
     current_jobs = starting_points
 
@@ -309,7 +307,7 @@ def p2answer1(ls, how_many_workers=2, time_offset=0, *args, **kwargs):
     # While there is a job key in the queue.
     while len([i[0] for i in all_queues if i == (None, None)]) < how_many_workers:
 
-        # Increment timekeeper
+        # Increment timekeeper.
         current_time += 1
 
         # Check for jobs that should be done at this point and time and add to completed queue.
@@ -329,45 +327,55 @@ def p2answer1(ls, how_many_workers=2, time_offset=0, *args, **kwargs):
 
         print("[INFO] worker queue with completed tasks removed: {0}".format(all_queues))
 
-        # Check to see which jobs have now become enabled with this iteration's completed tasks.
-        newly_enabled_tasks = []
-        for job_key in completed_master:
-            if job_key in prereqs_conditions:
-                newly_enabled_tasks = prereqs_conditions[job_key][1]
-
-        for enabled_job_key in newly_enabled_tasks:
-            if (enabled_job_key not in enabled_tasks) and (enabled_job_key not in job_keys_currently_in_queue):
-                enabled_tasks.extend(enabled_job_key)
-
         # Remove completed job form prereq_conditions dict.
         for job_key in completed_master:
             if job_key in prereqs_conditions:
                 prereqs_conditions.pop(job_key)
+            if job_key in enabled_tasks:
+                enabled_tasks.remove(job_key)
 
-        # Generated expected completion times for all now available tasks.
+        # Check to see which jobs have now become enabled with this iteration's completed tasks.
+        for job_key in completed_master:
+            for (k, v) in prereqs_conditions.items():
+                if job_key in v[0]:
+                    prereqs_conditions[k][0].remove(job_key)
+                    print("[INFO] removed {0} from {1}'s prereqs".format(job_key, k))
+
+        for (k, v) in prereqs_conditions.items():
+            if not v[0] and k not in enabled_tasks:
+                enabled_tasks.append(k)
+
+        # Find empty spots and what is in queue.
+        empty_spots = [idx for (idx, i) in enumerate(all_queues) if i == (None, None)]
+        job_keys_currently_in_queue = [i[1] for i in all_queues if i[1] != None]
+
+        # Generated expected completion times for available tasks.
         enabled_time_log = []
 
         for job_key in enabled_tasks:
+            if job_key not in job_keys_currently_in_queue:
                 expected_completion_time = time_per_letter[job_key] + current_time
                 enabled_time_log.append((expected_completion_time, job_key))
 
-        # Fill empty queues with newly available jobs.
-        empty_spots = [idx for (idx,i) in enumerate(all_queues) if i == (None,None)]
+        print("[INFO] enabled time log: {0}".format(enabled_time_log))
 
-        job_keys_currently_in_queue = [i[1] for i in all_queues if i[1] != None]
-
+        # Fill empty spots.
         for ((expected_completion_time, enabled_job_key), empty) in zip(enabled_time_log, empty_spots):
             if (enabled_job_key not in job_keys_currently_in_queue) and (enabled_job_key not in completed_master):
                 all_queues[empty] = (expected_completion_time, enabled_job_key)
                 enabled_tasks.remove(enabled_job_key)
                 print("[INFO] removed: {0}".format(enabled_job_key))
 
-        print("[INFO] jobs in queue: {0}".format(job_keys_currently_in_queue))
+        print("[INFO] worker queue after refill: {0}".format(all_queues))
 
+        # Get jobs in queue at iterations end.
+        job_keys_in_queue_at_loop_end = [i[1] for i in all_queues if i[1] != None]
+
+        print("[INFO] jobs in queue at iterations end: {0}".format(job_keys_in_queue_at_loop_end))
         print("[INFO] jobs left to complete: {0}".format(all_pieces))
         print("[INFO] current time: {0}".format(current_time))
 
-    return current_time + 1
+    return current_time
 
 def p2answer2(*args, **kwargs):
     pass
@@ -386,8 +394,8 @@ for (answer_name, answer) in p2answers.items():
         else:
             print("[Problem 2] Test: FAIL, Function: {0} Input: {1}".format(answer_name, test))
 
-# [Problem 2] Test: PASS, Function: p2answer1 Input: []
-# [Problem 2] Test: PASS, Function: p2answer2 Input: []
+# [Problem 2] Test: PASS, Function: p2answer1 Input: ['Step F must be finished before step E can begin.', 'Step D must be finished before step E can begin.', 'Step B must be finished before step E can begin.', 'Step A must be finished before step D can begin.', 'Step A must be finished before step B can begin.', 'Step C must be finished before step F can begin.', 'Step C must be finished before step A can begin.']
+# [Problem 2] Test: FAIL, Function: p2answer2 Input: ['Step F must be finished before step E can begin.', 'Step D must be finished before step E can begin.', 'Step B must be finished before step E can begin.', 'Step A must be finished before step D can begin.', 'Step A must be finished before step B can begin.', 'Step C must be finished before step F can begin.', 'Step C must be finished before step A can begin.']
 
 
 ####### Official Input Data #######
@@ -417,8 +425,11 @@ def time_with_official_data(problem_number, answer_dict, loops=1, testing=False,
 time_with_official_data(problem_number=1, answer_dict=p1answers, loops=1)
 time_with_official_data(problem_number=2, answer_dict=p2answers, loops=1)
 
-# [Problem 1] Time: 0.00185 seconds on 1 loops, Function: p1answer1
-# [Problem 1] Time: 0.00117 seconds on 1 loops, Function: p1answer2
+# [Problem 1] Time: 0.00075 seconds on 1 loops, Function: p1answer1
+# [Problem 1] Time: 0.00039 seconds on 1 loops, Function: p1answer2
+# [Problem 2] Time: 0.00833 seconds on 1 loops, Function: p2answer1
+# [Problem 2] Time: 0.0 seconds on 1 loops, Function: p2answer2
+
 
 
 
