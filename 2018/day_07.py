@@ -274,6 +274,7 @@ def p2answer1(ls, how_many_workers=2, time_offset=0, *args, **kwargs):
     for i in prereqs_conditions.items():
         print(i)
 
+    # Find time per job key.
     alphabet = [chr(97+i).upper() for i in range(26)]
     time_per_letter = {k:(v+time_offset) for (k,v) in zip(alphabet,range(1,27))}
 
@@ -299,14 +300,14 @@ def p2answer1(ls, how_many_workers=2, time_offset=0, *args, **kwargs):
     # Fill worker queues with first available jobs.
     for (worker_id, job_key) in enumerate(current_jobs):
         this_jobs_time = time_per_letter[job_key]
-        all_queues[worker_id] = ((this_jobs_time + current_time + 1), job_key)
+        all_queues[worker_id] = ((this_jobs_time + current_time), job_key)
 
-    print(all_queues)
+    print("[INFO] beginning worker queue status: {0}".format(all_queues))
 
     enabled_tasks = []
 
     # While there is a job key in the queue.
-    while True:
+    while len([i[0] for i in all_queues if i == (None, None)]) < how_many_workers:
 
         # Increment timekeeper
         current_time += 1
@@ -317,7 +318,8 @@ def p2answer1(ls, how_many_workers=2, time_offset=0, *args, **kwargs):
                 completed_master.append(job_key)
                 all_pieces.remove(job_key)
 
-        print(completed_master)
+        print("[INFO] all completed jobs: {0}".format(completed_master))
+        print("[INFO] this iterations worker queue status: {0}".format(all_queues))
 
         # Remove completed jobs from any worker queue where they are present.
         for completed_job_key in completed_master:
@@ -325,7 +327,7 @@ def p2answer1(ls, how_many_workers=2, time_offset=0, *args, **kwargs):
                 if completed_job_key == job_key:
                     all_queues[idx] = (None, None)
 
-        print(all_queues)
+        print("[INFO] worker queue with completed tasks removed: {0}".format(all_queues))
 
         # Check to see which jobs have now become enabled with this iteration's completed tasks.
         newly_enabled_tasks = []
@@ -354,21 +356,16 @@ def p2answer1(ls, how_many_workers=2, time_offset=0, *args, **kwargs):
 
         job_keys_currently_in_queue = [i[1] for i in all_queues if i[1] != None]
 
-        print("jobs in queue: {0}".format(job_keys_currently_in_queue))
-
         for ((expected_completion_time, enabled_job_key), empty) in zip(enabled_time_log, empty_spots):
-            if enabled_job_key not in job_keys_currently_in_queue:
+            if (enabled_job_key not in job_keys_currently_in_queue) and (enabled_job_key not in completed_master):
                 all_queues[empty] = (expected_completion_time, enabled_job_key)
                 enabled_tasks.remove(enabled_job_key)
-                print("removed: {0}".format(enabled_job_key))
+                print("[INFO] removed: {0}".format(enabled_job_key))
 
-        print(all_pieces)
-        print(current_time)
+        print("[INFO] jobs in queue: {0}".format(job_keys_currently_in_queue))
 
-        if len(prereqs_conditions) == 0:
-            break
-
-
+        print("[INFO] jobs left to complete: {0}".format(all_pieces))
+        print("[INFO] current time: {0}".format(current_time))
 
     return current_time + 1
 
