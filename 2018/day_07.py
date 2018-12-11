@@ -310,7 +310,7 @@ def p2answer1(ls, how_many_workers=2, time_offset=0, *args, **kwargs):
         # Increment timekeeper.
         current_time += 1
 
-        # Check for jobs that should be done at this point and time and add to completed queue.
+        # Check for jobs that should be done at this point in time and add to completed queue.
         for (idx,(task_time, job_key)) in enumerate(all_queues):
             if task_time == current_time:
                 completed_master.append(job_key)
@@ -327,7 +327,7 @@ def p2answer1(ls, how_many_workers=2, time_offset=0, *args, **kwargs):
 
         print("[INFO] worker queue with completed tasks removed: {0}".format(all_queues))
 
-        # Remove completed job form prereq_conditions dict.
+        # Remove completed jobs from prereq_conditions dict.
         for job_key in completed_master:
             if job_key in prereqs_conditions:
                 prereqs_conditions.pop(job_key)
@@ -349,7 +349,7 @@ def p2answer1(ls, how_many_workers=2, time_offset=0, *args, **kwargs):
         empty_spots = [idx for (idx, i) in enumerate(all_queues) if i == (None, None)]
         job_keys_currently_in_queue = [i[1] for i in all_queues if i[1] != None]
 
-        # Generated expected completion times for available tasks.
+        # Generate expected completion times for available tasks.
         enabled_time_log = []
 
         for job_key in enabled_tasks:
@@ -368,7 +368,7 @@ def p2answer1(ls, how_many_workers=2, time_offset=0, *args, **kwargs):
 
         print("[INFO] worker queue after refill: {0}".format(all_queues))
 
-        # Get jobs in queue at iterations end.
+        # Get jobs in queue at iteration's end.
         job_keys_in_queue_at_loop_end = [i[1] for i in all_queues if i[1] != None]
 
         print("[INFO] jobs in queue at iterations end: {0}".format(job_keys_in_queue_at_loop_end))
@@ -429,7 +429,3 @@ time_with_official_data(problem_number=2, answer_dict=p2answers, loops=1)
 # [Problem 1] Time: 0.00039 seconds on 1 loops, Function: p1answer2
 # [Problem 2] Time: 0.00833 seconds on 1 loops, Function: p2answer1
 # [Problem 2] Time: 0.0 seconds on 1 loops, Function: p2answer2
-
-
-
-
