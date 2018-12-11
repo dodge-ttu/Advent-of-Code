@@ -42,8 +42,10 @@ p1_test_cases = {
 
 ### Answers:
 
-def p1answer1(*args, **kwargs):
-    pass
+def p1answer1(ls, *args, **kwargs):
+    a,b = ls[0], ls[1]
+    print(a,b)
+
 
 def p1answer2(*args, **kwargs):
     pass
