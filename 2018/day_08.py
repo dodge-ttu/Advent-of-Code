@@ -44,33 +44,46 @@ p1_test_cases = {
 
 def p1answer1(ls, *args, **kwargs):
 
-    # Super basic recursion model
+    tree = {}
+    node_ID = 0
+
+    while ls:
+
+        children = ls.pop(0)
+        metadata = ls.pop(0)
+
+        if children != 0:
+            metas = []
+            for i in range(metadata):
+                metas.append(ls.pop(-1))
+            tree[node_ID] = metas
+            node_ID += 1
+            print(metas)
+
+        else:
+            metas = []
+            for i in range(metadata):
+                metas.append(ls.pop(0))
+            print(metas)
+
+            tree[node_ID] = metas
+            node_ID += 1
+
+    all_sum = 0
+    for (k,v) in tree.items():
+        all_sum += sum(v)
+
+    print(all_sum)
+
+    return all_sum
+
+    # # Recursive function to traverse dictionary.
     #
-    # tree = {}
-    # for key in ls:
-    #     tree = {key: tree}
-
-    # Recursively generate tree from list.
-    def create_tree(ls, tree={}):
-        # Base condition
-        if len(ls) == 0:
-            return tree
-
-        children, metadata = ls.pop(0), ls.pop(1)
-
-        if children not 0:
-            for child in children:
-
-            print(tree)
-            tree = {key: tree}
-
-    # Recursive function to traverse dictionary.
-
-    def open_dictionary(tree):
-        for (k,v) in tree.items():
-            if isinstance(v, dict):
-                print("{0} : {1}".format(k, v))
-                open_dictionary(v)
+    # def open_dictionary(tree):
+    #     for (k,v) in tree.items():
+    #         if isinstance(v, dict):
+    #             print("{0} : {1}".format(k, v))
+    #             open_dictionary(v)
 
 
 def p1answer2(*args, **kwargs):
@@ -135,7 +148,10 @@ for (answer_name, answer) in p2answers.items():
 file_path = "/home/will/advent_of_code/Advent-of-Code/2018/day_08_input.txt"
 
 with open(file_path) as my_file:
-    data = my_file.read().splitlines()
+    raw_data = my_file.read().split()
+    data = []
+    for i in raw_data:
+        data.append(int(i))
 
 # Data was the same for problem one and two for this day.
 
