@@ -43,8 +43,34 @@ p1_test_cases = {
 ### Answers:
 
 def p1answer1(ls, *args, **kwargs):
-    a,b = ls[0], ls[1]
-    print(a,b)
+
+    # Super basic recursion model
+    #
+    # tree = {}
+    # for key in ls:
+    #     tree = {key: tree}
+
+    # Recursively generate tree from list.
+    def create_tree(ls, tree={}):
+        # Base condition
+        if len(ls) == 0:
+            return tree
+
+        children, metadata = ls.pop(0), ls.pop(1)
+
+        if children not 0:
+            for child in children:
+
+            print(tree)
+            tree = {key: tree}
+
+    # Recursive function to traverse dictionary.
+
+    def open_dictionary(tree):
+        for (k,v) in tree.items():
+            if isinstance(v, dict):
+                print("{0} : {1}".format(k, v))
+                open_dictionary(v)
 
 
 def p1answer2(*args, **kwargs):
