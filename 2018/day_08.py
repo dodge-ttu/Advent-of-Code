@@ -42,8 +42,10 @@ p1_test_cases = {
 
 ### Answers:
 
+# Passes test case breaks on actual input.
 def p1answer1(ls, *args, **kwargs):
 
+    def build_node:
     tree = {}
     node_ID = 0
 
@@ -52,42 +54,55 @@ def p1answer1(ls, *args, **kwargs):
         children = ls.pop(0)
         metadata = ls.pop(0)
 
-        if children != 0:
+        if children == 0:
             metas = []
             for i in range(metadata):
-                metas.append(ls.pop(-1))
+                value = ls.pop(0)
+                metas.append(value)
             tree[node_ID] = metas
             node_ID += 1
             print(metas)
 
         else:
-            metas = []
-            for i in range(metadata):
-                metas.append(ls.pop(0))
-            print(metas)
-
-            tree[node_ID] = metas
+            children = ls.pop(0)
+            metadata = ls.pop(0)
             node_ID += 1
+
 
     all_sum = 0
     for (k,v) in tree.items():
-        all_sum += sum(v)
+        print(v)
+        this_sum = sum(v)
+        print(this_sum)
+        all_sum += this_sum
 
     print(all_sum)
 
     return all_sum
 
-    # # Recursive function to traverse dictionary.
-    #
-    # def open_dictionary(tree):
-    #     for (k,v) in tree.items():
-    #         if isinstance(v, dict):
-    #             print("{0} : {1}".format(k, v))
-    #             open_dictionary(v)
+# Attempt with recursion
+def p1answer2(ls, tree={}, *args, **kwargs):
+
+    node_ID = 0
+
+    while len(ls) > 0:
+
+        children = ls.pop(0)
+        metadata = ls.pop(0)
+
+        metadata_ls = []
+        for data in range(metadata):
+            print(data)
+            value = ls.pop()
+            metadata_ls.append(value)
+
+        tree =
+
+        node_ID += 1
 
 
-def p1answer2(*args, **kwargs):
-    pass
+
+
 
 p1answers = {
     "p1answer1":p1answer1,
