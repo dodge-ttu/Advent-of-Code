@@ -92,24 +92,40 @@ def p1answer2(ls, *args, **kwargs):
     tree = {}
     node_ID = 0
 
+    children = ls.pop(0)
+    metadata = ls.pop(0)
+
     while ls:
 
-        children = ls.pop(0)
-        metadata = ls.pop(0)
+        if children > 0:
+            for i in range(children):
+                node_ID += 1
+
+                if children == 0:
+
+                    meta_ls = []
+                    for i in range(metadata):
+                        value = ls.pop(0)
+                        meta_ls.append(value)
+
+                    tree[node_ID] = meta_ls
+
+                else:
+                    children = ls.pop(0)
+                    metadata = ls.pop(0)
 
         if children == 0:
+            node_ID += 1
+
             meta_ls = []
             for i in range(metadata):
                 value = ls.pop(0)
                 meta_ls.append(value)
 
-
             tree[node_ID] = meta_ls
 
-        else:
-            for i in range(children):
-                node_ID += 1
-                tree[node_ID] = []
+        children = ls.pop(0)
+        metadata = ls.pop(0)
 
         print(ls)
         print(tree)
