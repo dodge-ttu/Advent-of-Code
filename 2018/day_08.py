@@ -1,4 +1,5 @@
 import timeit
+from collections import defaultdict
 
 #region Problem 1
 #
@@ -74,35 +75,36 @@ def p1answer1(ls, *args, **kwargs):
 
         return build_tree(ls, tree={})
 
-# Non recursive solution
+# Getting absolutely nowhere.... must try something new
+# https://stackoverflow.com/questions/5369723/multi-level-defaultdict-with-variable-depth/8702435#8702435
+# https://stackoverflow.com/a/28015122
+# https://stackoverflow.com/a/2358075
+# https://stackoverflow.com/a/14920967
+# http://interactivepython.org/courselib/static/pythonds/BasicDS/ImplementinganUnorderedListLinkedLists.html
+# http://interactivepython.org/courselib/static/pythonds/index.html
+
 def p1answer2(ls, *args, **kwargs):
 
-    tree = {}
-    node_ID = 0
-    meta_count = 0
+    class Node(object):
+        def __init__(self, initdata):
+            self.data = initdata
+            self.next = None
 
-    while len(ls) > meta_count:
+        def getData(self):
+            return self.data
 
-        children = ls.pop(0)
-        metadata = ls.pop(0)
+        def getNext(self):
+            return self.next
 
-        if children == 0:
-            meta_ls = []
-            for i in range(metadata):
-                value = ls.pop(0)
-                meta_ls.append(value)
+        def setData(self):
+            self.data = newdata
 
-            tree[node_ID] = meta_ls
+        def setNext(self):
+            self.next = newnext
 
-        else:
-            tree[node_ID] = []
-            meta_count += metadata
 
-        node_ID += 1
 
-        print(ls)
-        print(tree)
-        print(ls[-meta_count:])
+
 
 
 
