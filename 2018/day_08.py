@@ -45,60 +45,26 @@ p1_test_cases = {
 # Passes test case breaks on actual input.
 def p1answer1(ls, *args, **kwargs):
 
-    def build_node:
-    tree = {}
-    node_ID = 0
+    def build_tree(ls, tree=None,  node_ID = 0, *args, **kwargs):
 
-    while ls:
+        if not ls:
+            return tree
 
         children = ls.pop(0)
         metadata = ls.pop(0)
 
         if children == 0:
-            metas = []
+            meta_values = []
             for i in range(metadata):
                 value = ls.pop(0)
-                metas.append(value)
-            tree[node_ID] = metas
-            node_ID += 1
-            print(metas)
+                meta_values.append(value)
+            tree[node_ID] = meta_values
 
-        else:
-            children = ls.pop(0)
-            metadata = ls.pop(0)
-            node_ID += 1
+            return build_tree(ls, tree=tree, node_ID= node_ID+1)
 
-
-    all_sum = 0
-    for (k,v) in tree.items():
-        print(v)
-        this_sum = sum(v)
-        print(this_sum)
-        all_sum += this_sum
-
-    print(all_sum)
-
-    return all_sum
-
-# Attempt with recursion
-def p1answer2(ls, tree={}, *args, **kwargs):
-
-    node_ID = 0
-
-    while len(ls) > 0:
-
-        children = ls.pop(0)
-        metadata = ls.pop(0)
-
-        metadata_ls = []
-        for data in range(metadata):
-            print(data)
-            value = ls.pop()
-            metadata_ls.append(value)
-
-        tree =
-
-        node_ID += 1
+        if children > 0:
+            tree = {node_ID: tree}
+            return build_tree(ls, tree=tree, node_ID= node_ID+1)
 
 
 
