@@ -77,48 +77,39 @@ def p1answer2(ls, *args, **kwargs):
 
     tree = {}
     node_ID = 0
-    nodes_still_owed = []
+
+    children = ls.pop(0)
+    metadata = ls.pop(0)
 
     while ls:
 
-        children = ls.pop(0)
+        node_ID += 1
 
         if children == 0:
-
-            node_ID += 1
-
-            metadata = ls.pop(0)
-
-            meta_ls =  []
+            meta_ls = []
             for i in range(metadata):
                 value = ls.pop(0)
                 meta_ls.append(value)
 
             tree[node_ID] = meta_ls
 
-            if nodes_still_owed:
-
-                while nodes_still_owed:
-
-                    node_ID -= 1
-
-                    metadata = nodes_still_owed.pop(-1)
-
-                    meta_ls = []
-                    for i in range(metadata):
-                        value = ls.pop(-1)
-                        meta_ls.append(value)
-
-                tree[node_ID] = meta_ls
-
         else:
-            node_ID += 1
-            metadata = ls.pop(0)
-            nodes_still_owed.append(metadata)
+
+
+
+        children = ls.pop(0)
+        metadata = ls.pop(0)
 
         print(ls)
         print(tree)
-        print(nodes_still_owed)
+
+
+
+
+
+
+
+
 
 
 
