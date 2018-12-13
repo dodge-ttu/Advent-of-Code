@@ -29,18 +29,6 @@ import timeit
 # The first check done on the license file is to simply add up all of the metadata entries. In this example,
 # that sum is 1+1+2+10+11+12+2+99=138.
 #
-# Alternate base test case:
-#
-# 2 3 1 1 0 1 12 1 0 3 1 99 2 1 1 2
-# A----------------------------------
-#     B----------- C---------
-#         D-----
-#
-#
-#
-
-
-
 #endregion
 
 ### Test cases:
@@ -91,32 +79,14 @@ def p1answer2(ls, *args, **kwargs):
 
     tree = {}
     node_ID = 0
+    meta_count = 0
 
-    children = ls.pop(0)
-    metadata = ls.pop(0)
+    while len(ls) > meta_count:
 
-    while ls:
-
-        if children > 0:
-            for i in range(children):
-                node_ID += 1
-
-                if children == 0:
-
-                    meta_ls = []
-                    for i in range(metadata):
-                        value = ls.pop(0)
-                        meta_ls.append(value)
-
-                    tree[node_ID] = meta_ls
-
-                else:
-                    children = ls.pop(0)
-                    metadata = ls.pop(0)
+        children = ls.pop(0)
+        metadata = ls.pop(0)
 
         if children == 0:
-            node_ID += 1
-
             meta_ls = []
             for i in range(metadata):
                 value = ls.pop(0)
@@ -124,12 +94,15 @@ def p1answer2(ls, *args, **kwargs):
 
             tree[node_ID] = meta_ls
 
-        children = ls.pop(0)
-        metadata = ls.pop(0)
+        else:
+            tree[node_ID] = []
+            meta_count += metadata
+
+        node_ID += 1
 
         print(ls)
         print(tree)
-
+        print(ls[-meta_count:])
 
 
 
