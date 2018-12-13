@@ -1,5 +1,4 @@
 import timeit
-import re
 
 #region Problem 1
 #
@@ -42,7 +41,7 @@ p1_test_cases = {
 
 ### Answers:
 
-# Passes test case breaks on actual input.
+# Passes test case breaks on actual input. Fun with recursion though :)
 def p1answer1(ls, *args, **kwargs):
 
     def build_tree(ls, tree=None,  node_ID = 0, *args, **kwargs):
@@ -62,9 +61,64 @@ def p1answer1(ls, *args, **kwargs):
 
             return build_tree(ls, tree=tree, node_ID= node_ID+1)
 
-        if children > 0:
-            tree = {node_ID: tree}
+        else:
+            meta_values = []
+            for i in range(metadata):
+                value = ls.pop(-1)
+                meta_values.append(value)
+            tree [node_ID] = meta_values
+
             return build_tree(ls, tree=tree, node_ID= node_ID+1)
+
+        return build_tree(ls, tree={})
+
+# Non recursive solution
+def p1answer2(ls, *args, **kwargs):
+
+    tree = {}
+    node_ID = 0
+    nodes_still_owed = []
+
+    while ls:
+
+        children = ls.pop(0)
+
+        if children == 0:
+
+            node_ID += 1
+
+            metadata = ls.pop(0)
+
+            meta_ls =  []
+            for i in range(metadata):
+                value = ls.pop(0)
+                meta_ls.append(value)
+
+            tree[node_ID] = meta_ls
+
+            if nodes_still_owed:
+
+                while nodes_still_owed:
+
+                    node_ID -= 1
+
+                    metadata = nodes_still_owed.pop(-1)
+
+                    meta_ls = []
+                    for i in range(metadata):
+                        value = ls.pop(-1)
+                        meta_ls.append(value)
+
+                tree[node_ID] = meta_ls
+
+        else:
+            node_ID += 1
+            metadata = ls.pop(0)
+            nodes_still_owed.append(metadata)
+
+        print(ls)
+        print(tree)
+        print(nodes_still_owed)
 
 
 
