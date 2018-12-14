@@ -91,40 +91,43 @@ p1_a = ([2,3,0,3,10,11,12,1,1,0,1,99,2,1,1,2],138)
 
 ls = p1_a[0].copy()
 
+# A simple node class.
 class Node(object):
     def __init__(self, *args, **kwargs):
-        self.children = []
         self.metadata = None
+        self.number_of_children = None
+        self.children = []
 
     def add_child(self, obj):
         self.children.append(obj)
 
-
-def build_tree(root, ls):
-    current_node = Node()
-    children = ls.pop(0)
-    metadata = ls.pop(0)
-
-    for child in range(children):
-        current_child = build_tree(child, ls)
-        current_node.add_child(current_child)
-
-    return current_node
-
-
+# Create root node.
 root = Node()
 
-children = ls.pop(0)
-
-for child in range(children):
-    root.add_child(Node())
-
+# Strip header and populate node attributes accordingly.
+root.number_of_children = ls.pop(0)
 root.metadata = ls.pop(0)
 
-a = build_tree(root, ls)
+# Generate as many child nodes as indicated by header.
+for child in range(root.number_of_children):
+    root.add_child(Node())
 
+# Check to see if node has any children to determine next course of action.
+got_kids = True if root.children else False
 
+# If node does not have kids collect metadata values.
+if not got_kids:
+    meta_ls = []
+    for meta in range(root.metadata):
+        value = ls.pop(0)
+        meta_ls.append(value)
 
+# If node has children drop first child node and start the process once again.
+if got_kids:
+    current_node = root.children[0]
+
+# Holy moly I feel as though I am right on the tip of getting this thing to work. Whith the process above I should be
+# able to get this ball rolling.
 
 
 p1answers = {
