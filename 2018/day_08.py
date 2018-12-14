@@ -80,38 +80,48 @@ def p1answer1(ls, *args, **kwargs):
 # https://stackoverflow.com/a/28015122
 # https://stackoverflow.com/a/2358075
 # https://stackoverflow.com/a/14920967
+# https://stackoverflow.com/a/2482610/
 # http://interactivepython.org/courselib/static/pythonds/BasicDS/ImplementinganUnorderedListLinkedLists.html
 # http://interactivepython.org/courselib/static/pythonds/index.html
 
+# Tree data structure attempt.
 def p1answer2(ls, *args, **kwargs):
 
-    class Node(object):
-        def __init__(self, initdata):
-            self.data = initdata
-            self.next = None
+p1_a = ([2,3,0,3,10,11,12,1,1,0,1,99,2,1,1,2],138)
 
-        def getData(self):
-            return self.data
+ls = p1_a[0].copy()
 
-        def getNext(self):
-            return self.next
+class Node(object):
+    def __init__(self, *args, **kwargs):
+        self.children = []
+        self.metadata = None
 
-        def setData(self):
-            self.data = newdata
-
-        def setNext(self):
-            self.next = newnext
+    def add_child(self, obj):
+        self.children.append(obj)
 
 
+def build_tree(root, ls):
+    current_node = Node()
+    children = ls.pop(0)
+    metadata = ls.pop(0)
+
+    for child in range(children):
+        current_child = build_tree(child, ls)
+        current_node.add_child(current_child)
+
+    return current_node
 
 
+root = Node()
 
+children = ls.pop(0)
 
+for child in range(children):
+    root.add_child(Node())
 
+root.metadata = ls.pop(0)
 
-
-
-
+a = build_tree(root, ls)
 
 
 
