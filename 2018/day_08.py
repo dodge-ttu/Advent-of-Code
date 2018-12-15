@@ -85,6 +85,12 @@ def p1answer1(ls, *args, **kwargs):
 # http://interactivepython.org/courselib/static/pythonds/BasicDS/ImplementinganUnorderedListLinkedLists.html
 # http://interactivepython.org/courselib/static/pythonds/index.html
 # http://interactivepython.org/runestone/static/pythonds/Trees/VocabularyandDefinitions.html
+# https://stackoverflow.com/a/14015526
+#
+# Starting from scratch all over again. Going to work with a simple binary tree and try to modify it after
+# I get a feel for it. I'm looking to make a left child - right sibling binary tree...
+
+
 
 # Tree data structure attempt.
 def p1answer2(ls, *args, **kwargs):
@@ -93,80 +99,7 @@ p1_a = ([2,3,0,3,10,11,12,1,1,0,1,99,2,1,1,2],138)
 
 ls = p1_a[0].copy()
 
-# A simple node class.
-class Node(object):
-    def __init__(self, *args, **kwargs):
-        self.metadata = None
-        self.number_of_children = None
-        self.children = []
 
-    def add_child(self, obj):
-        self.children.append(obj)
-
-# Create root node.
-root = Node()
-
-# Strip header and populate node attributes accordingly.
-root.number_of_children = ls.pop(0)
-root.metadata = ls.pop(0)
-
-# Generate as many child nodes as indicated by header.
-for child in range(root.number_of_children):
-    root.add_child(Node())
-
-# Check to see if node has any children to determine next course of action.
-got_kids = True if root.children else False
-
-# If node does not have kids collect metadata values.
-if not got_kids:
-    meta_ls = []
-    for meta in range(root.metadata):
-        value = ls.pop(0)
-        meta_ls.append(value)
-
-# Go on to next child or back up.
-
-
-# If node has children drop to first child node and start the process once again.
-if got_kids:
-    current_node = root.children[0]
-
-
-
-
-
-# Create root node.
-root = Node()
-root.children = ls.pop(0)
-root.metadata = ls.pop(0)
-
-def build_tree(a_node, ls):
-
-    if not ls:
-        return a_node
-
-    if not a_node.children:
-
-        meta_ls = []
-        for meta in range(root.metadata):
-            value = ls.pop(0)
-            meta_ls.append(value)
-
-        a_node.metadata = meta_ls
-
-        build_tree(a_node.children[1:])
-
-    else:
-        for this_childs_count in range(a_node.children):
-                a_node.add_child(Node())
-
-        a_node.children[0].children = ls.pop(0)
-        a_node.children[0].metadata = ls.pop(0)
-
-        build_tree(a_node.children[0])
-
-
-Tree = build_tree(root, ls)
 
 # Traversal
 #
@@ -183,6 +116,7 @@ Tree = build_tree(root, ls)
 #             yield x
 
 
+a = (i for i in range(20))
 
 
 
