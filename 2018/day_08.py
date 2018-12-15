@@ -45,7 +45,7 @@ p1_test_cases = {
 
 ### Answers:
 
-# Passes test case breaks on actual input. Fun with recursion though :)
+# Passes test case breaks on actual input.
 def p1answer1(ls, *args, **kwargs):
 
     def build_tree(ls, tree=None,  node_ID = 0, *args, **kwargs):
@@ -128,36 +128,6 @@ if not got_kids:
 if got_kids:
     current_node = root.children[0]
 
-# Whats new in 2.3 is new to me in 3.6... completey forgot about using a generator
-#
-# https://docs.python.org/3/whatsnew/2.3.html?highlight=build%20tree
-# https://stackoverflow.com/questions/231767/what-does-the-yield-keyword-do
-#
-# Putting the node with the tree traversal mechanism, this seems like an efficient graceful solution
-# o
-#
-#
-#
-# # A simple node class.
-# class Node(object):
-#     def __init__(self, *args, **kwargs):
-#         self.metadata = None
-#         self.number_of_children = None
-#         self.children = []
-#
-#     def add_child(self, obj):
-#         self.children.append(obj)
-# #
-#
-# def inorder(t):
-#     if t:
-#         for x in inorder(t.left):
-#             yield x
-#         yield t.label
-#         for x in inorder(t.right):
-#             yield x
-
-
 # A simple node class.
 class Node(object):
     def __init__(self, *args, **kwargs):
@@ -168,14 +138,45 @@ class Node(object):
     def add_child(self, obj):
         self.children.append(obj)
 
+# Whats new in 2.3 is new to me in 3.6... completely forgot about using a generator
+#
+# https://docs.python.org/3/whatsnew/2.3.html?highlight=build%20tree
+# https://stackoverflow.com/questions/231767/what-does-the-yield-keyword-do
+#
+# def inorder(t):
+#     if t:
+#         for x in inorder(t.left):
+#             yield x
+#         yield t.label
+#         for x in inorder(t.right):
+#             yield x
 
- def inorder(t):
-     if t:
-         for x in inorder(t.left):
-             yield x
-         yield t.label
-         for x in inorder(t.right):
-             yield x
+
+# Create root node.
+root = Node()
+
+def build_tree(a_node, ls):
+
+    current_node.children = ls.pop(0)
+    current_node.metadata = ls.pop(0)
+
+    if not ls:
+        return a_node
+
+    if not a_node.children:
+
+        meta_ls = []
+        for meta in range(root.metadata):
+            value = ls.pop(0)
+            meta_ls.append(value)
+
+    else:
+
+    for child in a_node.children:
+            build_tree(current_node, ls)
+
+
+
 
 
 
