@@ -83,6 +83,7 @@ def p1answer1(ls, *args, **kwargs):
 # https://stackoverflow.com/a/2482610/
 # http://interactivepython.org/courselib/static/pythonds/BasicDS/ImplementinganUnorderedListLinkedLists.html
 # http://interactivepython.org/courselib/static/pythonds/index.html
+# http://interactivepython.org/runestone/static/pythonds/Trees/VocabularyandDefinitions.html
 
 # Tree data structure attempt.
 def p1answer2(ls, *args, **kwargs):
@@ -126,8 +127,37 @@ if not got_kids:
 if got_kids:
     current_node = root.children[0]
 
-# Holy moly I feel as though I am right on the tip of getting this thing to work. Whith the process above I should be
-# able to get this ball rolling.
+# Whats new in 2.3 is new to me in 3.6... completey forgot about using a generator
+#
+# https://docs.python.org/3/whatsnew/2.3.html?highlight=build%20tree
+#
+# # A recursive generator that generates Tree leaves in in-order.
+# def inorder(t):
+#     if t:
+#         for x in inorder(t.left):
+#             yield x
+#         yield t.label
+#         for x in inorder(t.right):
+#             yield x
+
+
+
+
+
+
+
+
+
+
+
+ def inorder(t):
+     if t:
+         for x in inorder(t.left):
+             yield x
+         yield t.label
+         for x in inorder(t.right):
+             yield x
+
 
 
 p1answers = {
