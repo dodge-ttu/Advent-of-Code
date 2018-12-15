@@ -124,41 +124,23 @@ if not got_kids:
         value = ls.pop(0)
         meta_ls.append(value)
 
-# If node has children drop first child node and start the process once again.
+# Go on to next child or back up.
+
+
+# If node has children drop to first child node and start the process once again.
 if got_kids:
     current_node = root.children[0]
 
-# A simple node class.
-class Node(object):
-    def __init__(self, *args, **kwargs):
-        self.metadata = None
-        self.number_of_children = None
-        self.children = []
 
-    def add_child(self, obj):
-        self.children.append(obj)
 
-# Whats new in 2.3 is new to me in 3.6... completely forgot about using a generator
-#
-# https://docs.python.org/3/whatsnew/2.3.html?highlight=build%20tree
-# https://stackoverflow.com/questions/231767/what-does-the-yield-keyword-do
-#
-# def inorder(t):
-#     if t:
-#         for x in inorder(t.left):
-#             yield x
-#         yield t.label
-#         for x in inorder(t.right):
-#             yield x
 
 
 # Create root node.
 root = Node()
+root.children = ls.pop(0)
+root.metadata = ls.pop(0)
 
 def build_tree(a_node, ls):
-
-    current_node.children = ls.pop(0)
-    current_node.metadata = ls.pop(0)
 
     if not ls:
         return a_node
@@ -170,11 +152,36 @@ def build_tree(a_node, ls):
             value = ls.pop(0)
             meta_ls.append(value)
 
+        a_node.metadata = meta_ls
+
+        build_tree(a_node.children[1:])
+
     else:
+        for this_childs_count in range(a_node.children):
+                a_node.add_child(Node())
 
-    for child in a_node.children:
-            build_tree(current_node, ls)
+        a_node.children[0].children = ls.pop(0)
+        a_node.children[0].metadata = ls.pop(0)
 
+        build_tree(a_node.children[0])
+
+
+Tree = build_tree(root, ls)
+
+# Holy I cannot believe I may have actually figured out how to implement this.
+
+
+
+# https://docs.python.org/3/whatsnew/2.3.html?highlight=build%20tree
+# https://stackoverflow.com/questions/231767/what-does-the-yield-keyword-do
+#
+# def inorder(t):
+#     if t:
+#         for x in inorder(t.left):
+#             yield x
+#         yield t.label
+#         for x in inorder(t.right):
+#             yield x
 
 
 
