@@ -10,7 +10,8 @@ from collections import defaultdict
 #
 # A header, which is always exactly two numbers:
 # The quantity of child nodes.
-# The quantity of metadata entries.
+# The quantity
+# of metadata entries.
 # Zero or more child nodes (as specified in the header).
 # One or more metadata entries (as specified in the header).
 # Each child node is itself a node that has its own header, child nodes, and metadata. For example:
@@ -130,8 +131,24 @@ if got_kids:
 # Whats new in 2.3 is new to me in 3.6... completey forgot about using a generator
 #
 # https://docs.python.org/3/whatsnew/2.3.html?highlight=build%20tree
+# https://stackoverflow.com/questions/231767/what-does-the-yield-keyword-do
 #
-# # A recursive generator that generates Tree leaves in in-order.
+# Putting the node with the tree traversal mechanism, this seems like an efficient graceful solution
+# o
+#
+#
+#
+# # A simple node class.
+# class Node(object):
+#     def __init__(self, *args, **kwargs):
+#         self.metadata = None
+#         self.number_of_children = None
+#         self.children = []
+#
+#     def add_child(self, obj):
+#         self.children.append(obj)
+# #
+#
 # def inorder(t):
 #     if t:
 #         for x in inorder(t.left):
@@ -141,13 +158,15 @@ if got_kids:
 #             yield x
 
 
+# A simple node class.
+class Node(object):
+    def __init__(self, *args, **kwargs):
+        self.metadata = None
+        self.number_of_children = None
+        self.children = []
 
-
-
-
-
-
-
+    def add_child(self, obj):
+        self.children.append(obj)
 
 
  def inorder(t):
