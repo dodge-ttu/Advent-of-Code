@@ -168,10 +168,9 @@ def build_tree(a_node, ls):
 
 Tree = build_tree(root, ls)
 
-# Holy I cannot believe I may have actually figured out how to implement this.
-
-
-
+# Traversal
+#
+#
 # https://docs.python.org/3/whatsnew/2.3.html?highlight=build%20tree
 # https://stackoverflow.com/questions/231767/what-does-the-yield-keyword-do
 #
