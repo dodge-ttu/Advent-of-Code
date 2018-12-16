@@ -1,5 +1,4 @@
 import timeit
-from collections import defaultdict
 
 #region Problem 1
 #
@@ -87,41 +86,112 @@ def p1answer1(ls, *args, **kwargs):
 # http://interactivepython.org/runestone/static/pythonds/Trees/VocabularyandDefinitions.html
 # https://stackoverflow.com/a/14015526
 
-class Node:
-    def __init__(self, metadata=None, numChildren=None):
-        self.metadata = metadata
-        self.numChildren = numChildren
-        self.children = []
-        self.parent = None
 
-    def add_child(self, metadata):
-        leaf = Node(metadata)
-        leaf.parent = self
-        self.children.append(leaf)
+def p1answer2(ls, *args, **kwargs):
 
+    class Node:
+        def __init__(self, key, parent=None, numChildren=None, numMeta=None):
+            self.key = key
+            self.parent = parent
+            self.numChildren = numChildren
+            self.numMeta = numMeta
+            self.metadata = []
+            self.children = []
+            self.children_copy = []
+            self.visited = False
 
+        def add_child(self, key):
+            leaf = Node(key)
+            leaf.parent = self
+            self.children.append(leaf)
 
+    letters = (str(i) for i in range(10000))
 
+    root = Node(key=next(letters))
+    root.parent = Node("root")
+    root.parent.visited = True
+    root.parent.children.append(root)
 
+    def build_tree(current_node, ls, asum=0):
 
-# Traversal
-#
-#
-# https://docs.python.org/3/whatsnew/2.3.html?highlight=build%20tree
-# https://stackoverflow.com/questions/231767/what-does-the-yield-keyword-do
-#
-# def inorder(t):
-#     if t:
-#         for x in inorder(t.left):
-#             yield x
-#         yield t.label
-#         for x in inorder(t.right):
-#             yield x
+        if not ls:
+            print(asum)
+            return current_node, asum
 
+        if current_node.key == "root" and ls:
+            print("look root")
+            current_node = current_node.children[0]
 
-a = (i for i in range(20))
+            return build_tree(current_node, ls)
 
+        if current_node.visited == False:
+            print("here")
+            print(current_node.key)
+            print(current_node.visited)
+            num_child = ls.pop(0)
+            metadata = ls.pop(0)
 
+            print(num_child, metadata)
+
+            current_node.numChildren = num_child
+            current_node.numMeta = metadata
+            current_node.visited = True
+
+            if current_node.numChildren > 0:
+                for i in range(current_node.numChildren):
+                    current_node.add_child(next(letters))
+
+                if current_node.parent == "root":
+                    root.children_copy == root.children.copy()
+
+                current_node = current_node.children.pop(0)
+
+                return build_tree(current_node, ls, asum)
+
+            elif current_node.numChildren == 0:
+                meta_ls = []
+                for i in range(current_node.numMeta):
+                    value = ls.pop(0)
+                    meta_ls.append(value)
+
+                current_node.metadata = meta_ls
+
+                asum += sum(meta_ls)
+
+                if current_node.parent.children:
+                    current_node = current_node.parent.children.pop(0)
+                else:
+                    current_node = current_node.parent
+
+                return build_tree(current_node, ls, asum)
+
+        elif current_node.visited == True and ls:
+            print("there")
+            print(current_node.key)
+            print(current_node.visited)
+            meta_ls = []
+            for i in range(current_node.numMeta):
+                value = ls.pop(0)
+                meta_ls.append(value)
+
+            current_node.metadata = meta_ls
+
+            asum += sum(meta_ls)
+
+            if current_node.parent and current_node.parent != "root":
+                current_node = current_node.parent
+
+            if current_node.parent and current_node.parent == "root":
+                current_node = current_node.children[0]
+
+            elif current_node.children:
+                current_node = current_node.children.pop(0)
+
+            return build_tree(current_node, ls, asum)
+
+    tree, asum = build_tree(root, ls)
+
+    return tree, asum
 
 p1answers = {
     "p1answer1":p1answer1,
