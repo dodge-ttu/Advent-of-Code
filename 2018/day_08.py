@@ -86,186 +86,21 @@ def p1answer1(ls, *args, **kwargs):
 # http://interactivepython.org/courselib/static/pythonds/index.html
 # http://interactivepython.org/runestone/static/pythonds/Trees/VocabularyandDefinitions.html
 # https://stackoverflow.com/a/14015526
-#
-# Possible problem solving implementations include a linked list, a trie, a binary tree with left child
-# right sibling arrangement.
-#
-# Starting from scratch all over again. Going to work with a simple binary tree and try to modify it after
-# I get a feel for it. I'm looking to make a left child - right sibling binary tree...
-#
-# LC-RS is exactly the same structure as a binary tree it is simply in the nature of construction that
-# causes it to be such.....
-#
-# This:
-#
-#        a
-#      / | \
-#     /  |  \
-#    b   c   d
-#       / \
-#      e   f
-#
-# Can be represented as:
-#
-#        a
-#       /
-#      /
-#     b---c---d
-#        /
-#       e---f
-#
-# May lead to some slow traversal at times.
 
-# Tree LCRS data structure attempt.
-def p1answer2(ls, *args, **kwargs):
-
-p1_a = ([2,3,0,3,10,11,12,1,1,0,1,99,2,1,1,2],138)
-
-ls = p1_a[0].copy()
-
-
-class BinaryTree:
-    def __init__(self, rootObj, metadata=None, numChildren=None):
-        self.key = rootObj
+class Node:
+    def __init__(self, metadata=None, numChildren=None):
         self.metadata = metadata
         self.numChildren = numChildren
-        self.leftChild = None
-        self.rightSibling = None
+        self.children = []
         self.parent = None
 
-    def insertLeft(self, newNode):
-        if self.leftChild == None:
-            self.leftChild = BinaryTree(newNode)
-            self.leftChild.parent = self
-
-        else:
-            t = BinaryTree(newNode)
-            t.leftChild = self.leftChild
-            t.leftChild.parent = self
-            self.leftChild = t
-
-    def insertRight(self, newNode):
-        parent = self.parent
-        if self.rightSibling== None:
-            self.rightSibling = BinaryTree(newNode)
-            self.rightSibling.parent = parent
-
-        else:
-            t = BinaryTree(newNode)
-            t.rightSibling = self.rightSibling
-            t.rightSibling.parent = parent
-            self.rightSibling = t
-
-    def setNumChildren(self, obj):
-        self.numChildren = obj
-
-    def setMetadata(self, obj):
-        self.metadata = obj
-
-    def setRootVal(self, obj):
-        self.key = obj
-
-    def getLeftChild(self):
-        if self.leftChild:
-            print("{0}'s left child is {1}".format(self.key, self.leftChild.key))
-        else:
-            print(self.leftChild)
-        return self.leftChild
-
-    def getRightSibling(self):
-        if self.rightSibling:
-            print("{0}'s right sibling is {1}".format(self.key, self.rightSibling.key))
-        else:
-            print(self.rightSibling)
-        return self.rightSibling
-
-    def getParent(self):
-        print("{0}'s parent is {1}".format(self.key, self.parent.key))
-        return self.parent
-
-    def getNumChildren(self):
-        # print("{0}'s number of children is {1}".format(self.key, self.numChildren))
-        return self.numChildren
-
-    def getMetadata(self):
-        return self.metadata
-
-    def getRootVal(self):
-        return self.key
+    def add_child(self, metadata):
+        leaf = Node(metadata)
+        leaf.parent = self
+        self.children.append(leaf)
 
 
-def build_tree(current_node, ls):
 
-    if not ls:
-        return(current_node)
-
-    if current_node.getNumChildren() > 0:
-        node_ID = next(node_ID_generator)
-        print(node_ID)
-        current_node.insertLeft(node_ID)
-
-        # Create right siblings for the left child just created.
-        # Range is minus one because we already created the left child for this level.
-        for i in range(1, current_node.getNumChildren()):
-            node_ID = next(node_ID_generator)
-            current_node.getLeftChild().insertRight(node_ID)
-
-        current_node = current_node.getLeftChild()
-
-        number_of_children = ls.pop(0)
-        metadata = ls.pop(0)
-
-        current_node.setNumChildren(number_of_children)
-        current_node.setMetadata(metadata)
-
-        return build_tree(current_node, ls)
-
-    if current_node.getNumChildren() == 0 and current_node.getRightSibling() != None:
-        meta_ls = []
-        for i in range(current_node.getMetadata()):
-            value = ls.pop(0)
-            meta_ls.append(value)
-
-        current_node.setMetadata(meta_ls)
-
-        current_node = current_node.getRightSibling()
-
-        number_of_children = ls.pop(0)
-        metadata = ls.pop(0)
-
-        current_node.setNumChildren(number_of_children)
-        current_node.setMetadata(metadata)
-
-        return build_tree(current_node, ls)
-
-    if current_node.getNumChildren() == 0 and current_node.getRightSibling() == None:
-
-        if current_node.getParent() == None:
-
-            return current_node
-
-        else:
-            current_node = current_node.getParent()
-
-            return build_tree(current_node, ls)
-
-
-node_ID_generator = (str(i) for i in range(10))
-node_ID = next(node_ID_generator)
-A_node = BinaryTree(node_ID)
-
-number_of_children = ls.pop(0)
-metadata = ls.pop(0)
-
-A_node.setNumChildren(number_of_children)
-A_node.setMetadata(metadata)
-
-build_tree(A_node, ls)
-
-A = A_node
-B = A_node.getLeftChild()
-C = B.getRightSibling()
-D = C.getLeftChild()
 
 
 
