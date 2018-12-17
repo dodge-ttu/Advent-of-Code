@@ -112,18 +112,19 @@ def p1answer1(ls):
     last_pnts = ls[1]
 
     game_board = [0]
-    ball_score = 1
+    other_loc = 0
 
     score_dict = {}
 
     for i in range(1, players + 1):
         score_dict[i] = 0
 
-    for i in range(1, last_pnts + 1):
+    for i in range(1, last_pnts):
         print(game_board)
         insertion_location = find_insertion_point(i)
+        insertion_location = insertion_location - other_loc
 
-        current_player = (i % players)
+        current_player = (i % players) +1
 
         if i % 23 == 0:
             other_loc = (insertion_location - 9)
@@ -133,8 +134,7 @@ def p1answer1(ls):
             print(plus_removal)
             score_dict[current_player] += (i + plus_removal)
             print(i)
-
-            ball_score += i
+            other_loc += 7
 
         else:
             game_board.insert(insertion_location, i)
