@@ -56,7 +56,10 @@ import math
 # [5]  0 16  8 17  4 18(19) 2 20 10 21  5 22 11  1 12  6 13  3 14  7 15
 # [6]  0 16  8 17  4 18 19  2(24)20 10 21  5 22 11  1 12  6 13  3 14  7 15
 # [7]  0 16  8 17  4 18 19  2 24 20(25)10 21  5 22 11  1 12  6 13  3 14  7 15
-# The goal is to be the player with the highest score after the last marble is used up. Assuming the example above ends after the marble numbered 25, the winning score is 23+9=32 (because player 5 kept marble 23 and removed marble 9, while no other player got any points in this very short example game).
+
+# The goal is to be the player with the highest score after the last marble is used up. Assuming the example above
+# ends after the marble numbered 25, the winning score is 23+9=32 (because player 5 kept marble 23 and removed marble
+# 9, while no other player got any points in this very short example game).
 #
 # Here are a few more examples:
 #
@@ -116,28 +119,41 @@ def p1answer1(ls):
 
     score_dict = {}
 
+    lookup = {}
+
+    for i in range(100000):
+        lookup[i] = find_insertion_point(i)
+
+    lookup_invert = {v:k for (k,v) in lookup.items()}
+
     for i in range(1, players + 1):
         score_dict[i] = 0
 
-    for i in range(1, last_pnts):
-        print(game_board)
+    for i in range(1, last_pnts+1):
         insertion_location = find_insertion_point(i)
-        insertion_location = insertion_location - other_loc
 
         current_player = (i % players) +1
 
         if i % 23 == 0:
-            other_loc = (insertion_location - 9)
-            print(other_loc)
-            print(insertion_location)
+            print("here")
+            game_board_reversed = (game_board[insertion_location:] + game_board[:insertion_location]).copy()
+            game_board_reversed.reverse()
+            spinner = itertools.cycle(game_board_reversed)
+            this_one = [next(spinner) for i in range(9)][-1]
+            print(this_one)
+            here = game_board.index(this_one)
+            print(here)
+            other_loc = here
             plus_removal = game_board.pop(other_loc)
-            print(plus_removal)
             score_dict[current_player] += (i + plus_removal)
-            print(i)
-            other_loc += 7
+            print(game_board[other_loc])
+            other_loc += 3
 
         else:
+            insertion_location -= other_loc
             game_board.insert(insertion_location, i)
+
+        print(game_board)
 
 
 
