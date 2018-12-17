@@ -1,4 +1,6 @@
 import timeit
+import sys
+sys.setrecursionlimit(5000)
 
 #region Problem 1
 #
@@ -215,7 +217,7 @@ for (answer_name, answer) in p1answers.items():
 
 ### Test cases:
 
-p2_a = ([],0)
+p2_a = ([2,3,0,3,10,11,12,1,1,0,1,99,2,1,1,2],66)
 
 p2_test_cases = {
     "p2_a":p2_a
@@ -223,8 +225,195 @@ p2_test_cases = {
 
 ### Answers:
 
-def p2answer1(*args, **kwargs):
-    pass
+def p2answer1(ls, *args, **kwargs):
+
+    class Node:
+        def __init__(self, key, parent=None, numChildren=None, numMeta=None):
+            self.key = key
+            self.parent = parent
+            self.numChildren = numChildren
+            self.numMeta = numMeta
+            self.metadata = []
+            self.children = []
+            self.children_copy = []
+            self.visited = False
+
+        def add_child(self, key):
+            leaf = Node(key)
+            leaf.parent = self
+            self.children.append(leaf)
+            self.children_copy.append(leaf)
+
+    letters = (i for i in range(10000))
+
+    root = Node(key=next(letters))
+    root.parent = Node("root")
+    root.parent.visited = True
+    root.parent.children.append(root)
+
+    master_dict = {}
+
+    def build_tree(current_node, ls, asum=0):
+
+        if not ls:
+            print(asum)
+            return current_node, asum
+
+        if current_node.key == "root" and ls:
+            print("look root")
+            current_node = current_node.children[0]
+
+            return build_tree(current_node, ls)
+
+        if current_node.visited == False:
+            print("here")
+            print(current_node.key)
+            print(current_node.visited)
+            num_child = ls.pop(0)
+            metadata = ls.pop(0)
+
+            print(num_child, metadata)
+
+            current_node.numChildren = num_child
+            current_node.numMeta = metadata
+            current_node.visited = True
+
+            if current_node.numChildren > 0:
+                for i in range(current_node.numChildren):
+                    current_node.add_child(next(letters))
+
+                if current_node.parent == "root":
+                    root.children_copy == root.children.copy()
+
+                current_node = current_node.children.pop(0)
+
+                return build_tree(current_node, ls, asum)
+
+            elif current_node.numChildren == 0:
+                meta_ls = []
+                for i in range(current_node.numMeta):
+                    value = ls.pop(0)
+                    meta_ls.append(value)
+
+                current_node.metadata = meta_ls
+
+                asum += sum(meta_ls)
+
+                aa = [i.key for i in current_node.children_copy]
+                aa_rent = current_node.parent.key
+
+                master_dict[current_node.key] = (current_node.metadata, aa, aa_rent)
+
+                if current_node.parent.children:
+                    current_node = current_node.parent.children.pop(0)
+                else:
+                    current_node = current_node.parent
+
+                return build_tree(current_node, ls, asum)
+
+        elif current_node.visited == True and ls:
+            print("there")
+            print(current_node.key)
+            print(current_node.visited)
+            meta_ls = []
+            for i in range(current_node.numMeta):
+                value = ls.pop(0)
+                meta_ls.append(value)
+
+            current_node.metadata = meta_ls
+
+            aa = [i.key for i in current_node.children_copy]
+            aa_rent = current_node.parent.key
+
+            master_dict[current_node.key] = (current_node.metadata, aa, aa_rent)
+
+            asum += sum(meta_ls)
+
+            if current_node.parent and current_node.parent != "root":
+                current_node = current_node.parent
+
+            if current_node.parent and current_node.parent == "root":
+                current_node = current_node.children[0]
+
+            elif current_node.children:
+                current_node = current_node.children.pop(0)
+
+            return build_tree(current_node, ls, asum)
+
+    tree, asum = build_tree(root, ls)
+
+    cleaner_dict = {}
+
+    for (k, v) in master_dict.items():
+
+        print(k, v)
+
+        if not v[1]:
+            asum = sum(v[0])
+            cleaner_dict[k] = [[], asum, v[2], []]
+
+        else:
+            print(v[0])
+            kids_that_count = []
+            for i in v[0]:
+                try:
+                    a_kid = v[1][i - 1]
+                    kids_that_count.append(a_kid)
+                except:
+                    print("pass")
+                    pass
+            cleaner_dict[k] = [kids_that_count, 0, v[2], []]
+
+    root = cleaner_dict[0]
+
+    def count_node(current_node, node_sum=0):
+
+        print(current_node)
+
+        # try:
+        #     whats_left = [k for (k,v) in cleaner_dict.items() if v[0]]
+        #     print("still going")
+        #     print(whats_left)
+        #
+        # except:
+        #     print("excepted out")
+        #     print(node_sum)
+        #     return current_node, node_sum
+
+        if not current_node[0] and current_node[2] == "root":
+            print("wasabe")
+            return node_sum
+
+        elif not current_node[0]:
+            print("no kids")
+            print(current_node[1])
+            this_nodes_sum = current_node[1]
+            print("here")
+            node_sum += this_nodes_sum
+            print(node_sum)
+            parent = cleaner_dict[current_node[2]]
+            parent[1] += this_nodes_sum
+
+            print(parent)
+            current_node = parent
+
+            return count_node(current_node, node_sum)
+
+        else:
+            print("on to next kid")
+            next_key = current_node[0].pop(0)
+            current_node[3].append(next_key)
+            next_child = cleaner_dict[next_key]
+            print(next_key)
+            current_node = next_child
+
+            return count_node(current_node, node_sum)
+
+    node_sum = count_node(root)
+
+    print(node_sum)
+
+    return node_sum
 
 def p2answer2(*args, **kwargs):
     pass
@@ -243,6 +432,8 @@ for (answer_name, answer) in p2answers.items():
         else:
             print("[Problem 2] Test: FAIL, Function: {0} Input: {1}".format(answer_name, test))
 
+# [Problem 2] Test: PASS, Function: p2answer1 Input: []
+# [Problem 2] Test: FAIL, Function: p2answer2 Input: []
 
 
 ####### Official Input Data #######
