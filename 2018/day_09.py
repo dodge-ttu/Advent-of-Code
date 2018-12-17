@@ -108,11 +108,6 @@ def p1answer1(ls):
             loc = 2*(integer-2**int(math.log(integer, 2)))+1
             return loc
 
-    insertion_point_dict = {}
-
-    for i in range(100000):
-        insertion_point_dict[i] = find_insertion_point(i)
-
     players = ls[0]
     last_pnts = ls[1]
 
@@ -140,8 +135,6 @@ def p1answer1(ls):
             print(i)
 
             ball_score += i
-
-            return game_board, ball_score, score_dict, other_loc
 
         else:
             game_board.insert(insertion_location, i)
