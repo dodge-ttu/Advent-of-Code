@@ -258,9 +258,9 @@ def p2answer1(ls, *args, **kwargs):
             self.children.append(leaf)
             self.children_copy.append(leaf)
 
-    letters = (i for i in range(10000))
+    some_IDs = (i for i in range(10000))
 
-    root = Node(key=next(letters))
+    root = Node(key=next(some_IDs))
     root.parent = Node("root")
     root.parent.visited = True
     root.parent.children.append(root)
@@ -287,7 +287,7 @@ def p2answer1(ls, *args, **kwargs):
 
             if current_node.numChildren > 0:
                 for i in range(current_node.numChildren):
-                    current_node.add_child(next(letters))
+                    current_node.add_child(next(some_IDs))
 
                 if current_node.parent == "root":
                     root.children_copy == root.children.copy()
