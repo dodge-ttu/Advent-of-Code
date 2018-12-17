@@ -38,8 +38,6 @@ sys.setrecursionlimit(5000)
 
 p1_a = ([2,3,0,3,10,11,12,1,1,0,1,99,2,1,1,2],138)
 
-p1_b = ([1,1,0,1,99,2], 101)
-
 p1_test_cases = {
     "p1_a":p1_a,
 }
@@ -117,23 +115,16 @@ def p1answer2(ls, *args, **kwargs):
     def build_tree(current_node, ls, asum=0):
 
         if not ls:
-            print(asum)
             return current_node, asum
 
         if current_node.key == "root" and ls:
-            print("look root")
             current_node = current_node.children[0]
 
             return build_tree(current_node, ls)
 
         if current_node.visited == False:
-            print("here")
-            print(current_node.key)
-            print(current_node.visited)
             num_child = ls.pop(0)
             metadata = ls.pop(0)
-
-            print(num_child, metadata)
 
             current_node.numChildren = num_child
             current_node.numMeta = metadata
@@ -168,9 +159,6 @@ def p1answer2(ls, *args, **kwargs):
                 return build_tree(current_node, ls, asum)
 
         elif current_node.visited == True and ls:
-            print("there")
-            print(current_node.key)
-            print(current_node.visited)
             meta_ls = []
             for i in range(current_node.numMeta):
                 value = ls.pop(0)
@@ -193,7 +181,7 @@ def p1answer2(ls, *args, **kwargs):
 
     tree, asum = build_tree(root, ls)
 
-    return tree, asum
+    return asum
 
 p1answers = {
     "p1answer1":p1answer1,
@@ -209,9 +197,35 @@ for (answer_name, answer) in p1answers.items():
         else:
             print("[Problem 1] Test: FAIL, Function: {0} Input: {1}".format(answer_name, test))
 
+# [Problem 1] Test: FAIL, Function: p1answer1 Input: [2, 3, 0, 3, 10, 11, 12, 1, 1, 0, 1, 99, 2, 1, 1, 2]
+# [Problem 1] Test: PASS, Function: p1answer2 Input: []
+
 #region Problem 2
 #
+# The second check is slightly more complicated: you need to find the value of the root node (A in the example above).
 #
+# The value of a node depends on whether it has child nodes.
+#
+# If a node has no child nodes, its value is the sum of its metadata entries. So, the value of node B is 10+11+12=33,
+# and the value of node D is 99.
+#
+# However, if a node does have child nodes, the metadata entries become indexes which refer to those child nodes.
+# A metadata entry of 1 refers to the first child node, 2 to the second, 3 to the third, and so on. The value of
+# this node is the sum of the values of the child nodes referenced by the metadata entries. If a referenced child
+# node does not exist, that reference is skipped. A child node can be referenced multiple time and counts each time
+# it is referenced. A metadata entry of 0 does not refer to any child node.
+#
+# For example, again using the above nodes:
+#
+# Node C has one metadata entry, 2. Because node C has only one child node, 2 references a child node which does
+# not exist, and so the value of node C is 0.
+#
+# Node A has three metadata entries: 1, 1, and 2. The 1 references node A's first child node, B, and the 2 references
+# node A's second child node, C. Because node B has a value of 33 and node C has a value of 0, the value of node
+# A is 33+33+0=66.
+# So, in this example, the value of the root node is 66.
+#
+# What is the value of the root node?
 #
 #endregion
 
@@ -256,23 +270,16 @@ def p2answer1(ls, *args, **kwargs):
     def build_tree(current_node, ls, asum=0):
 
         if not ls:
-            print(asum)
             return current_node, asum
 
         if current_node.key == "root" and ls:
-            print("look root")
             current_node = current_node.children[0]
 
             return build_tree(current_node, ls)
 
         if current_node.visited == False:
-            print("here")
-            print(current_node.key)
-            print(current_node.visited)
             num_child = ls.pop(0)
             metadata = ls.pop(0)
-
-            print(num_child, metadata)
 
             current_node.numChildren = num_child
             current_node.numMeta = metadata
@@ -312,9 +319,6 @@ def p2answer1(ls, *args, **kwargs):
                 return build_tree(current_node, ls, asum)
 
         elif current_node.visited == True and ls:
-            print("there")
-            print(current_node.key)
-            print(current_node.visited)
             meta_ls = []
             for i in range(current_node.numMeta):
                 value = ls.pop(0)
@@ -346,21 +350,17 @@ def p2answer1(ls, *args, **kwargs):
 
     for (k, v) in master_dict.items():
 
-        print(k, v)
-
         if not v[1]:
             asum = sum(v[0])
             cleaner_dict[k] = [[], asum, v[2], []]
 
         else:
-            print(v[0])
             kids_that_count = []
             for i in v[0]:
                 try:
                     a_kid = v[1][i - 1]
                     kids_that_count.append(a_kid)
                 except:
-                    print("pass")
                     pass
             cleaner_dict[k] = [kids_that_count, 0, v[2], []]
 
@@ -368,50 +368,28 @@ def p2answer1(ls, *args, **kwargs):
 
     def count_node(current_node, node_sum=0):
 
-        print(current_node)
-
-        # try:
-        #     whats_left = [k for (k,v) in cleaner_dict.items() if v[0]]
-        #     print("still going")
-        #     print(whats_left)
-        #
-        # except:
-        #     print("excepted out")
-        #     print(node_sum)
-        #     return current_node, node_sum
-
         if not current_node[0] and current_node[2] == "root":
-            print("wasabe")
             return node_sum
 
         elif not current_node[0]:
-            print("no kids")
-            print(current_node[1])
             this_nodes_sum = current_node[1]
-            print("here")
             node_sum += this_nodes_sum
-            print(node_sum)
             parent = cleaner_dict[current_node[2]]
             parent[1] += this_nodes_sum
 
-            print(parent)
             current_node = parent
 
             return count_node(current_node, node_sum)
 
         else:
-            print("on to next kid")
             next_key = current_node[0].pop(0)
             current_node[3].append(next_key)
             next_child = cleaner_dict[next_key]
-            print(next_key)
             current_node = next_child
 
             return count_node(current_node, node_sum)
 
     node_sum = count_node(root)
-
-    print(node_sum)
 
     return node_sum
 
@@ -438,7 +416,7 @@ for (answer_name, answer) in p2answers.items():
 
 ####### Official Input Data #######
 
-### C"SV library
+### CSV library
 
 file_path = "/home/will/advent_of_code/Advent-of-Code/2018/day_08_input.txt"
 
@@ -447,8 +425,6 @@ with open(file_path) as my_file:
     data = []
     for i in raw_data:
         data.append(int(i))
-
-# Data was the same for problem one and two for this day.
 
 
 ####### Performance  #######
@@ -464,5 +440,20 @@ def time_with_official_data(problem_number, answer_dict, loops=1, testing=False,
         print("[Problem {0}] Time: {1} seconds on {2} loops, Function: {3}".format(problem_number,time,loops,answer_name))
 
 time_with_official_data(problem_number=1, answer_dict=p1answers, loops=1)
+
+# remake actual data as it gets empty from popping
+
+file_path = "/home/will/advent_of_code/Advent-of-Code/2018/day_08_input.txt"
+
+with open(file_path) as my_file:
+    raw_data = my_file.read().split()
+    data = []
+    for i in raw_data:
+        data.append(int(i))
+
 time_with_official_data(problem_number=2, answer_dict=p2answers, loops=1)
 
+# [Problem 1] Time: 0.0 seconds on 1 loops, Function: p1answer1
+# [Problem 1] Time: 0.03869 seconds on 1 loops, Function: p1answer2
+# [Problem 2] Time: 0.03899 seconds on 1 loops, Function: p2answer1
+# [Problem 2] Time: 0.0 seconds on 1 loops, Function: p2answer2
