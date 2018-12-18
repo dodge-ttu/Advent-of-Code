@@ -104,65 +104,47 @@ p1_test_cases = {
 
 def p1answer1(ls):
 
-    def find_insertion_point(integer):
-        if integer == 0:
-            return 1
-        else:
-            loc = 2*(integer-2**int(math.log(integer, 2)))+1
-            return loc
+    def gen_exp(limit):
+        for i in range(1, limit):
+            n = 2 * (i - 2 ** int(math.log(i, 2))) + 1
+            yield n
 
-    players = ls[0]
-    last_pnts = ls[1]
+    aa = gen_exp(100000)
 
+    players = 429
+    player_next = itertools.cycle(range(1, players + 1))
+
+    last_pnts = 70901
     game_board = [0]
-    other_loc = 0
 
     score_dict = {}
-
-    lookup = {}
-
-    for i in range(100000):
-        lookup[i] = find_insertion_point(i)
-
-    lookup_invert = {v:k for (k,v) in lookup.items()}
-
     for i in range(1, players + 1):
         score_dict[i] = 0
 
-    for i in range(1, last_pnts+1):
-        insertion_location = find_insertion_point(i)
+    loc = next(aa)
+    next(player_next)
+    game_board.insert(loc, 1)
 
-        current_player = (i % players) +1
+    loc_change = 0
+
+    for i in range(2, last_pnts + 1):
+        player = next(player_next)
 
         if i % 23 == 0:
-            print("here")
-            game_board_reversed = (game_board[insertion_location:] + game_board[:insertion_location]).copy()
-            game_board_reversed.reverse()
-            spinner = itertools.cycle(game_board_reversed)
-            this_one = [next(spinner) for i in range(9)][-1]
-            print(this_one)
-            here = game_board.index(this_one)
-            print(here)
-            other_loc = here
-            plus_removal = game_board.pop(other_loc)
-            score_dict[current_player] += (i + plus_removal)
-            print(game_board[other_loc])
-            other_loc += 3
+            print(i)
+            other_ball = game_board.pop(loc - 7)
+            print(other_ball)
+            score_dict[player] += (i + other_ball)
+            print(loc)
+            loc_change += 7
 
         else:
-            insertion_location -= other_loc
-            game_board.insert(insertion_location, i)
+            loc = next(aa)
+            loc -= loc_change
 
+        game_board.insert(loc, i)
         print(game_board)
 
-
-
-
-
-
-    max_score = max(score_dict.items(), key=lambda x: x[1])
-
-    return max_score[1]
 
 p1answers = {
     "p1answer1":p1answer1,
