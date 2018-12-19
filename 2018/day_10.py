@@ -1,4 +1,3 @@
-import timeit
 import re
 import numpy as np
 import matplotlib.pyplot as plt
@@ -197,9 +196,16 @@ p1_a = ([
     "position=<-3,  6> velocity=< 2, -1>",
         ], 0)
 
-p1_test_cases = {
-    "p1_a":p1_a,
-}
+### Data:
+
+file_path = "/home/will/advent_of_code/Advent-of-Code/2018/day_10_input.txt"
+
+with open(file_path) as my_file:
+    raw_data = my_file.read().splitlines()
+    data = []
+    for row in raw_data:
+        data.append(row)
+
 
 ### Answers:
 
@@ -234,7 +240,6 @@ def p1answer1(data):
         y_vols.append(i[3])
 
     # np array for convenience
-
     xs = np.array(xs)
     ys = np.array(ys)
     x_vols = np.array(x_vols)
@@ -256,8 +261,6 @@ def p1answer1(data):
 
     ax.set_xlim((min_x - 1000, max_x + 1000))
     ax.set_ylim((min_y - 1000, max_y + 1000))
-
-    sleep = 0
 
     # Animation initilization function
     def init():
@@ -300,69 +303,109 @@ p1answers = {
 
 ### Problem 1 tests:
 
-for (answer_name, answer) in p1answers.items():
-    for test_name, (test,sol) in p1_test_cases.items():
-        if (answer(test) == sol):
-            print("[Problem 1] Test: PASS, Function: {0} Input: {1}".format(answer_name, test))
-        else:
-            print("[Problem 1] Test: FAIL, Function: {0} Input: {1}".format(answer_name, test))
-
+# No testing, only visual inspection.
 
 
 #region Problem 2
 #
+# How many seconds until the image appears?
 #
 #endregion
 
-### Test cases:
+# Parse data.
+image_data = []
 
-p2_a = ([], 0)
+for line in data:
+    coords = re.findall(r"[+-]?(?<!\.)\b[0-9]+\b(?!\.[0-9])", line)
+    coords = [int(i) for i in coords]
+
+    image_data.append(coords)
+
+# Initial x values.
+xs = []
+for i in image_data:
+    xs.append(i[0])
+
+# Initial y values.
+ys = []
+for i in image_data:
+    ys.append(i[1])
+
+# X velocity increment.
+x_vols = []
+for i in image_data:
+    x_vols.append(i[2])
+
+# Y velocity increment.
+y_vols = []
+for i in image_data:
+    y_vols.append(i[3])
+
+# np array for convenience
+xs = np.array(xs)
+ys = np.array(ys)
+x_vols = np.array(x_vols)
+y_vols = np.array(y_vols)
+
+# Make counter for the second problem.
+counter = 0
+
+# Fast forward
+for i in range(10650):
+    counter += 1
+    xs += x_vols
+    ys += y_vols
+
+# Set up plotting area.
+fig, ax = plt.subplots()
+line, = ax.plot([], [], "o")
+
+min_x = min(xs)
+max_x = max(xs)
+min_y = min(ys)
+max_y = max(ys)
+
+ax.set_xlim((min_x - 1000, max_x + 1000))
+ax.set_ylim((min_y - 1000, max_y + 1000))
+
+# Animation initilization function
+def init():
+    line.set_data([], [])
+
+    return line,
+
+#  Animation function.
+def animate(i, xs, ys, x_vols, y_vols, counter):
+
+    counter += i
+
+    xs += x_vols
+    ys += y_vols
+
+    min_x = min(xs)
+    max_x = max(xs)
+    min_y = min(ys)
+    max_y = max(ys)
 
 
-p2_test_cases = {
-    "p2_a":p2_a,
-}
+    ax.set_xlim((min_x - (.1*min_x)), (max_x + (.1*max_x)))
+    ax.set_ylim((min_y - (.1*max_y)), (max_y + (.1*max_y)))
 
-### Answers:
+    anchored_text = AnchoredText(counter, loc=2)
+    ax.add_artist(anchored_text)
 
-def p2answer1(ls):
-    pass
+    line.set_data(xs, ys)
 
+    return line,
 
-p2answers = {
-    "p2answer1":p2answer1,
-}
+fargs =(xs, ys, x_vols, y_vols, counter)
 
-### Problem 2 tests:
+# Generate animation.
+anim = animation.FuncAnimation(fig, animate, blit=False, interval=400,
+                               repeat=True, init_func=init, fargs =fargs)
+plt.show()
 
-for (answer_name, answer) in p2answers.items():
-    for test_name, (test,sol) in p2_test_cases.items():
-        if (answer(test) == sol):
-            print("[Problem 2] Test: PASS, Function: {0} Input: {1}".format(answer_name, test))
-        else:
-            print("[Problem 2] Test: FAIL, Function: {0} Input: {1}".format(answer_name, test))
+# Save a copy
+anim.save('/home/will/Desktop/animation.gif', writer='imagemagick', fps=1)
 
 
-####### Official Input Data #######
-
-file_path = "/home/will/advent_of_code/Advent-of-Code/2018/day_10_input.txt"
-
-with open(file_path) as my_file:
-    raw_data = my_file.read().splitlines()
-    data = []
-    for row in raw_data:
-        data.append(row)
-
-
-####### Performance  #######
-
-# Performance testing on official data.
-
-def time_with_official_data(problem_number, answer_dict, loops=1):
-    for (answer_name, answer) in answer_dict.items():
-        time = timeit.timeit("{0}(data)".format(answer_name), globals=globals(), number=loops)
-        time = round(time, 5)
-        print("[Problem {0}] Time: {1} seconds on {2} loops, Function: {3}".format(problem_number,time,loops,answer_name))
-
-time_with_official_data(problem_number=1, answer_dict=p1answers, loops=1)
-time_with_official_data(problem_number=2, answer_dict=p2answers, loops=1)
