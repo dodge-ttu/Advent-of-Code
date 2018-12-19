@@ -89,6 +89,7 @@ def p1answer1(ls, *args, **kwargs):
 
 def p1answer2(ls, *args, **kwargs):
 
+    # Simple node class.
     class Node:
         def __init__(self, key, parent=None, numChildren=None, numMeta=None):
             self.key = key
@@ -107,6 +108,7 @@ def p1answer2(ls, *args, **kwargs):
 
     letters = (str(i) for i in range(10000))
 
+    # Create root that bounces back to self.
     root = Node(key=next(letters))
     root.parent = Node("root")
     root.parent.visited = True
@@ -114,14 +116,17 @@ def p1answer2(ls, *args, **kwargs):
 
     def build_tree(current_node, ls, asum=0):
 
+        # Base condition
         if not ls:
             return current_node, asum
 
+        # If we have visited all children.
         if current_node.key == "root" and ls:
             current_node = current_node.children[0]
 
             return build_tree(current_node, ls)
 
+        # Visiting new child node that was created but not yet visited.
         if current_node.visited == False:
             num_child = ls.pop(0)
             metadata = ls.pop(0)
@@ -130,17 +135,21 @@ def p1answer2(ls, *args, **kwargs):
             current_node.numMeta = metadata
             current_node.visited = True
 
+            # Create children nodes.
             if current_node.numChildren > 0:
                 for i in range(current_node.numChildren):
                     current_node.add_child(next(letters))
 
+                # Make copy of root children and store in root node. ?
                 if current_node.parent == "root":
                     root.children_copy == root.children.copy()
 
+                # Visited first child node
                 current_node = current_node.children.pop(0)
 
                 return build_tree(current_node, ls, asum)
 
+            # If this node has no children collect metadata values.
             elif current_node.numChildren == 0:
                 meta_ls = []
                 for i in range(current_node.numMeta):
@@ -151,29 +160,38 @@ def p1answer2(ls, *args, **kwargs):
 
                 asum += sum(meta_ls)
 
+                # If this node has siblings go to the first sibling of current node.
                 if current_node.parent.children:
                     current_node = current_node.parent.children.pop(0)
+
+                # Return to parent node.
                 else:
                     current_node = current_node.parent
 
                 return build_tree(current_node, ls, asum)
 
+        # If we have been to this node and there is input data left collect data.
+        # We should be backing out of this branch of the tree at this point.
         elif current_node.visited == True and ls:
             meta_ls = []
             for i in range(current_node.numMeta):
                 value = ls.pop(0)
                 meta_ls.append(value)
 
+
             current_node.metadata = meta_ls
 
             asum += sum(meta_ls)
 
+            # If this node has parents and they aren't root go to parent.
             if current_node.parent and current_node.parent != "root":
                 current_node = current_node.parent
 
+            # If this node has parents and it's root go to first child.
             if current_node.parent and current_node.parent == "root":
                 current_node = current_node.children[0]
 
+            # Go to first child.
             elif current_node.children:
                 current_node = current_node.children.pop(0)
 
@@ -426,34 +444,28 @@ with open(file_path) as my_file:
     for i in raw_data:
         data.append(int(i))
 
+data_1 = data.copy()
+data_2 = data.copy()
 
 ####### Performance  #######
 
 def time_with_official_data(problem_number, answer_dict, loops=1, testing=False, *args, **kwargs):
+    counter = 0
     for (answer_name, answer) in answer_dict.items():
+        counter += 1
         if not testing:
-            time = timeit.timeit("{0}(data)".format(answer_name), globals=globals(), number=loops)
+            time = timeit.timeit("{0}(data_{1})".format(answer_name, counter), globals=globals(), number=loops)
         else:
-            time = timeit.timeit("{0}(data, testing=False)".format(answer_name), globals=globals(), number=loops)
+            time = timeit.timeit("{0}(data_{1}, testing=False)".format(answer_name, counter), globals=globals(), number=loops)
 
         time = round(time, 5)
         print("[Problem {0}] Time: {1} seconds on {2} loops, Function: {3}".format(problem_number,time,loops,answer_name))
 
 time_with_official_data(problem_number=1, answer_dict=p1answers, loops=1)
-
-# remake actual data as it gets empty from popping
-
-file_path = "/home/will/advent_of_code/Advent-of-Code/2018/day_08_input.txt"
-
-with open(file_path) as my_file:
-    raw_data = my_file.read().split()
-    data = []
-    for i in raw_data:
-        data.append(int(i))
-
 time_with_official_data(problem_number=2, answer_dict=p2answers, loops=1)
 
 # [Problem 1] Time: 0.0 seconds on 1 loops, Function: p1answer1
-# [Problem 1] Time: 0.03869 seconds on 1 loops, Function: p1answer2
-# [Problem 2] Time: 0.03899 seconds on 1 loops, Function: p2answer1
+# [Problem 1] Time: 0.03564 seconds on 1 loops, Function: p1answer2
+# [Problem 2] Time: 0.0465 seconds on 1 loops, Function: p2answer1
 # [Problem 2] Time: 0.0 seconds on 1 loops, Function: p2answer2
+
