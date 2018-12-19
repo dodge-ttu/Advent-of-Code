@@ -1,7 +1,5 @@
 import timeit
 import itertools
-import math
-
 
 #region Problem 1
 #
@@ -92,59 +90,50 @@ p1_test_cases = {
 
 ### Answers:
 
-# The placing of an individual marble is a pattern:
-#
-# 1,1,3,1,3,5,7,1,3,5,7,9,11,13,15,1,3............
-#
-# Looking that up on OEIS one finds the following series:
-#
-# https://oeis.org/A006257
-#
-# Described with the formula: 2*(n-2**int(math.log(n, 2)))+1
-
 def p1answer1(ls):
 
-    def gen_exp(limit):
-        for i in range(1, limit):
-            n = 2 * (i - 2 ** int(math.log(i, 2))) + 1
-            yield n
-
-    aa = gen_exp(100000)
-
-    players = 429
+    players = ls[0]
     player_next = itertools.cycle(range(1, players + 1))
 
-    last_pnts = 70901
-    game_board = [0]
+    last_pnts = ls[1]
 
     score_dict = {}
     for i in range(1, players + 1):
         score_dict[i] = 0
 
-    loc = next(aa)
+    # Start on the third play to move past beginning weirdness.
+    game_board = [0, 2, 1]
+
+    # Skip forward two players.
     next(player_next)
-    game_board.insert(loc, 1)
+    next(player_next)
 
-    loc_change = 0
+    loc = 1
 
-    for i in range(2, last_pnts + 1):
+    for i in range(3, last_pnts + 1):
         player = next(player_next)
 
         if i % 23 == 0:
-            print(i)
-            other_ball = game_board.pop(loc - 7)
-            print(other_ball)
-            score_dict[player] += (i + other_ball)
-            print(loc)
-            loc_change += 7
+            other_ball = game_board.pop(loc - 9)
+            loc -= 7
+            if loc < 0:
+                loc -= 1
+            score_dict[player] += (other_ball + i)
+            # print(other_ball, i)
+
+        elif loc == len(game_board):
+            game_board.append(i)
+            loc = 1
 
         else:
-            loc = next(aa)
-            loc -= loc_change
+            game_board.insert(loc, i)
+            loc += 2
 
-        game_board.insert(loc, i)
-        print(game_board)
+        # print(game_board)
 
+    player, max_score = max(score_dict.items(), key=lambda x: x[1])
+
+    return max_score
 
 p1answers = {
     "p1answer1":p1answer1,
@@ -159,6 +148,11 @@ for (answer_name, answer) in p1answers.items():
         else:
             print("[Problem 1] Test: FAIL, Function: {0} Input: {1}".format(answer_name, test))
 
+# [Problem 1] Test: PASS, Function: p1answer1 Input: [9, 25]
+# [Problem 1] Test: PASS, Function: p1answer1 Input: [10, 1618]
+# [Problem 1] Test: PASS, Function: p1answer1 Input: [13, 7999]
+# [Problem 1] Test: PASS, Function: p1answer1 Input: [17, 1104]
+# [Problem 1] Test: PASS, Function: p1answer1 Input: [21, 6111]
 
 
 #region Problem 2
@@ -169,6 +163,11 @@ for (answer_name, answer) in p1answers.items():
 
 ### Test cases:
 
+p2_a = ([], 0)
+
+p2_test_cases = {
+    "p2_a":p2_a,
+}
 
 
 ### Answers:
@@ -193,14 +192,12 @@ for (answer_name, answer) in p2answers.items():
 
 ####### Official Input Data #######
 
-file_path = "/home/will/advent_of_code/Advent-of-Code/2018/day_01_input.txt"
+file_path = "/home/will/advent_of_code/Advent-of-Code/2018/day_09_input.txt"
 
-with open(file_path, newline='') as csv_file:
-    raw_data = csv.reader(csv_file, delimiter=" ", quoting=csv.QUOTE_NONNUMERIC)
-    data = []
-    for i in list(raw_data):
-        data.extend(i)
+with open(file_path) as my_file:
+    words = my_file.read().split()
 
+data = [int(words[0]), int(words[6])]
 
 
 ####### Performance  #######
