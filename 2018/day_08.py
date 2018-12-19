@@ -126,7 +126,7 @@ def p1answer2(ls, *args, **kwargs):
 
             return build_tree(current_node, ls)
 
-        # Create new node.
+        # Parse data and create next node.
         if current_node.visited == False:
             num_child = ls.pop(0)
             metadata = ls.pop(0)
@@ -140,11 +140,11 @@ def p1answer2(ls, *args, **kwargs):
                 for i in range(current_node.numChildren):
                     current_node.add_child(next(letters))
 
-                # Make copy of root children and store in root node. ?
+                # Make copy of root children and store in root node.
                 if current_node.parent == "root":
                     root.children_copy == root.children.copy()
 
-                # Visited first child node
+                # Visit first child node
                 current_node = current_node.children.pop(0)
 
                 return build_tree(current_node, ls, asum)
@@ -170,7 +170,7 @@ def p1answer2(ls, *args, **kwargs):
 
                 return build_tree(current_node, ls, asum)
 
-        # If we have been to this node and there is input data left collect data.
+        # If we have been to this node and there is input data left, then collect data.
         # We should be backing out of this branch of the tree at this point.
         elif current_node.visited == True and ls:
             meta_ls = []
@@ -259,6 +259,7 @@ p2_test_cases = {
 
 def p2answer1(ls, *args, **kwargs):
 
+    # Simple node class.
     class Node:
         def __init__(self, key, parent=None, numChildren=None, numMeta=None):
             self.key = key
@@ -278,13 +279,16 @@ def p2answer1(ls, *args, **kwargs):
 
     some_IDs = (i for i in range(10000))
 
+    # Create root that bounces back to self.
     root = Node(key=next(some_IDs))
     root.parent = Node("root")
     root.parent.visited = True
     root.parent.children.append(root)
 
+    # Create a dictionary to store attributes of the tree.
     master_dict = {}
 
+    # Create tree as above but store some attributes of each node to examine later.
     def build_tree(current_node, ls, asum=0):
 
         if not ls:
@@ -364,6 +368,7 @@ def p2answer1(ls, *args, **kwargs):
 
     tree, asum = build_tree(root, ls)
 
+    # Take that dictionary and refine it a bit, not a great plan here, hence this hacky approach
     cleaner_dict = {}
 
     for (k, v) in master_dict.items():
@@ -384,6 +389,7 @@ def p2answer1(ls, *args, **kwargs):
 
     root = cleaner_dict[0]
 
+    # Recurse through the dictionary to calculate the value of the node.
     def count_node(current_node, node_sum=0):
 
         if not current_node[0] and current_node[2] == "root":
