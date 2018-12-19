@@ -126,7 +126,7 @@ def p1answer2(ls, *args, **kwargs):
 
             return build_tree(current_node, ls)
 
-        # Visiting new child node that was created but not yet visited.
+        # Create new node.
         if current_node.visited == False:
             num_child = ls.pop(0)
             metadata = ls.pop(0)
