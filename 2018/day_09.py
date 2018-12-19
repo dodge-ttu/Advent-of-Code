@@ -157,7 +157,7 @@ for (answer_name, answer) in p1answers.items():
 
 #region Problem 2
 #
-#
+# Mulitply the marble worth max_points by 100 and run again. Inefficient algos get blasted now :(
 #
 #endregion
 
@@ -212,3 +212,5 @@ def time_with_official_data(problem_number, answer_dict, loops=1):
 
 time_with_official_data(problem_number=1, answer_dict=p1answers, loops=1)
 time_with_official_data(problem_number=2, answer_dict=p2answers, loops=1)
+
+# This took several hours becuase poor algo. Maybe a moving window or a stateless alternative.

@@ -1,5 +1,8 @@
 import timeit
+import re
 import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 
 #region Problem 1
 #
@@ -200,48 +203,7 @@ p1_test_cases = {
 
 ### Answers:
 
-def p1answer1(ls):
-    import re
-    import numpy as np
-    import matplotlib.pyplot as plt
-    import matplotlib.animation as animation
-
-    p1_a = ([
-                "position=< 9,  1> velocity=< 0,  2>",
-                "position=< 7,  0> velocity=<-1,  0>",
-                "position=< 3, -2> velocity=<-1,  1>",
-                "position=< 6, 10> velocity=<-2, -1>",
-                "position=< 2, -4> velocity=< 2,  2>",
-                "position=<-6, 10> velocity=< 2, -2>",
-                "position=< 1,  8> velocity=< 1, -1>",
-                "position=< 1,  7> velocity=< 1,  0>",
-                "position=<-3, 11> velocity=< 1, -2>",
-                "position=< 7,  6> velocity=<-1, -1>",
-                "position=<-2,  3> velocity=< 1,  0>",
-                "position=<-4,  3> velocity=< 2,  0>",
-                "position=<10, -3> velocity=<-1,  1>",
-                "position=< 5, 11> velocity=< 1, -2>",
-                "position=< 4,  7> velocity=< 0, -1>",
-                "position=< 8, -2> velocity=< 0,  1>",
-                "position=<15,  0> velocity=<-2,  0>",
-                "position=< 1,  6> velocity=< 1,  0>",
-                "position=< 8,  9> velocity=< 0, -1>",
-                "position=< 3,  3> velocity=<-1,  1>",
-                "position=< 0,  5> velocity=< 0, -1>",
-                "position=<-2,  2> velocity=< 2,  0>",
-                "position=< 5, -2> velocity=< 1,  2>",
-                "position=< 1,  4> velocity=< 2,  1>",
-                "position=<-2,  7> velocity=< 2, -2>",
-                "position=< 3,  6> velocity=<-1, -1>",
-                "position=< 5,  0> velocity=< 1,  0>",
-                "position=<-6,  0> velocity=< 2,  0>",
-                "position=< 5,  9> velocity=< 1, -2>",
-                "position=<14,  7> velocity=<-2,  0>",
-                "position=<-3,  6> velocity=< 2, -1>",
-            ], 0)
-
-    data = p1_a[0]
-
+def p1answer1(data):
     # Parse data.
     image_data = []
 
@@ -271,50 +233,66 @@ def p1answer1(ls):
     for i in image_data:
         y_vols.append(i[3])
 
-    # Big inefficient list.
-    xs_all = xs
-    ys_all = ys
+    # np array for convenience
 
-    # Generate some data for animation.
+    xs = np.array(xs)
+    ys = np.array(ys)
+    x_vols = np.array(x_vols)
+    y_vols = np.array(y_vols)
 
-    some_data = []
+    # Fast forward
+    for i in range(10633):
+        xs += x_vols
+        ys += y_vols
 
-    for i in range(1000):
-        xs_all = xs
-        ys_all = ys
-        for (x, y, x_vol, y_vol) in zip(xs, ys, x_vols, y_vols):
-            x += x_vol
-            y += y_vol
+    # Set up plotting area.
+    fig, ax = plt.subplots()
+    line, = ax.plot([], [], "o")
 
-    print(x_temp)
+    min_x = min(xs)
+    max_x = max(xs)
+    min_y = min(ys)
+    max_y = max(ys)
 
-    some_data.append((x_temp, y_temp))
+    ax.set_xlim((min_x - 1000, max_x + 1000))
+    ax.set_ylim((min_y - 1000, max_y + 1000))
 
+    sleep = 0
 
-fig, ax = plt.subplots()
-line, = ax.plot([], [], "o")
+    # Animation initilization function
+    def init():
+        line.set_data([], [])
 
-ax.set_xlim((-20, 20))
-ax.set_ylim((-20, 20))
+        return line,
 
+    #  Animation function.
+    def animate(i, xs, ys, x_vols, y_vols):
 
-def init():
-    line.set_data([], [])
+        xs += x_vols
+        ys += y_vols
 
-    return line,
+        min_x = min(xs)
+        max_x = max(xs)
+        min_y = min(ys)
+        max_y = max(ys)
 
+        ax.set_xlim((min_x - (.1 * min_x)), (max_x + (.1 * max_x)))
+        ax.set_ylim((min_y - (.1 * max_y)), (max_y + (.1 * max_y)))
 
-def animate(i):
-    (xs, ys) = some_data[i]
+        line.set_data(xs, ys)
 
-    line.set_data(xs, ys)
+        return line,
 
-    return line,
+    fargs = (xs, ys, x_vols, y_vols)
 
+    # Generate animation.
+    anim = animation.FuncAnimation(fig, animate, blit=False, interval=300,
+                                   repeat=True, init_func=init, fargs=fargs)
+    plt.show()
 
-anim = animation.FuncAnimation(fig, animate, blit=False, interval=10,
-                               repeat=True, init_func=init)
-plt.show()
+    # Save a copy
+    anim.save('/home/will/Desktop/animation.gif', writer='imagemagick', fps=1)
+
 
 p1answers = {
     "p1answer1":p1answer1,
@@ -370,7 +348,10 @@ for (answer_name, answer) in p2answers.items():
 file_path = "/home/will/advent_of_code/Advent-of-Code/2018/day_10_input.txt"
 
 with open(file_path) as my_file:
-    data = my_file.read()
+    raw_data = my_file.read().splitlines()
+    data = []
+    for row in raw_data:
+        data.append(row)
 
 
 ####### Performance  #######
