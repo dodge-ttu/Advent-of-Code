@@ -73,32 +73,18 @@ def p1answer1(grid_serial_number, print_info=None):
     return  max_x, max_y, max_power, grid_serial_number
 
 
-def power_by_location_np(x, y, serial):
-    rack_id = x + 10
-    power_level = rack_id * y
-    power_level = power_level + serial
-    power_level = power_level * rack_id
-    power_level = int(str(round(power_level))[-3]) if power_level > 100 else 0
-    power_level = power_level - 5
-
-    return power_level
-
-
 def p1answer2(grid_serial_number, print_info=None):
 
     cell_grid = np.ones((300,300))
     my_xx, my_yy = np.nonzero(cell_grid)
 
-    gpv = np.vectorize(power_by_location_np)
+    gpv = np.vectorize(power_by_location)
     a = gpv(my_xx, my_yy, grid_serial_number).reshape(300,300)
-
-    ul_xx = my_xx[::3]
-    ul_yy = my_yy[::3]
 
     def power_per_cell(x, y, serial):
 
         if (x < 297) & (y < 297):
-            this_cell_power = a[x:x+3,y:y+3].sum()
+            this_cell_power = a[x:x+3, y:y+3].sum()
 
         else:
             this_cell_power = -5
@@ -106,7 +92,7 @@ def p1answer2(grid_serial_number, print_info=None):
         return (x, y, this_cell_power)
 
     ppv = np.vectorize(power_per_cell)
-    b = ppv(ul_xx, ul_yy, grid_serial_number)
+    b = ppv(my_xx, my_yy, grid_serial_number)
     b = [(a,b,c) for (a,b,c) in zip(b[0],b[1],b[2])]
 
     max_x, max_y, max_power = (max(b, key=lambda x: x[2]))
@@ -121,6 +107,7 @@ p1answers = {
     "p1answer2":p1answer2,
 }
 
+
 ### Problem 1 tests:
 
 for (answer_name, answer) in p1answers.items():
@@ -134,45 +121,39 @@ for (answer_name, answer) in p1answers.items():
 ##### PROBLEM 2 #####
 
 ### Test Cases:
-p1_a = (18, (90,269,113,18))
-p1_b = (42, (232,251,119,42))
+p2_a = (18, (90,269,16,18))
+p2_b = (42, (232,251,12,42))
 
 p2_test_cases = {
-    "p1_a":p1_a,
-    "p1_b":p1_b,
+    "p2_a":p2_a,
+    "p2_b":p2_b,
 }
 
 ### Answers:
 def p2answer1(grid_serial_number, print_info=None):
 
-    cell_grid = np.ones((300,300))
+    cell_grid = np.ones((300, 300))
     my_xx, my_yy = np.nonzero(cell_grid)
 
-    gpv = np.vectorize(power_by_location_np)
-    a = gpv(my_xx, my_yy, grid_serial_number).reshape(300,300)
+    gpv = np.vectorize(power_by_location)
+    cell_grid = gpv(my_xx, my_yy, grid_serial_number).reshape(300, 300)
 
-    def power_per_cell(x, y):
+    cell_power_info = []
 
-        dif_x = 300 - x
-        dif_y = 300 - y
+    for (x,y) in zip(my_xx, my_yy):
+        for b in range(300-x):
+            cell_power = cell_grid[y:y+b, x:x+b].sum()
+            cell_size = b
 
-        for dx in range(dif_x):
-            for dy in range(dif_y):
-                this_cell_power = a[x:x+dx,y:y+dy].sum()
-                this_cell_size = (x+dx) * (y+dy)
+            cell_power_info.append((x,y, cell_size, cell_power))
 
-        return (x, y, this_cell_power, this_cell_size)
-
-    ppv = np.vectorize(power_per_cell)
-    b = ppv(my_xx, my_yy)
-    b = [(a,b,c,b) for (a,b,c,b) in zip(b[0],b[1],b[2],b[3])]
-
-    max_x, max_y, max_power, max_cell_size = (max(b, key=lambda x: x[2]))
+    max_x, max_y, max_cell_size, max_power = max(cell_power_info, key=lambda x: x[3])
 
     if print_info:
-        print(f'X: {max_x}, Y: {max_y}, Power: {max_power}, Size: {max_cell_size}, Grid Serial Number: {grid_serial_number}')
+        print(f'X: {max_x}, Y: {max_y}, Power: {max_power}, Size: {max_cell_size} x {max_cell_size}, Grid Serial Number: {grid_serial_number}')
 
-    return max_x, max_y, max_power, grid_serial_number
+    return max_x, max_y, max_cell_size, grid_serial_number
+
 
 p2answers = {
     'p2answer1':p2answer1,
