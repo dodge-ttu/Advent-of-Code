@@ -10,8 +10,6 @@ data = get_data(day=11, year=2018)
 # >>> print(grid_serial_number)
 # 5235
 
-grid_serial_number = 5235
-
 ##### PROBLEM 1 #####
 
 ### Test cases:
