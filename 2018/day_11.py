@@ -35,13 +35,6 @@ def power_by_location(x, y, serial):
 
     return power_level
 
-# test1 = -5 == power_by_location(122, 79, 57)
-# test2 = 0 == power_by_location(217, 196, 39)
-# test3 = 4 == power_by_location(101, 153, 71)
-#
-# print(f'[INFO] Test 1 Pass: {test1}')
-# print(f'[INFO] Test 2 Pass: {test2}')
-# print(f'[INFO] Test 3 Pass: {test3}')
 
 def p1answer1(grid_serial_number, print_info=None):
 
@@ -108,7 +101,6 @@ p1answers = {
 
 
 ### Problem 1 tests:
-
 for (answer_name, answer) in p1answers.items():
     for test_name, (test,sol) in p1_test_cases.items():
         if (answer(test) == sol):
@@ -159,17 +151,15 @@ p2answers = {
 }
 
 ### Problem 2 tests:
-
 for (answer_name, answer) in p2answers.items():
     for test_name, (test,sol) in p2_test_cases.items():
-        if (answer(test, print_info=True) == sol):
+        if (answer(test) == sol):
             print("[Problem 2] Test: PASS, Function: {0} Input: {1}".format(answer_name, test))
         else:
             print("[Problem 2] Test: FAIL, Function: {0} Input: {1}".format(answer_name, test))
 
 
 ####### Performance  #######
-
 def time_with_official_data(problem_number, answer_dict, loops=1, testing=False, *args, **kwargs):
     for (answer_name, answer) in answer_dict.items():
         if not testing:
