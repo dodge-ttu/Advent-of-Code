@@ -2,8 +2,8 @@ from aocd import get_data
 import numpy as np
 import timeit
 
+data = get_data(day=11, year=2018)
 
-#data = get_data(day=11, year=2018)
 # Data for this day as a single input that becomes the grid serial number.
 # grid_serial_number = int(data)
 
