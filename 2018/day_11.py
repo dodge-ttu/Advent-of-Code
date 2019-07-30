@@ -4,7 +4,6 @@ import timeit
 
 
 #data = get_data(day=11, year=2018)
-
 # Data for this day as a single input that becomes the grid serial number.
 # grid_serial_number = int(data)
 
@@ -147,7 +146,7 @@ def p2answer1(grid_serial_number, print_info=None):
 
             cell_power_info.append((x,y, cell_size, cell_power))
 
-    max_x, max_y, max_cell_size, max_power = max(cell_power_info, key=lambda x: x[3])
+    max_y, max_x, max_cell_size, max_power = max(cell_power_info, key=lambda x: x[3])
 
     if print_info:
         print(f'X: {max_x}, Y: {max_y}, Power: {max_power}, Size: {max_cell_size} x {max_cell_size}, Grid Serial Number: {grid_serial_number}')
@@ -163,7 +162,7 @@ p2answers = {
 
 for (answer_name, answer) in p2answers.items():
     for test_name, (test,sol) in p2_test_cases.items():
-        if (answer(test) == sol):
+        if (answer(test, print_info=True) == sol):
             print("[Problem 2] Test: PASS, Function: {0} Input: {1}".format(answer_name, test))
         else:
             print("[Problem 2] Test: FAIL, Function: {0} Input: {1}".format(answer_name, test))
@@ -184,3 +183,13 @@ def time_with_official_data(problem_number, answer_dict, loops=1, testing=False,
 data = grid_serial_number
 time_with_official_data(problem_number=1, answer_dict=p1answers, loops=1)
 time_with_official_data(problem_number=2, answer_dict=p2answers, loops=1)
+
+# [Problem 1] Test: PASS, Function: p1answer1 Input: 18
+# [Problem 1] Test: PASS, Function: p1answer1 Input: 42
+# [Problem 1] Test: PASS, Function: p1answer2 Input: 18
+# [Problem 1] Test: PASS, Function: p1answer2 Input: 42
+# [Problem 2] Test: PASS, Function: p2answer1 Input: 18
+# [Problem 2] Test: PASS, Function: p2answer1 Input: 42
+# [Problem 1] Time: 0.48372 seconds on 1 loops, Function: p1answer1
+# [Problem 1] Time: 0.26841 seconds on 1 loops, Function: p1answer2
+# [Problem 2] Time: 126.85822 seconds on 1 loops, Function: p2answer1
