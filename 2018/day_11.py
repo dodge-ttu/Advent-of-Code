@@ -28,7 +28,8 @@ def power_by_location(x, y, serial):
     power_level = rack_id * y
     power_level = power_level + serial
     power_level = power_level * rack_id
-    power_level = int(str(round(power_level))[-3]) if power_level > 100 else 0
+    pls = str(round(abs(power_level)))
+    power_level = int(pls[-3]) if len(pls) > 2 else 0
     power_level = power_level - 5
 
     return power_level
