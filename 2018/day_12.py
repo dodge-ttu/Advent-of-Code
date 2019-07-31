@@ -19,7 +19,22 @@ p1_test_cases = {
 
 ### Answers:
 def p1answer1(x):
-    pass
+    initial_state_info = data.split('\n')
+    initial_state = initial_state_info[0]
+    initial_state = initial_state.split(' ')[2]
+    instructions = initial_state_info[2:]
+    instructions = [s.split(' => ') for s in instructions]
+    instructions = [('\\' + '\\'.join(target), progeny) for (target,progeny) in instructions]
+    instructions = [(r'' + target, progeny) for (target, progeny) in instructions]
+
+    tst = instructions[0][0]
+    print(tst)
+    m = re.findall(tst, initial_state)
+    # m = re.findall(r'\.\.\.\.', initial_state)
+
+    print(m)
+
+
 
 
 p1answers = {
