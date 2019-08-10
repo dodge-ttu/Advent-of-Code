@@ -5,7 +5,6 @@ import timeit
 data = get_data(day=11, year=2018)
 grid_serial_number = int(data)
 
-
 # Data for this day as a single input that becomes the grid serial number.
 # >>> print(grid_serial_number)
 # 5235
