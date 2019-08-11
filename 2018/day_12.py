@@ -186,3 +186,8 @@ def time_with_official_data(problem_number, answer_dict, loops=1, testing=False,
 
 time_with_official_data(problem_number=1, answer_dict=p1answers, loops=1)
 time_with_official_data(problem_number=2, answer_dict=p2answers, loops=1)
+
+# Solution for probelm 1: 325
+# [Problem 1] Test: PASS, Function: p1answer1 Input: (['...## => #', '..#.. => #', '.#... => #', '.#.#. => #', '.#.## => #', '.##.. => #', '.#### => #', '#.#.# => #', '#.### => #', '##.#. => #', '##.## => #', '###.. => #', '###.# => #', '####. => #'], '#..#.#..##......###...###')
+# [Problem 1] Time: 0.02568 seconds on 1 loops, Function: p1answer1
+# [Problem 2] Time: 12.40946 seconds on 1 loops, Function: p2answer1
