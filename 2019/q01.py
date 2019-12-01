@@ -13,8 +13,7 @@ required_fuel = []
 for i in masses:
     required_fuel.append(calc_fuel(i))
 
-p1_answer = sum(required_fuel)
-print(f'[INFO] Problem one solution: {p1_answer}')
+part_a_answer = sum(required_fuel)
 
 # Problem 2
 def calc_fuels_fuel(x):
@@ -30,6 +29,9 @@ fuels_fuel = []
 for i in masses:
     fuels_fuel.append(calc_fuels_fuel(i))
 
-p2_answer = sum(fuels_fuel)
-print(f'[INFO] Problem two solution: {p2_answer}')
+part_b_answer = sum(fuels_fuel)
+
+print(f'[INFO] Puzzle Title: {puzzle.title}')
+print(f'[INFO] Part A answer: {puzzle.answer_a}')
+print(f'[INFO] Part B answer: {puzzle.answer_b}')
 
