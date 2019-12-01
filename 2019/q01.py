@@ -1,7 +1,9 @@
 from aocd.models import Puzzle
-puzzle = Puzzle(year=2019, day=1)
 
-masses = puzzle.input_data.split('\n')
+puzzle = Puzzle(year=2019, day=1)
+data = puzzle.input_data
+
+masses = data.split('\n')
 masses = [int(i) for i in masses]
 
 # Problem 1
@@ -34,4 +36,3 @@ part_b_answer = sum(fuels_fuel)
 print(f'[INFO] Puzzle Title: {puzzle.title}')
 print(f'[INFO] Part A answer: {puzzle.answer_a}')
 print(f'[INFO] Part B answer: {puzzle.answer_b}')
-
