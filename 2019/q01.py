@@ -6,7 +6,7 @@ masses = [int(i) for i in masses]
 
 # Problem 1
 def calc_fuel(x):
-    x = int((x / 3)) - 2
+    x = int(x / 3) - 2
     return x
 
 required_fuel = []
