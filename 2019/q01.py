@@ -24,7 +24,6 @@ def calc_fuels_fuel(x):
         if x < 0:
             x = 0
         fuels.append(x)
-
     return sum(fuels)
 
 fuels_fuel = []
