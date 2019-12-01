@@ -9,6 +9,8 @@ masses = [int(i) for i in masses]
 # Problem 1
 def calc_fuel(x):
     x = int(x / 3) - 2
+    if x < 0:
+        x = 0
     return x
 
 required_fuel = []
@@ -22,8 +24,6 @@ def calc_fuels_fuel(x):
     fuels = []
     while x > 0:
         x = calc_fuel(x)
-        if x < 0:
-            x = 0
         fuels.append(x)
     return sum(fuels)
 
