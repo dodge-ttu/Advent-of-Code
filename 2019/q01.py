@@ -1,7 +1,5 @@
 from aocd.models import Puzzle
-
 puzzle = Puzzle(year=2019, day=1)
-print(puzzle.input_data)
 
 masses = puzzle.input_data.split('\n')
 masses = [int(i) for i in masses]
