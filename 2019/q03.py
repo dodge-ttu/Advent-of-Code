@@ -80,7 +80,7 @@ intersections_distances = []
 for (x,y) in intersections:
     intersections_distances.append(((x,y), abs(x)+abs(y)))
 
-# Part B: Find the intersection with the shorted pieces of wire (fewest steps).
+# Part B: Find the intersection with the shortest pieces of wire (fewest steps).
 intersection_wire_lengths = []
 for an_intersect in intersections:
     wire_one_length = wire_1_ls.index(an_intersect)
