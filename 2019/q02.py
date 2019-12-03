@@ -26,7 +26,6 @@ def read_opcode(opcode):
 
 read_opcode(opcode)
 part_a_answer = opcode[0]
-print(part_a_answer)
 
 # Part B
 opcode = data.split(',')
@@ -44,8 +43,9 @@ while True:
         break
 
 part_b_answer = 100 * noun + verb
-print(part_b_answer)
 
+print(part_a_answer)
+print(part_b_answer)
 print(f'[INFO] Puzzle Title: {puzzle.title}')
 print(f'[INFO] Part A answer: {puzzle.answer_a}')
 print(f'[INFO] Part B answer: {puzzle.answer_b}')

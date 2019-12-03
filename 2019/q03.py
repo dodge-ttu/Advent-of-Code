@@ -50,18 +50,18 @@ for wire_coords in wire_span_coords:
     all_points_on_this_wire = []
     for ((x1,y1),(x2,y2)) in wire_coords:
         if x1 < x2:
-            xx = [i for i in range(x1, x2+1, 1)]
+            xx = [i for i in range(x1, x2, 1)]
             yy = [y1] * len(xx)
         if x2 < x1:
-            xx = [i for i in range(x1, x2-1,-1)]
+            xx = [i for i in range(x1, x2,-1)]
             yy = [y1] * len(xx)
         if y1 < y2:
-            yy = [i for i in range(y1, y2+1, 1)]
+            yy = [i for i in range(y1, y2, 1)]
             xx = [x1] * len(yy)
         if y2 < y1:
-            yy = [i for i in range(y1, y2-1, -1)]
+            yy = [i for i in range(y1, y2, -1)]
             xx = [x1] * len(yy)
-        xxyy = [(x,y) for x,y in zip(xx,yy)][:-1]
+        xxyy = [(x,y) for x,y in zip(xx,yy)]
         all_points_on_this_wire.extend(xxyy)
     all_points_on_wires.append(all_points_on_this_wire)
 
