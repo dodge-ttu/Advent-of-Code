@@ -1,3 +1,112 @@
 from aocd.models import Puzzle
 
 puzzle = Puzzle(year=2019, day=3)
+data = puzzle.input_data
+
+wires = data.split('\n')
+wires = [wire.split(',') for wire in wires]
+
+# test =[
+#     ['R75','D30','R83','U83','L12','D49','R71','U7','L72'],
+#     ['U62','R66','U55','R34','D71','R55','D58','R83']
+# ]
+# wires = test
+
+# test = [
+#     ['R8','U5','L5','D3'],
+#     ['U7','R6','D4','L4']
+# ]
+# wires=test
+
+# Create coordinates representing wire segments
+wire_span_coords = []
+
+for wire_span_info in wires:
+    x_pos_old = 0
+    y_pos_old = 0
+    x_pos_new = 0
+    y_pos_new = 0
+    a_wires_spans = []
+    for span in wire_span_info:
+        direction = span[0]
+        distance = int(span[1:])
+        if direction == 'R':
+            x_pos_new += distance
+        elif direction == 'L':
+            x_pos_new -= distance
+        elif direction == 'U':
+            y_pos_new += distance
+        elif direction == 'D':
+            y_pos_new -= distance
+        a_wires_spans.append(((x_pos_old, y_pos_old), (x_pos_new, y_pos_new)))
+        x_pos_old = x_pos_new
+        y_pos_old = y_pos_new
+    wire_span_coords.append(a_wires_spans)
+
+# Create a list of ordered pairs representing all points on wire
+wire_1 = wire_span_coords[0]
+wire_2 = wire_span_coords[1]
+
+all_points_on_wire_one = []
+all_points_on_wire_two = []
+
+for ((x1,y1),(x2,y2)) in wire_1:
+    if x1 < x2:
+        xx = [i for i in range(x1, x2+1, 1)]
+        yy = [y1] * len(xx)
+    if x2 < x1:
+        xx = [i for i in range(x1, x2-1,-1)]
+        yy = [y1] * len(xx)
+    if y1 < y2:
+        yy = [i for i in range(y1, y2+1, 1)]
+        xx = [x1] * len(yy)
+    if y2 < y1:
+        yy = [i for i in range(y1, y2-1, -1)]
+        xx = [x1] * len(yy)
+    all_points_on_wire_one.extend([(x,y) for x,y in zip(xx,yy)][:-1])
+
+for ((x1,y1),(x2,y2)) in wire_2:
+    if x1 < x2:
+        xx = [i for i in range(x1, x2+1, 1)]
+        yy = [y1] * len(xx)
+    if x2 < x1:
+        xx = [i for i in range(x1, x2-1,-1)]
+        yy = [y1] * len(xx)
+    if y1 < y2:
+        yy = [i for i in range(y1, y2+1, 1)]
+        xx = [x1] * len(yy)
+    if y2 < y1:
+        yy = [i for i in range(y1, y2-1, -1)]
+        xx = [x1] * len(yy)
+    all_points_on_wire_two.extend([(x,y) for x,y in zip(xx,yy)][:-1])
+
+# Create strings representing all point to do set compariosons for find intersections
+all_points_on_wire_one = [str(f'{t[0]}_{t[1]}') for t in all_points_on_wire_one]
+all_points_on_wire_two = [str(f'{t[0]}_{t[1]}') for t in all_points_on_wire_two]
+all_points_on_wire_one_set = set(all_points_on_wire_one)
+all_points_on_wire_two_set = set(all_points_on_wire_two)
+
+intersections = all_points_on_wire_one_set.intersection(all_points_on_wire_two_set)
+intersections = [s for s in intersections if s !='0_0']
+
+# Part A: Find the closest intersection.
+intersections_distances = []
+for xy in intersections:
+    xy = xy.split('_')
+    x,y = (int(xy[0]), int(xy[1]))
+    intersections_distances.append(((x,y), abs(x)+abs(y)))
+
+# Part B: Find the intersection with the shorted pieces of wire (fewest steps).
+intersection_wire_lengths = []
+for an_intersect in intersections:
+    wire_one_length = all_points_on_wire_one.index(an_intersect)
+    wire_two_length = all_points_on_wire_two.index(an_intersect)
+    intersection_wire_lengths.append((an_intersect, wire_one_length+wire_two_length))
+
+print(f'answer a: {min(intersections_distances, key=lambda x: x[1])}')
+print(f'answer b: {min(intersection_wire_lengths, key=lambda x: x[1])}')
+print(f'[INFO] Puzzle Title: {puzzle.title}')
+print(f'[INFO] Part A answer: {puzzle.answer_a}')
+print(f'[INFO] Part B answer: {puzzle.answer_b}')
+
+

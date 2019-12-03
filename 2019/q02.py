@@ -32,7 +32,7 @@ print(part_a_answer)
 opcode = data.split(',')
 opcode = [int(c) for c in opcode]
 
-pairs = itertools.permutations(range(99), 2)
+pairs = itertools.permutations(range(100), 2)
 
 while True:
     a = opcode.copy()
