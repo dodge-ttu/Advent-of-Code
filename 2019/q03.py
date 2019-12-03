@@ -6,11 +6,11 @@ data = puzzle.input_data
 wires = data.split('\n')
 wires = [wire.split(',') for wire in wires]
 
-# test =[
-#     ['R75','D30','R83','U83','L12','D49','R71','U7','L72'],
-#     ['U62','R66','U55','R34','D71','R55','D58','R83']
-# ]
-# wires = test
+test =[
+    ['R75','D30','R83','U83','L12','D49','R71','U7','L72'],
+    ['U62','R66','U55','R34','D71','R55','D58','R83']
+]
+wires = test
 
 # test = [
 #     ['R8','U5','L5','D3'],
@@ -80,20 +80,15 @@ for ((x1,y1),(x2,y2)) in wire_2:
         xx = [x1] * len(yy)
     all_points_on_wire_two.extend([(x,y) for x,y in zip(xx,yy)][:-1])
 
-# Create strings representing all point to do set compariosons for find intersections
-all_points_on_wire_one = [str(f'{t[0]}_{t[1]}') for t in all_points_on_wire_one]
-all_points_on_wire_two = [str(f'{t[0]}_{t[1]}') for t in all_points_on_wire_two]
 all_points_on_wire_one_set = set(all_points_on_wire_one)
 all_points_on_wire_two_set = set(all_points_on_wire_two)
 
 intersections = all_points_on_wire_one_set.intersection(all_points_on_wire_two_set)
-intersections = [s for s in intersections if s !='0_0']
+intersections = [s for s in intersections if s != (0,0)]
 
-# Part A: Find the closest intersection.
+# Part A: Find the intersection closest to the origin.
 intersections_distances = []
-for xy in intersections:
-    xy = xy.split('_')
-    x,y = (int(xy[0]), int(xy[1]))
+for (x,y) in intersections:
     intersections_distances.append(((x,y), abs(x)+abs(y)))
 
 # Part B: Find the intersection with the shorted pieces of wire (fewest steps).
