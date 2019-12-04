@@ -25,7 +25,7 @@ def read_opcode(opcode):
             break
 
 read_opcode(opcode)
-part_a_answer = opcode[0]
+a_answer = opcode[0]
 
 # Part B
 opcode = data.split(',')
@@ -42,10 +42,27 @@ while True:
         verb = a[2]
         break
 
-part_b_answer = 100 * noun + verb
+b_answer = 100 * noun + verb
 
-print(part_a_answer)
-print(part_b_answer)
-print(f'[INFO] Puzzle Title: {puzzle.title}')
-print(f'[INFO] Part A answer: {puzzle.answer_a}')
-print(f'[INFO] Part B answer: {puzzle.answer_b}')
+# Puzzle metadata
+def time_to_HHMMSS(td):
+    HH = f'{(td // 3600):02d}'
+    MM = f'{((td % 3600) // 60):02d}'
+    SS = f'{((td % 3600) % 60):02d}'
+    return HH, MM, SS
+
+a_stats = puzzle.my_stats['a']
+b_stats = puzzle.my_stats['b']
+
+HHA, MMA, SSA = time_to_HHMMSS(a_stats['time'].seconds)
+HHB, MMB, SSB = time_to_HHMMSS(b_stats['time'].seconds)
+rank_a, score_a = a_stats['rank'], a_stats['score']
+rank_b, score_b = b_stats['rank'], a_stats['score']
+
+print(f'[INFO] Puzzle - {puzzle.title}')
+print(f'[INFO] Part A - current answer: {a_answer} verified solution: {puzzle.answer_a}')
+print(f'[INFO] Part A - time to solve: {HHA} hours {MMA} minutes {SSA} seconds')
+print(f'[INFO] Part A - rank: {rank_a} score: {score_a}')
+print(f'[INFO] Part B - current answer: {b_answer} verified solution: {puzzle.answer_b}')
+print(f'[INFO] Part B - time to solve: {HHB} hours {MMB} minutes {SSB} seconds')
+print(f'[INFO] Part B - rank: {rank_b} score: {score_b}')

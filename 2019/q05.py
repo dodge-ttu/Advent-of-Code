@@ -1,37 +1,13 @@
 from aocd.models import Puzzle
 
-puzzle = Puzzle(year=2019, day=1)
-data = puzzle.input_data
+puzzle = Puzzle(year=2019, day=5)
 
-masses = data.split('\n')
-masses = [int(i) for i in masses]
 
-# Part A
-def calc_fuel(x):
-    x = int(x / 3) - 2
-    if x < 0:
-        x = 0
-    return x
 
-required_fuel = []
-for i in masses:
-    required_fuel.append(calc_fuel(i))
 
-a_answer = sum(required_fuel)
 
-# Part B
-def calc_fuels_fuel(x):
-    fuels = []
-    while x > 0:
-        x = calc_fuel(x)
-        fuels.append(x)
-    return sum(fuels)
 
-fuels_fuel = []
-for i in masses:
-    fuels_fuel.append(calc_fuels_fuel(i))
 
-b_answer = sum(fuels_fuel)
 
 # Puzzle metadata
 def time_to_HHMMSS(td):

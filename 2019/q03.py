@@ -6,19 +6,6 @@ data = puzzle.input_data
 wires = data.split('\n')
 wires = [wire.split(',') for wire in wires]
 
-# test =[
-#     ['R75','D30','R83','U83','L12','D49','R71','U7','L72'],
-#     ['U62','R66','U55','R34','D71','R55','D58','R83']
-# ]
-# wires = test
-
-# test = [
-#     ['R8','U5','L5','D3'],
-#     ['U7','R6','D4','L4']
-# ]
-# wires=test
-
-# Create coordinates representing wire segments
 wire_span_coords = []
 
 for wire_span_info in wires:
@@ -87,8 +74,28 @@ for an_intersect in intersections:
     wire_two_length = wire_2_ls.index(an_intersect)
     intersection_wire_lengths.append((an_intersect, wire_one_length+wire_two_length))
 
-print(f'answer a: {min(intersections_distances, key=lambda x: x[1])}')
-print(f'answer b: {min(intersection_wire_lengths, key=lambda x: x[1])}')
-print(f'[INFO] Puzzle Title: {puzzle.title}')
-print(f'[INFO] Part A answer: {puzzle.answer_a}')
-print(f'[INFO] Part B answer: {puzzle.answer_b}')
+a_answer = min(intersections_distances, key=lambda x: x[1])
+b_answer = min(intersection_wire_lengths, key=lambda x: x[1])
+
+# Puzzle metadata
+def time_to_HHMMSS(td):
+    HH = f'{(td // 3600):02d}'
+    MM = f'{((td % 3600) // 60):02d}'
+    SS = f'{((td % 3600) % 60):02d}'
+    return HH, MM, SS
+
+a_stats = puzzle.my_stats['a']
+b_stats = puzzle.my_stats['b']
+
+HHA, MMA, SSA = time_to_HHMMSS(a_stats['time'].seconds)
+HHB, MMB, SSB = time_to_HHMMSS(b_stats['time'].seconds)
+rank_a, score_a = a_stats['rank'], a_stats['score']
+rank_b, score_b = b_stats['rank'], a_stats['score']
+
+print(f'[INFO] Puzzle - {puzzle.title}')
+print(f'[INFO] Part A - current answer: {a_answer} verified solution: {puzzle.answer_a}')
+print(f'[INFO] Part A - time to solve: {HHA} hours {MMA} minutes {SSA} seconds')
+print(f'[INFO] Part A - rank: {rank_a} score: {score_a}')
+print(f'[INFO] Part B - current answer: {b_answer} verified solution: {puzzle.answer_b}')
+print(f'[INFO] Part B - time to solve: {HHB} hours {MMB} minutes {SSB} seconds')
+print(f'[INFO] Part B - rank: {rank_b} score: {score_b}')
