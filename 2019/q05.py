@@ -16,10 +16,13 @@ def read_opcode(opcode, input):
         opc_info = int(pm_inst[-2:])
         fst_param_mode = int(pm_inst[-3])
         scd_param_mode = int(pm_inst[-4])
-        address_1 = opcode[ap + 1]
-        address_2 = opcode[ap + 2]
-        address_3 = opcode[ap + 3]
-        print(pm_inst, address_1, address_2, address_3)
+        try:
+            address_1 = opcode[ap + 1]
+            address_2 = opcode[ap + 2]
+            address_3 = opcode[ap + 3]
+        except:
+            print('done')
+        #print(pm_inst, address_1, address_2, address_3)
         if opc_info in {1,2,5,6,7,8}:
             val_1 = opcode[address_1] if fst_param_mode == 0 else address_1
             val_2 = opcode[address_2] if scd_param_mode == 0 else address_2
@@ -36,8 +39,7 @@ def read_opcode(opcode, input):
             ap += 2
         elif opc_info == 4:
             output = opcode[address_1]
-            print(output)
-            break
+            #print(output)
             ap += 2
         elif opc_info == 5:
             if val_1 != 0:
@@ -67,8 +69,11 @@ def read_opcode(opcode, input):
             ap += 4
         elif opc_info == 99:
             break
+    if output:
+        return output
 
-read_opcode(opcode=diagnostic_program, input=5)
+a_answer = read_opcode(opcode=diagnostic_program.copy(), input=1)
+b_answer = read_opcode(opcode=diagnostic_program.copy(), input=5)
 
 # Puzzle metadata
 def time_to_HHMMSS(td):
