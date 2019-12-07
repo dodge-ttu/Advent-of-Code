@@ -37,6 +37,7 @@ while children_to_be_created:
                     next_child = parent_keys[value].pop(0)
                     children_to_be_created.remove(next_child)
                     n.L = Node(key=next_child)
+                    # Store parent pointer and level
                     n.L.parent = n
                     n.L.level = n.level + 1
                     n = n.L
@@ -47,6 +48,7 @@ while children_to_be_created:
                     next_child = parent_keys[value].pop(0)
                     children_to_be_created.remove(next_child)
                     n.R = Node(key=next_child)
+                    # Store parent pointer and level
                     n.R.parent = n
                     n.R.level = n.level + 1
                     n = n.R
@@ -73,8 +75,11 @@ def inorder_count_all_orbits(node, count=0):
             count = inorder_count_all_orbits(node.R, count=count)
     return count + node.level
 
+# This was just the sum all nodes' levels
 a_answer = inorder_count_all_orbits(tree)
 
+# Find path using lowest common ancestor (LAC)
+# Reference: https://www.geeksforgeeks.org/find-distance-between-two-nodes-of-a-binary-tree/
 def me_to_santa(node, path, k):
     if node is None:
         return False
@@ -109,6 +114,7 @@ def distance(node, data1, data2):
     else:
         return 0
 
+# The answer was tricky because it was the path to what you and Santa orbited, so two less
 b_answer = distance(tree, 'YOU', 'SAN') - 2
 
 # Puzzle metadata
