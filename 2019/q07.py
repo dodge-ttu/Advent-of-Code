@@ -78,7 +78,6 @@ amp_control_software = [int(i) for i in data]
 # a_test = [3,31,3,32,1002,32,10,32,1001,31,-2,31,1007,31,0,33,
 # 1002,33,7,33,1,33,31,31,1,32,31,31,4,31,99,0,0,0]
 
-
 thrust_outputs = []
 for i in range(0,44444):
     program = amp_control_software.copy()
@@ -99,18 +98,17 @@ for i in range(0,44444):
 a_answer = max(thrust_outputs, key=lambda x: x[0])
 print(a_answer)
 
-amp_control_software = [3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,
-27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5]
+# amp_control_software = [3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,
+# 27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5]
 
 thrust_signals = []
 
-for i in range(55555,99999):
+for ps in range(55555,99999):
     program = amp_control_software.copy()
-    phase_sequence = [int(i) for i in str(i).zfill(5)]
+    phase_sequence = [int(i) for i in str(ps).zfill(5)]
     phase_sequence = [i for i in phase_sequence if i >= 5]
     if len(set(phase_sequence)) == 5:
-        print(i)
-        (A,B,C,D,E) = [9,8,7,6,5]
+        (A,B,C,D,E) = phase_sequence
         a_ap = 0
         b_ap = 0
         c_ap = 0
@@ -123,34 +121,31 @@ for i in range(55555,99999):
         e_oc = program.copy()
 
         # Primer cycle for the amps.
-        a_sig, a_oc, a_ap, _ = read_opcode(a_oc, input=A, ap=a_ap)
-        print('a', a_sig, a_ap, _)
-        b_sig, b_oc, b_ap, _ = read_opcode(b_oc, input=B, ap=b_ap)
-        print('b', b_sig, b_ap, _)
-        c_sig, c_oc, c_ap, _ = read_opcode(c_oc, input=C, ap=c_ap)
-        print('c', c_sig, c_ap, _)
-        d_sig, d_oc, d_ap, _ = read_opcode(d_oc, input=D,  ap=d_ap)
-        print('d', d_sig, d_ap, _)
-        thrust_sig, e_oc, e_ap, finished_e = read_opcode(e_oc, input=E, ap=e_ap)
-        print('e', thrust_sig, e_ap, finished_e)
-
-        thrust_sig = 0
+        a_sig, a_oc, a_ap, _ = read_opcode(a_oc, input=[A, 0], ap=a_ap, grouped_input=True)
+        #print('a', a_sig, a_ap, _)
+        b_sig, b_oc, b_ap, _ = read_opcode(b_oc, input=[B,a_sig], ap=b_ap, grouped_input=True)
+        #print('b', b_sig, b_ap, _)
+        c_sig, c_oc, c_ap, _ = read_opcode(c_oc, input=[C,b_sig], ap=c_ap, grouped_input=True)
+        #print('c', c_sig, c_ap, _)
+        d_sig, d_oc, d_ap, _ = read_opcode(d_oc, input=[D,c_sig],  ap=d_ap, grouped_input=True)
+        #print('d', d_sig, d_ap, _)
+        thrust_sig, e_oc, e_ap, finished_e = read_opcode(e_oc, input=[E,d_sig], ap=e_ap, grouped_input=True)
+        #print('e', thrust_sig, e_ap, finished_e)
 
         while finished_e == False:
             thrust_signals.append(thrust_sig)
             a_sig, a_oc, a_ap, _ = read_opcode(a_oc, input=thrust_sig, ap=a_ap)
-            print('a', a_sig, a_ap, _)
+            #print('a', a_sig, a_ap, _)
             b_sig, b_oc, b_ap, _ = read_opcode(b_oc, input=a_sig, ap=b_ap)
-            print('b', b_sig, b_ap, _)
+            #print('b', b_sig, b_ap, _)
             c_sig, c_oc, c_ap, _ = read_opcode(c_oc, input=b_sig, ap=c_ap)
-            print('c', c_sig, c_ap, _)
+            #print('c', c_sig, c_ap, _)
             d_sig, d_oc, d_ap, _ = read_opcode(d_oc, input=c_sig, ap=d_ap)
-            print('d', d_sig, d_ap, _)
+            #print('d', d_sig, d_ap, _)
             thrust_sig, e_oc, e_ap, finished_e = read_opcode(e_oc, input=d_sig, ap=e_ap)
-            print('e', thrust_sig, e_ap, finished_e)
+            #print('e', thrust_sig, e_ap, finished_e)
 
-print(max(thrust_signals))
-
+b_answer = (max(thrust_signals))
 
 # Puzzle metadata
 def time_to_HHMMSS(td):
@@ -174,6 +169,3 @@ print(f'[INFO] Part A - rank: {rank_a} score: {score_a}')
 print(f'[INFO] Part B - current answer: {b_answer} verified solution: {puzzle.answer_b}')
 print(f'[INFO] Part B - time to solve: {HHB} hours {MMB} minutes {SSB} seconds')
 print(f'[INFO] Part B - rank: {rank_b} score: {score_b}')
-
-
-
