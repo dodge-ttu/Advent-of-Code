@@ -122,6 +122,7 @@ for i in range(55555,99999):
         d_oc = program.copy()
         e_oc = program.copy()
 
+        # Primer cycle for the amps.
         a_sig, a_oc, a_ap, _ = read_opcode(a_oc, input=A, ap=a_ap)
         print('a', a_sig, a_ap, _)
         b_sig, b_oc, b_ap, _ = read_opcode(b_oc, input=B, ap=b_ap)
