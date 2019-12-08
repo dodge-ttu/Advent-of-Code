@@ -83,16 +83,12 @@ a_answer = inorder_count_all_orbits(tree)
 def me_to_santa(node, path, k):
     if node is None:
         return False
-
     path.append(node.V)
-
     if node.V == k:
         return True
-
     if ((node.L != None) and me_to_santa(node.L, path, k) or
         ((node.R != None) and me_to_santa(node.R, path, k))):
         return True
-
     path.pop()
     return False
 
@@ -100,7 +96,6 @@ def distance(node, data1, data2):
     if node:
         path1 = []
         me_to_santa(node, path1, data1)
-
         path2 = []
         me_to_santa(node, path2, data2)
 
