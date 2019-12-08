@@ -40,7 +40,7 @@ img = loc_top_pix
 img[img == 1] = 255
 
 img = img.astype(np.uint8)
-cv2.imwrite('/home/will/advent_of_code/Advent-of-Code/2019/aoc.png', img)
+cv2.imwrite('/home/will/advent_of_code/Advent-of-Code/2019/q08.png', img)
 b_answer = 'ZUKCJ'
 
 # Puzzle metadata
