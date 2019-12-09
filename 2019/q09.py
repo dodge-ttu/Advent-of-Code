@@ -10,7 +10,7 @@ def read_opcode(opcode, input, ap, rb, output=None, extend_mem=100000):
     # Extend memory
     ex_mem = [0]*extend_mem
     opcode.extend(ex_mem)
-    # A to variable output indicating a '99'
+    # A variable to output indicating a '99'
     finished = False
     while True:
         # Track whether pointer has been changed by opcode
@@ -27,11 +27,13 @@ def read_opcode(opcode, input, ap, rb, output=None, extend_mem=100000):
         address_1 = opcode[ap + 1]
         address_2 = opcode[ap + 2]
         address_3 = opcode[ap + 3]
-        # Get values for parameters based on mode
+        # Position mode
         if fst_param_mode == 0:
             val_1 = opcode[address_1]
+        # Immediate mode
         elif fst_param_mode == 1:
             val_1 = address_1
+        # Relative mode
         else:
             address_1 += rb
             val_1 = opcode[address_1]
@@ -44,11 +46,8 @@ def read_opcode(opcode, input, ap, rb, output=None, extend_mem=100000):
             address_2 += rb
             val_2 = opcode[address_2]
 
-        if thd_param_mode == 0:
-            pass
-        elif thd_param_mode == 1:
-            pass
-        else:
+        # So far this is only input so deal with relative mode
+        if thd_param_mode == 2:
             address_3 += rb
 
         # Perform operations based on code
