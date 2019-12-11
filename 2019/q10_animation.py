@@ -1,12 +1,8 @@
-import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import animation
 import matplotlib as mpl
 mpl.rcParams['agg.path.chunksize'] = 10000
-
-from matplotlib import animation, rc
-#from IPython.display import HTML
-from matplotlib import collections  as mc
 
 test_5 = '.#..##.###...#######\n##.############..##.\n.#.######.########.#\n.###.#######.####.#.\n#####.##.#.##.###.##\n..#####..#.#########\n####################\n#.####....###.#.#.##\n##.#################\n#####.##.###..####..\n..######..##.#######\n####.##.####...##..#\n.#####..#.######.###\n##...#.##########...\n#.##########.#######\n.####.#.###.###.#.##\n....##.##.###..#####\n.#.#.###########.###\n#.#.#.#####.####.###\n###.##.####.##.#..##'
 
@@ -62,8 +58,8 @@ def cool_plot(j, xx, yy, map):
                                 s2 = f'asteroid at {xcheck, ycheck} on this line'
                                 count += 1
                         # if s1:
-                        # print(s1)
-                        # print(s2)
+                            # print(s1)
+                            # print(s2)
             if count == 0:
                 # print(f'Asteroid {x1, y1} has a clear path to: {x2,y2}')
                 this_asteroids_vis_count += 1
