@@ -82,12 +82,12 @@ output = count_visible_asteroids(xx,yy)
 answer_cords, a_answer, visible_from_here = max(output, key=lambda x: x[1])
 print(a_answer)
 
-def giant_laser_time(map, xx, yy, detectable_coords, location):
+def giant_laser_time(map, xx, yy, vis_from_here, location):
     x1, y2 = location
     this_asteroids_count = 0
     for (x2, y2) in zip(xx, yy):
         if (x1, y1) != (x2, y2):
-            # y = m*x + b
+            #
             # Determine the equation of the line between the two asteroids
             delta_y = y2 - y1
             delta_x = x2 - x1
