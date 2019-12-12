@@ -12,7 +12,7 @@ test_3 = '#.#...#.#.\n.###....#.\n.#....#...\n##.#.#.#.#\n....#.#.#.\n.##..###.#
 test_4 ='.#..#..###\n####.###.#\n....###.#.\n..###.##.#\n##.##.#.#.\n....###..#\n..#.#..#.#\n#..#.#.###\n.##...##.#\n.....#.#..'
 test_5 = '.#..##.###...#######\n##.############..##.\n.#.######.########.#\n.###.#######.####.#.\n#####.##.#.##.###.##\n..#####..#.#########\n####################\n#.####....###.#.#.##\n##.#################\n#####.##.###..####..\n..######..##.#######\n####.##.####...##..#\n.#####..#.######.###\n##...#.##########...\n#.##########.#######\n.####.#.###.###.#.##\n....##.##.###..#####\n.#.#.###########.###\n#.#.#.#####.####.###\n###.##.####.##.#..##'
 
-test = data.split('\n')
+test = test_5.split('\n')
 cleaned = []
 for row in test:
     cleaned_row = []
@@ -50,25 +50,15 @@ def count_visible_asteroids(xx,yy):
                         if ((xcheck,ycheck) != (x1,y1)) and ((xcheck,ycheck) != (x2,y2)):
                             if (delta_x == 0):
                                 if x1 == xcheck:
-                                    s1 = f'equation for line {x1, y1}---{x2, y2}: x={x1}'
-                                    s2 = f'asteroid at {xcheck, ycheck} on this line'
                                     count += 1
                             elif (delta_y == 0):
                                 if y1 == ycheck:
-                                    s1 = f'equation for line {x1, y1}---{x2, y2}: x={y1}'
-                                    s2 = f'asteroid at {xcheck, ycheck} on this line'
                                     count += 1
                             else:
                                 m = (y2 - y1) / (x2 - x1)
                                 b = y1 - m * x1
                                 if math.isclose(ycheck, (m*xcheck + b), abs_tol=1e-5):
-                                    print(ycheck, (m*xcheck+b))
-                                    s1 = f'equation for line {x1, y1}---{x2, y2}: y = {m}*x + {b}'
-                                    s2 = f'asteroid at {xcheck, ycheck} on this line'
                                     count += 1
-                            #if s1:
-                                #print(s1)
-                                #print(s2)
                 if count == 0:
                     the_ones_visible_from_here.append((x2,y2))
                     this_asteroids_vis_count += 1
@@ -79,52 +69,56 @@ def count_visible_asteroids(xx,yy):
     return asteroid_locs_and_count
 
 output = count_visible_asteroids(xx,yy)
-answer_cords, a_answer, visible_from_here = max(output, key=lambda x: x[1])
+a_answer_coords, a_answer, visible_from_here = max(output, key=lambda x: x[1])
 print(a_answer)
 
-def giant_laser_time(map, xx, yy, vis_from_here, location):
-    x1, y2 = location
-    this_asteroids_count = 0
-    for (x2, y2) in zip(xx, yy):
-        if (x1, y1) != (x2, y2):
-            #
-            # Determine the equation of the line between the two asteroids
-            delta_y = y2 - y1
-            delta_x = x2 - x1
-            # Check to see if any other asteroids are on that line, if so (x2,y2) is blocked.
-            count = 0
-            for (xcheck, ycheck) in zip(xx, yy):
-                s1 = ''
-                s2 = ''
-                if (min(x1, x2) <= xcheck <= max(x1, x2)) and (min(y1, y2) <= ycheck <= max(y1, y2)):
-                    if ((xcheck, ycheck) != (x1, y1)) and ((xcheck, ycheck) != (x2, y2)):
-                        if (delta_x == 0):
-                            if x1 == xcheck:
-                                s1 = f'equation for line {x1, y1}---{x2, y2}: x={x1}'
-                                s2 = f'asteroid at {xcheck, ycheck} on this line'
-                                count += 1
-                        elif (delta_y == 0):
-                            if y1 == ycheck:
-                                s1 = f'equation for line {x1, y1}---{x2, y2}: x={y1}'
-                                s2 = f'asteroid at {xcheck, ycheck} on this line'
-                                count += 1
-                        else:
-                            m = (y2 - y1) / (x2 - x1)
-                            b = y1 - m * x1
-                            if math.isclose(ycheck, (m * xcheck + b), abs_tol=1e-5):
-                                print(ycheck, (m * xcheck + b))
-                                s1 = f'equation for line {x1, y1}---{x2, y2}: y = {m}*x + {b}'
-                                s2 = f'asteroid at {xcheck, ycheck} on this line'
-                                count += 1
-                        # if s1:
-                        # print(s1)
-                        # print(s2)
-            if count == 0:
-                this_asteroids_vis_count += 1
+def giant_laser_time(map, location):
+    xloc, yloc = location
+    # Create a set of coords that will allow for rotation around the current location.
+    h, w = map.shape
+    ab = max(h,w)
+    tt = np.linspace(-0.5*np.pi, 1.5*np.pi, 205)
+    r = np.sqrt(ab**2 + ab**2)
+    xxr = np.cos(tt) * r + xloc
+    yyr = np.sin(tt) * r + yloc
+    yy, xx = np.where(map == 1)
+    total_number_of_asteroids = len(xx)
 
-    return max(asteroid_locs_and_count, key=lambda x: x[1])
+    # Find visible asteroid on the line, blast it, and step in clockwise rotation.
+    blast_count = 0
+    for i in range(total_number_of_asteroids):
+        for (x, y) in zip(xxr, yyr):
+            asteroids_on_the_line = []
+            for (xcheck, ycheck) in zip(xx,yy):
+                if ((xloc,yloc) != (xcheck, ycheck)):
+                    # Determine the equation of the line between the two asteroids
+                    ab_dist = np.sqrt(((xloc-xcheck)**2)+((yloc-ycheck)**2))
+                    bc_dist = np.sqrt(((x-xcheck)**2)+((y-ycheck)**2))
+                    ac_dist = np.sqrt(((xloc-x)**2)+((yloc-y)**2))
+                    if math.isclose((ab_dist+bc_dist), ac_dist, abs_tol=1e-6):
+                        asteroids_on_the_line.append(((xcheck,ycheck), ab_dist))
+                        print(f'asteroid {xcheck, ycheck} is on line')
+            if asteroids_on_the_line:
+                print(asteroids_on_the_line)
+                asteroid_loc = min(asteroids_on_the_line, key=lambda x: x[1])
+                x_remove, y_remove = asteroid_loc[0]
+                map[y_remove,x_remove] = 0
+                blast_count += 1
+                yy, xx = np.where(map == 1)
+                print(len(xx), len(yy))
+                if blast_count == 2:
+                    return x_remove, y_remove
 
+x_last, y_last = giant_laser_time(map=map.copy(), location=(11,13))
+b_answer = x_last*100 + y_last
+print(x_last, y_last, b_answer)
 
+# Puzzle metadata
+def time_to_HHMMSS(td):
+    HH = f'{(td // 3600):02d}'
+    MM = f'{((td % 3600) // 60):02d}'
+    SS = f'{((td % 3600) % 60):02d}'
+    return HH, MM, SS
 
 a_stats = puzzle.my_stats['a']
 b_stats = puzzle.my_stats['b']
