@@ -75,39 +75,19 @@ print(a_answer)
 def giant_laser_time(map, location):
     xloc, yloc = location
     # Create a set of coords that will allow for rotation around the current location.
-    h, w = map.shape
-    ab = max(h,w)
-    tt = np.linspace(-0.5*np.pi, 1.5*np.pi, 205)
-    r = np.sqrt(ab**2 + ab**2)
-    xxr = np.cos(tt) * r + xloc
-    yyr = np.sin(tt) * r + yloc
-    yy, xx = np.where(map == 1)
-    total_number_of_asteroids = len(xx)
+    # New plan: find the theta value for every point and the then the following steps:
+    # 1. Find theta value for every asteroid
+    # 2. Sort all asteroid locations by their theta values
+    # 3. Remove asteroid closest to current location (origin)
+    # 4. Step to the next theta value now that all of the increments are known
+    # 5. Remove closest asteroid with that theta value
+    # 6. Repeat.
 
-    # Find visible asteroid on the line, blast it, and step in clockwise rotation.
-    blast_count = 0
-    for i in range(total_number_of_asteroids):
-        for (x, y) in zip(xxr, yyr):
-            asteroids_on_the_line = []
-            for (xcheck, ycheck) in zip(xx,yy):
-                if ((xloc,yloc) != (xcheck, ycheck)):
-                    # Determine the equation of the line between the two asteroids
-                    ab_dist = np.sqrt(((xloc-xcheck)**2)+((yloc-ycheck)**2))
-                    bc_dist = np.sqrt(((x-xcheck)**2)+((y-ycheck)**2))
-                    ac_dist = np.sqrt(((xloc-x)**2)+((yloc-y)**2))
-                    if math.isclose((ab_dist+bc_dist), ac_dist, abs_tol=1e-6):
-                        asteroids_on_the_line.append(((xcheck,ycheck), ab_dist))
-                        print(f'asteroid {xcheck, ycheck} is on line')
-            if asteroids_on_the_line:
-                print(asteroids_on_the_line)
-                asteroid_loc = min(asteroids_on_the_line, key=lambda x: x[1])
-                x_remove, y_remove = asteroid_loc[0]
-                map[y_remove,x_remove] = 0
-                blast_count += 1
-                yy, xx = np.where(map == 1)
-                print(len(xx), len(yy))
-                if blast_count == 2:
-                    return x_remove, y_remove
+    # xx and yy switched because the coords in this puzzle are UL origin
+    yy, xx = np.where(map == 1)
+    # theta = tan^-1(oposite/adjacent)
+    thetas = np.arctan((yy-yloc)/(xx-xloc))
+
 
 x_last, y_last = giant_laser_time(map=map.copy(), location=(11,13))
 b_answer = x_last*100 + y_last
