@@ -44,8 +44,6 @@ def count_visible_asteroids(xx,yy):
                 # Check to see if any other asteroids are on that line, if so (x2,y2) is blocked.
                 count = 0
                 for (xcheck, ycheck) in zip(xx,yy):
-                    s1 = ''
-                    s2 = ''
                     if (min(x1, x2) <= xcheck <= max(x1, x2)) and (min(y1, y2) <= ycheck <= max(y1, y2)):
                         if ((xcheck,ycheck) != (x1,y1)) and ((xcheck,ycheck) != (x2,y2)):
                             if (delta_x == 0):
@@ -76,15 +74,16 @@ def giant_laser_time(map, location, visible_from_here, stop_count):
     xloc, yloc = location
     # 1. Find theta value for every asteroid
     # 2. Sort all asteroid locations by their theta values
-    # 3. Find closest with Euclidean distance
+    # 3. Filter values by quadrant and then sort by theta
     # 3. Remove asteroid closest to current location (origin)
+    # 4. Find new set of visible asteroids
     # 6. Repeat.
 
     # xx and yy switched because the coords in this puzzle are UL origin
     yy, xx = np.where(map == 1)
     total_number_of_asteroids = len(yy)
     blasted_count = 0
-    # theta = tan^-1(oposite/adjacent)
+    # theta = tan^-1(opposite/adjacent)
     for i in range(total_number_of_asteroids):
         xvis = np.array([i[0] for i in visible_from_here])
         yvis = np.array([i[1] for i in visible_from_here])
@@ -97,30 +96,14 @@ def giant_laser_time(map, location, visible_from_here, stop_count):
         quad_thr = sorted([(x,y,t) for (x,y,t) in xytheta if x<xloc and y>=yloc], key=lambda x: x[2])
         quad_fou = sorted([(x,y,t) for (x,y,t) in xytheta if x<=xloc and y<yloc], key=lambda x: x[2])
 
-        for (x,y,t) in quad_one:
+        by_quad_all = quad_one + quad_two + quad_thr + quad_fou
+
+        for (x,y,t) in by_quad_all:
             blasted_count += 1
             map[y,x] = 0
             print(f'asteroid {x,y} blasted')
             if blasted_count == stop_count:
                 return x,y
-        for (x,y,t) in quad_two:
-            blasted_count += 1
-            map[y,x] = 0
-            if blasted_count == stop_count:
-                return x,y
-            print(f'asteroid {x,y} blasted')
-        for (x,y,t) in quad_thr:
-            blasted_count += 1
-            map[y,x] = 0
-            if blasted_count == stop_count:
-                return x,y
-            print(f'asteroid {x,y} blasted')
-        for (x,y,t) in quad_fou:
-            blasted_count += 1
-            map[y,x] = 0
-            if blasted_count == stop_count:
-                return x,y
-            print(f'asteroid {x,y} blasted')
 
         output = count_visible_asteroids(xx, yy)
         _, _, visible_from_here = max(output, key=lambda x: x[1])
