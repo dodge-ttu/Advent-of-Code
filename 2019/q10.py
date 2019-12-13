@@ -12,7 +12,7 @@ test_3 = '#.#...#.#.\n.###....#.\n.#....#...\n##.#.#.#.#\n....#.#.#.\n.##..###.#
 test_4 ='.#..#..###\n####.###.#\n....###.#.\n..###.##.#\n##.##.#.#.\n....###..#\n..#.#..#.#\n#..#.#.###\n.##...##.#\n.....#.#..'
 test_5 = '.#..##.###...#######\n##.############..##.\n.#.######.########.#\n.###.#######.####.#.\n#####.##.#.##.###.##\n..#####..#.#########\n####################\n#.####....###.#.#.##\n##.#################\n#####.##.###..####..\n..######..##.#######\n####.##.####...##..#\n.#####..#.######.###\n##...#.##########...\n#.##########.#######\n.####.#.###.###.#.##\n....##.##.###..#####\n.#.#.###########.###\n#.#.#.#####.####.###\n###.##.####.##.#..##'
 
-test = test_5.split('\n')
+test = data.split('\n')
 cleaned = []
 for row in test:
     cleaned_row = []
@@ -72,24 +72,75 @@ output = count_visible_asteroids(xx,yy)
 a_answer_coords, a_answer, visible_from_here = max(output, key=lambda x: x[1])
 print(a_answer)
 
-def giant_laser_time(map, location):
+def giant_laser_time(map, location, visible_from_here, stop_count):
     xloc, yloc = location
-    # Create a set of coords that will allow for rotation around the current location.
-    # New plan: find the theta value for every point and the then the following steps:
     # 1. Find theta value for every asteroid
     # 2. Sort all asteroid locations by their theta values
+    # 3. Find closest with Euclidean distance
     # 3. Remove asteroid closest to current location (origin)
-    # 4. Step to the next theta value now that all of the increments are known
-    # 5. Remove closest asteroid with that theta value
     # 6. Repeat.
 
     # xx and yy switched because the coords in this puzzle are UL origin
     yy, xx = np.where(map == 1)
+    total_number_of_asteroids = len(yy)
+    blasted_count = 0
     # theta = tan^-1(oposite/adjacent)
-    thetas = np.arctan((yy-yloc)/(xx-xloc))
+    for i in range(total_number_of_asteroids):
+        xvis = np.array([i[0] for i in visible_from_here])
+        yvis = np.array([i[1] for i in visible_from_here])
+        thetas = np.arctan((yvis-yloc)/(xvis-xloc))
+        thetas[np.isnan(thetas)] = 0
+        xytheta = [(x,y,t) for (x,y,t) in zip(xvis,yvis,thetas)]
 
+        quad_one = sorted([(x,y,t) for (x,y,t) in xytheta if x>=xloc and y<=yloc], key=lambda x: x[2])
+        quad_two = sorted([(x,y,t) for (x,y,t) in xytheta if x>=xloc and y>yloc], key=lambda x: x[2])
+        quad_thr = sorted([(x,y,t) for (x,y,t) in xytheta if x<xloc and y>=yloc], key=lambda x: x[2])
+        quad_fou = sorted([(x,y,t) for (x,y,t) in xytheta if x<=xloc and y<yloc], key=lambda x: x[2])
 
-x_last, y_last = giant_laser_time(map=map.copy(), location=(11,13))
+        for (x,y,t) in quad_one:
+            blasted_count += 1
+            map[y,x] = 0
+            print(f'asteroid {x,y} blasted')
+            if blasted_count == stop_count:
+                return x,y
+        for (x,y,t) in quad_two:
+            blasted_count += 1
+            map[y,x] = 0
+            if blasted_count == stop_count:
+                return x,y
+            print(f'asteroid {x,y} blasted')
+        for (x,y,t) in quad_thr:
+            blasted_count += 1
+            map[y,x] = 0
+            if blasted_count == stop_count:
+                return x,y
+            print(f'asteroid {x,y} blasted')
+        for (x,y,t) in quad_fou:
+            blasted_count += 1
+            map[y,x] = 0
+            if blasted_count == stop_count:
+                return x,y
+            print(f'asteroid {x,y} blasted')
+
+        output = count_visible_asteroids(xx, yy)
+        _, _, visible_from_here = max(output, key=lambda x: x[1])
+
+    # fig, ax = plt.subplots(1,1, figsize=(10,10))
+    # ax.invert_yaxis()
+    # ax.plot(yy, xx, 'ob')
+    # ax.plot([i[0] for i in xytheta], [i[1] for i in xytheta], 'or')
+    # for (idx,(x,y,t)) in enumerate(quad_one):
+    #     ax.text(x,y,str(idx))
+    # for (idx,(x,y,t)) in enumerate(quad_two):
+    #     ax.text(x,y,str(idx))
+    # for (idx,(x,y,t)) in enumerate(quad_thr):
+    #     ax.text(x,y,str(idx))
+    # for (idx,(x,y,t)) in enumerate(quad_fou):
+    #     ax.text(x,y,str(idx))
+    # ax.plot(xloc,yloc,'Xg')
+    # fig.show()
+
+x_last, y_last = giant_laser_time(map.copy(), a_answer_coords, visible_from_here, 201)
 b_answer = x_last*100 + y_last
 print(x_last, y_last, b_answer)
 
