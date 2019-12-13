@@ -1,4 +1,5 @@
 from aocd.models import Puzzle
+import cv2
 import numpy as np
 
 puzzle = Puzzle(year=2019, day=11)
@@ -52,7 +53,7 @@ def read_opcode(opcode, input, ap, rb, output=None, extend_mem=100000):
             address_3 += rb
 
         # Log
-        print(f'pointer: {ap} opcode: {opc_info} 1st mode: {fst_param_mode} 2nd mode: {scd_param_mode} 3rd mode: {thd_param_mode} va1_1: {val_1} val_2: {val_2}')
+        #print(f'pointer: {ap} opcode: {opc_info} 1st mode: {fst_param_mode} 2nd mode: {scd_param_mode} 3rd mode: {thd_param_mode} va1_1: {val_1} val_2: {val_2}')
 
         # Perform operations based on code
         if opc_info == 1:
@@ -114,21 +115,21 @@ def robot(ship, color, next_direction, xcur, ycur, dir_cur):
         else:
             xcur += 1
             dir_cur = 'E'
-    if dir_cur == 'E':
-        if next_direction == 0:
-            ycur += 1
-            dir_cur = 'N'
-        else:
-            ycur -= 1
-            dir_cur = 'S'
-    if dir_cur == 'W':
+    elif dir_cur == 'E':
         if next_direction == 0:
             ycur -= 1
-            dir_cur = 'S'
+            dir_cur = 'N'
         else:
             ycur += 1
+            dir_cur = 'S'
+    elif dir_cur == 'W':
+        if next_direction == 0:
+            ycur += 1
+            dir_cur = 'S'
+        else:
+            ycur -= 1
             dir_cur = 'N'
-    if dir_cur == 'S':
+    elif dir_cur == 'S':
         if next_direction == 0:
             xcur += 1
             dir_cur = 'E'
@@ -140,19 +141,45 @@ def robot(ship, color, next_direction, xcur, ycur, dir_cur):
 
 tiles_visited = []
 
-ship = np.zeros((10000,10000), dtype=np.uint8)
+ship = np.zeros((100,100), dtype=np.uint8)
 out1, opc, ap, rb, finished = read_opcode(intcode.copy(), input=0, ap=0, rb=0, output=None, extend_mem=100000)
-out2, opc, ap, rb, finished = read_opcode(opc, input=0, ap=ap, rb=rb, output=None, extend_mem=1)
+out2, opc, ap, rb, finished = read_opcode(opc, input=1, ap=ap, rb=rb, output=None, extend_mem=1)
 xc, yc, cv, dc = robot(ship, color=out1, next_direction=out2, xcur=0, ycur=0, dir_cur='N')
+print(f'cur x: {xc} cur y: {yc} cur view: {cv} dir_cur {dc}')
+tiles_visited.append((xc,yc))
+
+while not finished:
+    tiles_visited.append((xc,yc))
+    out1, opc, ap, rb, finished = read_opcode(opc, input=cv, ap=ap, rb=rb, output=None, extend_mem=1)
+    if finished:
+        break
+    out2, opc, ap, rb, finished = read_opcode(opc, input=cv, ap=ap, rb=rb, output=None, extend_mem=1)
+    xc, yc, cv, dc = robot(ship, color=out1, next_direction=out2, xcur=xc, ycur=yc, dir_cur=dc)
+    print(f'cur x: {xc} cur y: {yc} cur view: {cv} dir_cur {dc}')
+
+a_answer = (len(set(tiles_visited)))
+
+
+ship = np.zeros((100,100), dtype=np.uint8)
+out1, opc, ap, rb, finished = read_opcode(intcode.copy(), input=1, ap=0, rb=0, output=None, extend_mem=100000)
+out2, opc, ap, rb, finished = read_opcode(opc, input=1, ap=ap, rb=rb, output=None, extend_mem=1)
+xc, yc, cv, dc = robot(ship, color=out1, next_direction=out2, xcur=0, ycur=0, dir_cur='N')
+print(f'cur x: {xc} cur y: {yc} cur view: {cv} dir_cur {dc}')
 tiles_visited.append((xc,yc))
 
 while not finished:
     out1, opc, ap, rb, finished = read_opcode(opc, input=cv, ap=ap, rb=rb, output=None, extend_mem=1)
+    if finished:
+        break
     out2, opc, ap, rb, finished = read_opcode(opc, input=cv, ap=ap, rb=rb, output=None, extend_mem=1)
     xc, yc, cv, dc = robot(ship, color=out1, next_direction=out2, xcur=xc, ycur=yc, dir_cur=dc)
+    print(f'cur x: {xc} cur y: {yc} cur view: {cv} dir_cur {dc}')
     tiles_visited.append((xc,yc))
 
-print(len(set(tiles_visited)))
+ship[ship == 1] = 255
+ship = ship.astype(np.uint8)
+cv2.imwrite('/home/will/advent_of_code/Advent-of-Code/2019/q11.png', ship)
+b_answer = 'RJLFBUCU'
 
 # Puzzle metadata
 def time_to_HHMMSS(td):
