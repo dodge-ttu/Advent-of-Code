@@ -50,6 +50,9 @@ def read_opcode(opcode, input, ap, rb, output=None, extend_mem=100000):
         if thd_param_mode == 2:
             address_3 += rb
 
+        # Log
+        print(f'pointer: {ap} opcode: {opc_info} 1st mode: {fst_param_mode} 2nd mode: {scd_param_mode} 3rd mode: {thd_param_mode} va1_1: {val_1} val_2: {val_2}')
+
         # Perform operations based on code
         if opc_info == 1:
             new_value = val_1 + val_2
@@ -63,7 +66,7 @@ def read_opcode(opcode, input, ap, rb, output=None, extend_mem=100000):
             opcode[address_1] = input
             ap += 2
         elif opc_info == 4:
-            output = opcode[address_1]
+            output = val_1
             print(f'output: {output}')
             ap += 2
             return output, opcode, ap, rb, finished
