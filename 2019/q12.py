@@ -139,7 +139,6 @@ for planet_name in planets.keys():
     planets[planet_name]['tot'] = planets[planet_name]['pot'] * planets[planet_name]['kin']
 
 a_answer = sum([v['tot'] for (k,v) in planets.items()])
-print(a_answer)
 
 # Part B
 periods =[]
@@ -150,7 +149,6 @@ for ax in ['x','y','z']:
     periods.append(period_length)
 
 b_answer = np.lcm.reduce(periods)
-
 
 # Puzzle metadata
 def time_to_HHMMSS(td):
