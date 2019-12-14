@@ -36,32 +36,20 @@ def cool_plot(j, xx, yy, map):
             # Check to see if any other asteroids are on that line, if so (x2,y2) is blocked.
             count = 0
             for (xcheck, ycheck) in zip(xx, yy):
-                s1 = ''
-                s2 = ''
                 if ((xcheck, ycheck) != (x1, y1)) and ((xcheck, ycheck) != (x2, y2)):
                     if (min(x1, x2) <= xcheck <= max(x1, x2)) and (min(y1, y2) <= ycheck <= max(y1, y2)):
                         if (delta_x == 0):
                             if x1 == xcheck:
-                                s1 = f'equation for line {x1, y1}---{x2, y2}: x={x1}'
-                                s2 = f'asteroid at {xcheck, ycheck} on this line'
                                 count += 1
                         elif (delta_y == 0):
                             if y1 == ycheck:
-                                s1 = f'equation for line {x1, y1}---{x2, y2}: x={y1}'
-                                s2 = f'asteroid at {xcheck, ycheck} on this line'
                                 count += 1
                         else:
                             m = (y2 - y1) / (x2 - x1)
                             b = y1 - m * x1
                             if (ycheck == m * xcheck + b):
-                                s1 = f'equation for line {x1, y1}---{x2, y2}: y = {m}*x + {b}'
-                                s2 = f'asteroid at {xcheck, ycheck} on this line'
                                 count += 1
-                        # if s1:
-                            # print(s1)
-                            # print(s2)
             if count == 0:
-                # print(f'Asteroid {x1, y1} has a clear path to: {x2,y2}')
                 this_asteroids_vis_count += 1
                 asteroid_lines_xx.append((x1, x2))
                 asteroid_lines_yy.append((y1, y2))
@@ -70,16 +58,15 @@ def cool_plot(j, xx, yy, map):
 
     return asteroids_xx, asteroids_yy, asteroid_lines_xx, asteroid_lines_yy
 
-##### initialization function: plot the background of each frame
+# Initialization function
 def init():
     return (line1, line2, line3,)
 
-# animation function. This is called sequentially
+# Animation function is called sequentially
 def animate(j, xx, yy, map):
     asteroids_xx, asteroids_yy, asteroid_lines_xx, asteroid_lines_yy = cool_plot(j, xx, yy, map)
     line2.set_data(asteroid_lines_xx, asteroid_lines_yy)
     line3.set_data(asteroids_xx, asteroids_yy)
-    print('here')
     return (line1, line2, line3,)
 
 fig, ax = plt.subplots(1, 1, figsize=(6, 6))
@@ -93,19 +80,19 @@ line3, = ax.plot([], [], color='green', linestyle='', marker='o', markersize=4)
 
 frames = [(x,y) for (x,y) in zip(xx,yy)]
 
-# call the animator. blit=True means only re-draw the parts that have changed.
+# Call the animator
 params = {
     'fig': fig,
     'func': animate,
     'frames': frames,
     'init_func': init,
     'interval': 200,
-    'blit': True,
+    'blit': True, # blit=True, only draw what has changed
     'fargs': (xx, yy, map,),
     'cache_frame_data': False,
 }
 anim = animation.FuncAnimation(**params)
 plt.close('all')
-anim.save('test.gif', writer='imagemagick', fps=10)
+anim.save('/home/will/advent_of_code/Advent-of-Code/2019/q10.gif', writer='imagemagick', fps=10)
 #HTML(anim.to_html5_video())
 # anim.save('basic_animation.mp4', fps=30)
