@@ -1,11 +1,27 @@
 from aocd.models import Puzzle
-import numpy as np
 
-puzzle = Puzzle(year=2019, day=12)
-data = puzzle.input_data
+puzzle = Puzzle(year=2020, day=1)
+data = puzzle.input_data.splitlines()
+data = [int(i) for i in data]
 
-orbit_data = data.split('\n')
+# Part A
+def fix_exp_report(x):
+    for i in x:
+        for j in x:
+            if j + i == 2020:
+                return j*i
 
+a_answer = fix_exp_report(data)
+
+# Part B
+def fix_exp_report_again(x):
+    for i in x:
+        for j in x:
+            for k in x:
+                if i + j + k == 2020:
+                    return i*j*k
+
+b_answer = fix_exp_report_again(data)
 
 # Puzzle metadata
 def time_to_HHMMSS(td):

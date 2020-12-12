@@ -1,11 +1,42 @@
 from aocd.models import Puzzle
-import numpy as np
 
-puzzle = Puzzle(year=2019, day=12)
-data = puzzle.input_data
+puzzle = Puzzle(year=2020, day=2)
+data = puzzle.input_data.splitlines()
 
-orbit_data = data.split('\n')
+# Part A
+def valid_pass(x):
+    count = 0
+    for i in x:
+        info = i.split(' ')
+        limits = info[0].split('-')
+        minlim = int(limits[0])
+        maxlim = int(limits[1])
+        letter = info[1][0]
+        password = info[2]
+        letter_count = sum([1 for l in password if l == letter])
+        if minlim <= letter_count <= maxlim:
+            count+=1
+    return count
 
+a_answer = valid_pass(data)
+
+# Part B
+def valid_pass_again(x):
+    count = 0
+    for i in x:
+        info = i.split(' ')
+        limits = info[0].split('-')
+        loc1 = int(limits[0])
+        loc2 = int(limits[1])
+        letter = info[1][0]
+        password = info[2]
+        check1 = (letter == password[loc1-1])
+        check2 = (letter == password[loc2-1])
+        if (check1 or check2) and not (check1 & check2):
+            count += 1
+    return count
+
+b_answer = valid_pass_again(data)
 
 # Puzzle metadata
 def time_to_HHMMSS(td):
